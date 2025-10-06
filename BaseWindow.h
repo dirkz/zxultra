@@ -9,9 +9,6 @@
 namespace zxultra
 {
 
-template <class T>
-static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 template <class T> struct BaseWindow
 {
     BaseWindow(HINSTANCE hInstance, const std::wstring &windowTitle, int desiredWidth,
