@@ -9,6 +9,10 @@ void DXWindow::OnHwndCreated(HWND hwnd)
 {
 }
 
+void DXWindow::Resize(int width, int height)
+{
+}
+
 void DXWindow::Update(double elapsedSeconds)
 {
 }

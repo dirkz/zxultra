@@ -103,6 +103,11 @@ template <class T> struct BaseWindow
         m_appWindow->Draw();
     }
 
+    inline void Resize(int width, int height)
+    {
+        m_appWindow->Resize(width, height);
+    }
+
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         LONG_PTR lptr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
@@ -120,7 +125,7 @@ template <class T> struct BaseWindow
                 PostQuitMessage(0);
                 return 0;
 
-            case WM_SIZE:
+            case WM_SIZE: {
                 if (wParam == SIZE_MINIMIZED)
                 {
                     // TODO: Pause on minimization
@@ -129,6 +134,12 @@ template <class T> struct BaseWindow
                 {
                     // TODO: This could be the restore after minimization
                 }
+
+                WORD width = LOWORD(lParam);
+                WORD height = HIWORD(lParam);
+
+                baseWindow->Resize(width, height);
+            }
                 return 0;
 
             case WM_PAINT:
