@@ -1,5 +1,7 @@
 #include "AppWindow.h"
 
+#include <Dxgi.h>
+#include <d3d12.h>
 #include <string>
 
 namespace zxultra
