@@ -20,6 +20,8 @@ add_compile_definitions(_UNICODE UNICODE)
 
 add_executable (zxultra WIN32 "main.cpp")
 
+if (CMAKE_VERSION VERSION_GREATER 3.12)
+  set_property(TARGET zxultra PROPERTY CXX_STANDARD 20)
+endif()
+
 # TODO: Add tests and install targets if needed.
-
-
