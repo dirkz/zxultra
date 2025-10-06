@@ -12,6 +12,8 @@ struct DXWindow
 
     void Update(double elapsedSeconds);
     void Draw();
+
+    void LogAdapters();
 };
 
 } // namespace zxultra
