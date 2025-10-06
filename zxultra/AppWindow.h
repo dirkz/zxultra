@@ -19,6 +19,7 @@ struct DXWindow
   private:
     ComPtr<IDXGIFactory1> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
+    ComPtr<ID3D12Device> m_device;
 };
 
 } // namespace zxultra
