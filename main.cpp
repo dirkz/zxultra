@@ -38,11 +38,34 @@ static int CreateWindowAndRunMessageLoop(HINSTANCE hInstance, int nShowCmd)
 
     RegisterClass(&wc);
 
+    // Determine window coordinates
+    int width = GetSystemMetrics(SM_CXFULLSCREEN);
+    int height = GetSystemMetrics(SM_CYFULLSCREEN);
+
+    constexpr int desiredWidth = 1280;
+    constexpr int desiredHeight = 800;
+
+    int x = CW_USEDEFAULT;
+    int y = CW_USEDEFAULT;
+
+    if (width > desiredWidth && height > desiredHeight)
+    {
+        x = (width - desiredWidth) / 2;
+        y = 0;
+        width = desiredWidth;
+        height = desiredHeight;
+    }
+    else
+    {
+        width = CW_USEDEFAULT;
+        height = CW_USEDEFAULT;
+    }
+
     HWND hwnd = CreateWindowEx(0, // optional windows styles
                                WindowClassName.c_str(),
                                L"zxultra",          // window title
                                WS_OVERLAPPEDWINDOW, // window style
-                               CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                               x, y, width, height,
                                nullptr, // parent window
                                nullptr, // menu
                                hInstance,
