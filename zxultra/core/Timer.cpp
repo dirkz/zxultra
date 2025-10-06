@@ -30,7 +30,8 @@ double Timer::ElapsedSeconds() const
 {
     auto elapsed = Elapsed().count();
     auto dElapsed = static_cast<double>(elapsed);
-    return dElapsed / 1000 / 1000;
+    constexpr double nanoToSeconds = 1000 * 1000 * 1000;
+    return dElapsed / nanoToSeconds;
 }
 
 } // namespace zxultra
