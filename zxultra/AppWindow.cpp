@@ -7,7 +7,8 @@ namespace zxultra
 
 void DXWindow::OnHwndCreated(HWND hwnd)
 {
-    LogAdapters();
+    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&m_factory)));
+    ThrowIfFailed(m_factory->EnumAdapters1(0, &m_adapter));
 }
 
 void DXWindow::Resize(int width, int height)
@@ -25,7 +26,7 @@ void DXWindow::Draw()
 void DXWindow::LogAdapters()
 {
     ComPtr<IDXGIFactory1> factory;
-    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(factory.GetAddressOf())));
+    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&factory)));
 
     UINT i = 0;
     ComPtr<IDXGIAdapter1> adapter;

@@ -15,6 +15,10 @@ struct DXWindow
 
     void LogAdapters();
     void LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter);
+
+  private:
+    ComPtr<IDXGIFactory1> m_factory;
+    ComPtr<IDXGIAdapter1> m_adapter;
 };
 
 } // namespace zxultra
