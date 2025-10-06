@@ -1,3 +1,6 @@
 [submodule "DirectX-Headers"]
 	path = DirectX-Headers
 	url = git@github.com:microsoft/DirectX-Headers.git
+[submodule "DirectXMath"]
+	path = DirectXMath
+	url = git@github.com:microsoft/DirectXMath.git
