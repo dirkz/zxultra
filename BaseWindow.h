@@ -69,12 +69,12 @@ template <class T> struct BaseWindow
         appWindow->OnHwndCreated(hwnd);
     }
 
-    void ShowWindow(int nShowCmd)
+    inline void ShowWindow(int nShowCmd)
     {
         ::ShowWindow(m_hwnd, nShowCmd);
     }
 
-    int RunMessageLoop()
+    inline int RunMessageLoop()
     {
         MSG msg = {};
         while (GetMessage(&msg, NULL, 0, 0) > 0)
@@ -86,23 +86,23 @@ template <class T> struct BaseWindow
         return static_cast<int>(msg.wParam);
     }
 
-    void StartTimer()
+    inline void StartTimer()
     {
         m_timer.Start();
     }
 
-    void OnHwndCreated(HWND hwnd)
+    inline void OnHwndCreated(HWND hwnd)
     {
         m_appWindow->OnHwndCreated(hwnd);
     }
 
-    void Update()
+    inline void Update()
     {
         double elapsedSeconds = m_timer.ElapsedSeconds();
         m_appWindow->Update(elapsedSeconds);
     }
 
-    void Draw()
+    inline void Draw()
     {
         m_appWindow->Draw();
     }
