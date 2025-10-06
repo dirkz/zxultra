@@ -4,7 +4,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "DXWindow.h"
 #include "Timer.h"
 
 namespace zxultra

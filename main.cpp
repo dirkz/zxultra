@@ -4,7 +4,7 @@
 
 #include "BaseWindow.h"
 
-#include "DXWindow.h"
+#include "AppWindow.h"
 
 using namespace zxultra;
 
