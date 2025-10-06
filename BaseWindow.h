@@ -66,7 +66,7 @@ template <class T> struct BaseWindow
 
         HWND hwnd = CreateWindowEx(0, // optional windows styles
                                    WindowClassName.c_str(),
-                                   L"zxultra",          // window title
+                                   windowTitle.c_str(), // window title
                                    WS_OVERLAPPEDWINDOW, // window style
                                    x, y, width, height,
                                    nullptr, // parent window
