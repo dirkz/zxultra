@@ -120,6 +120,17 @@ template <class T> struct BaseWindow
                 PostQuitMessage(0);
                 return 0;
 
+            case WM_SIZE:
+                if (wParam == SIZE_MINIMIZED)
+                {
+                    // TODO: Pause on minimization
+                }
+                else if (wParam == SIZE_RESTORED)
+                {
+                    // TODO: This could be the restore after minimization
+                }
+                return 0;
+
             case WM_PAINT:
                 baseWindow->Update();
                 baseWindow->Draw();
