@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <string>
 
+#include "DXWindow.h"
 #include "Timer.h"
 
 namespace zxultra
@@ -95,6 +96,17 @@ template <class T> struct BaseWindow
         m_appWindow->OnHwndCreated(hwnd);
     }
 
+    void Update()
+    {
+        double elapsedSeconds = m_timer.ElapsedSeconds();
+        m_appWindow->Update(elapsedSeconds);
+    }
+
+    void Draw()
+    {
+        m_appWindow->Draw();
+    }
+
   private:
     HWND m_hwnd;
     T *m_appWindow;
@@ -119,16 +131,9 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
             PostQuitMessage(0);
             return 0;
 
-        case WM_PAINT: {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hwnd, &ps);
-
-            // All painting occurs here, between BeginPaint and EndPaint.
-
-            FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
-            EndPaint(hwnd, &ps);
-        }
+        case WM_PAINT:
+            baseWindow->Update();
+            baseWindow->Draw();
             return 0;
         }
     }
