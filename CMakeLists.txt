@@ -22,7 +22,7 @@ add_executable (${CMAKE_PROJECT_NAME} WIN32 "main.cpp" "BaseWindow.h")
 
 add_subdirectory(zxultra)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} zxultra)
+target_link_libraries(${CMAKE_PROJECT_NAME} zxultra zxultra-core)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 20)

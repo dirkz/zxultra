@@ -4,61 +4,19 @@
 #include <stdexcept>
 #include <string>
 
+#include "Timer.h"
+
 namespace zxultra
 {
 
 template <class T>
-static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    LONG_PTR lptr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
-    if (lptr)
-    {
-        T *appWindow = reinterpret_cast<T *>(lptr);
-
-        switch (uMsg)
-        {
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
-
-        case WM_PAINT: {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hwnd, &ps);
-
-            // All painting occurs here, between BeginPaint and EndPaint.
-
-            FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
-            EndPaint(hwnd, &ps);
-        }
-            return 0;
-        }
-    }
-    else
-    {
-        switch (uMsg)
-        {
-        case WM_NCCREATE: {
-            CREATESTRUCT *pCreateStruct = reinterpret_cast<CREATESTRUCT *>(lParam);
-            T *pApp = reinterpret_cast<T *>(pCreateStruct->lpCreateParams);
-            SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pApp));
-        }
-            return TRUE;
-
-        default:
-            std::wstring msgString = std::format(L"Received objectless message {}\n", uMsg);
-            OutputDebugString(msgString.c_str());
-            break;
-        }
-    }
-
-    return DefWindowProc(hwnd, uMsg, wParam, lParam);
-}
+static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 template <class T> struct BaseWindow
 {
     BaseWindow(HINSTANCE hInstance, const std::wstring &windowTitle, int desiredWidth,
-               int desiredHeight, T &window)
+               int desiredHeight, T *appWindow)
+        : m_appWindow{appWindow}
     {
         const std::wstring WindowClassName{L"zxultra_class"};
 
@@ -107,7 +65,7 @@ template <class T> struct BaseWindow
 
         m_hwnd = hwnd;
 
-        window.OnHwndCreated(hwnd);
+        appWindow->OnHwndCreated(hwnd);
     }
 
     void ShowWindow(int nShowCmd)
@@ -127,8 +85,73 @@ template <class T> struct BaseWindow
         return static_cast<int>(msg.wParam);
     }
 
+    void StartTimer()
+    {
+        m_timer.Start();
+    }
+
+    void OnHwndCreated(HWND hwnd)
+    {
+        m_appWindow->OnHwndCreated(hwnd);
+    }
+
   private:
     HWND m_hwnd;
+    T *m_appWindow;
+    Timer m_timer;
 };
+
+template <class T>
+static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    LONG_PTR lptr = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    if (lptr)
+    {
+        BaseWindow<T> *baseWindow = reinterpret_cast<BaseWindow<T> *>(lptr);
+
+        switch (uMsg)
+        {
+        case WM_CREATE:
+            baseWindow->StartTimer();
+            return 0;
+
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
+
+        case WM_PAINT: {
+            PAINTSTRUCT ps;
+            HDC hdc = BeginPaint(hwnd, &ps);
+
+            // All painting occurs here, between BeginPaint and EndPaint.
+
+            FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+
+            EndPaint(hwnd, &ps);
+        }
+            return 0;
+        }
+    }
+    else
+    {
+        switch (uMsg)
+        {
+        case WM_NCCREATE: {
+            CREATESTRUCT *pCreateStruct = reinterpret_cast<CREATESTRUCT *>(lParam);
+            BaseWindow<T> *pBaseWindow =
+                reinterpret_cast<BaseWindow<T> *>(pCreateStruct->lpCreateParams);
+            SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pBaseWindow));
+        }
+            return TRUE;
+
+        default:
+            std::wstring msgString = std::format(L"Received objectless message {}\n", uMsg);
+            OutputDebugString(msgString.c_str());
+            break;
+        }
+    }
+
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
 
 } // namespace zxultra

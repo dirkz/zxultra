@@ -15,7 +15,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
     DXWindow dxWindow{};
 
-    BaseWindow baseWindow{hInstance, L"ZFX Ultra", 1280, 800, dxWindow};
+    BaseWindow baseWindow{hInstance, L"ZFX Ultra", 1280, 800, &dxWindow};
     baseWindow.ShowWindow(nShowCmd);
 
     return baseWindow.RunMessageLoop();
