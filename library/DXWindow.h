@@ -2,7 +2,7 @@
 
 #include <windows.h>
 
-namespace zfxultra
+namespace zxultra
 {
 
 struct DXWindow
@@ -10,4 +10,4 @@ struct DXWindow
     void OnHwndCreated(HWND hwnd);
 };
 
-} // namespace zfxultra
+} // namespace zxultra

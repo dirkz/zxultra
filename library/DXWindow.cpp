@@ -1,6 +1,6 @@
 #include "DXWindow.h"
 
-namespace zfxultra
+namespace zxultra
 {
 
 void DXWindow::OnHwndCreated(HWND hwnd)
@@ -8,4 +8,4 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     OutputDebugString(L"CreatedHwnd()");
 }
 
-} // namespace zfxultra
+} // namespace zxultra

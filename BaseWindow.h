@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace zfxultra
+namespace zxultra
 {
 
 template <class T>
@@ -131,4 +131,4 @@ template <class T> struct BaseWindow
     HWND m_hwnd;
 };
 
-} // namespace zfxultra
+} // namespace zxultra
