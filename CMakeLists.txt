@@ -13,13 +13,13 @@ project ("zxultra")
 
 # Add source to this project's executable.
 
-add_executable (zxultra WIN32 "main.cpp")
+set (CMAKE_CXX_STANDARD 20)
+set (CMAKE_CXX_STANDARD_REQUIRED True)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET zxultra PROPERTY CXX_STANDARD 20)
-endif()
+add_compile_definitions(_UNICODE UNICODE)
+
+add_executable (zxultra WIN32 "main.cpp")
 
 # TODO: Add tests and install targets if needed.
 
-add_definitions(-DUNICODE -D_UNICODE)
 
