@@ -23,7 +23,7 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     ThrowIfFailed(m_factory->EnumAdapters1(0, &m_adapter));
 
     ThrowIfFailed(
-        D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_1, IID_PPV_ARGS(&m_device)));
+        D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)));
 }
 
 void DXWindow::Resize(int width, int height)
