@@ -20,6 +20,10 @@ add_compile_definitions(_UNICODE UNICODE)
 
 add_executable (${CMAKE_PROJECT_NAME} WIN32 "main.cpp" "BaseWindow.h")
 
+add_subdirectory(library)
+
+target_link_libraries(${CMAKE_PROJECT_NAME} zfxultra)
+
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 endif()

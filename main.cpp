@@ -4,6 +4,8 @@
 
 #include "BaseWindow.h"
 
+#include "DXWindow.h"
+
 using namespace zfxultra;
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
@@ -11,8 +13,10 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 {
     OutputDebugString(L"Hello, world!\n");
 
-    BaseWindow<int> window{hInstance, L"ZFX Ultra", 1280, 800};
-    window.ShowWindow(nShowCmd);
+    DXWindow dxWindow{};
 
-    return window.RunMessageLoop();
+    BaseWindow baseWindow{hInstance, L"ZFX Ultra", 1280, 800, dxWindow};
+    baseWindow.ShowWindow(nShowCmd);
+
+    return baseWindow.RunMessageLoop();
 }

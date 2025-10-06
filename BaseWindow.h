@@ -33,7 +33,7 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 template <class T> struct BaseWindow
 {
     BaseWindow(HINSTANCE hInstance, const std::wstring &windowTitle, int desiredWidth,
-               int desiredHeight)
+               int desiredHeight, T &window)
     {
         const std::wstring WindowClassName{L"zxultra_class"};
 
@@ -81,6 +81,8 @@ template <class T> struct BaseWindow
         }
 
         m_hwnd = hwnd;
+
+        window.OnHwndCreated(hwnd);
     }
 
     void ShowWindow(int nShowCmd)
