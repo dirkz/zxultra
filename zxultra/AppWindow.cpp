@@ -19,11 +19,11 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     }
 #endif
 
-    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&m_factory)));
-    ThrowIfFailed(m_factory->EnumAdapters1(0, &m_adapter));
+    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(m_factory.GetAddressOf())));
+    ThrowIfFailed(m_factory->EnumAdapters1(0, m_adapter.GetAddressOf()));
 
     ThrowIfFailed(
-        D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)));
+        D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(m_device.GetAddressOf())));
 }
 
 void DXWindow::Resize(int width, int height)
@@ -41,11 +41,11 @@ void DXWindow::Draw()
 void DXWindow::LogAdapters()
 {
     ComPtr<IDXGIFactory1> factory;
-    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&factory)));
+    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(factory.GetAddressOf())));
 
     UINT i = 0;
     ComPtr<IDXGIAdapter1> adapter;
-    while (factory->EnumAdapters1(i, &adapter) != DXGI_ERROR_NOT_FOUND)
+    while (factory->EnumAdapters1(i, adapter.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND)
     {
         DXGI_ADAPTER_DESC1 desc;
         ThrowIfFailed(adapter->GetDesc1(&desc));
@@ -63,7 +63,7 @@ void DXWindow::LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter)
 {
     UINT i = 0;
     ComPtr<IDXGIOutput> output;
-    while (adapter->EnumOutputs(i, &output) != DXGI_ERROR_NOT_FOUND)
+    while (adapter->EnumOutputs(i, output.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND)
     {
         DXGI_OUTPUT_DESC desc;
         ThrowIfFailed(output->GetDesc(&desc));
