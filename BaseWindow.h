@@ -150,7 +150,7 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
             return TRUE;
 
         default:
-            std::wstring msgString = std::format(L"Received objectless message {}\n", uMsg);
+            std::wstring msgString = std::format(L"Received object-less message {}\n", uMsg);
             OutputDebugString(msgString.c_str());
             break;
         }
