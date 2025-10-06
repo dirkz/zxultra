@@ -20,7 +20,7 @@ add_compile_definitions(_UNICODE UNICODE)
 
 add_executable (${CMAKE_PROJECT_NAME} WIN32 "main.cpp" "BaseWindow.h")
 
-add_subdirectory(library)
+add_subdirectory(zxultra)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} zxultra)
 
