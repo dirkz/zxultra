@@ -11,12 +11,12 @@ endif()
 
 project ("zxultra")
 
-# Add source to this project's executable.
-
 set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_compile_definitions(_UNICODE UNICODE)
+
+# Add source to this project's executable.
 
 add_executable (zxultra WIN32 "main.cpp")
 
