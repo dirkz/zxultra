@@ -1,4 +1,4 @@
-add_library(zxultra OBJECT "AppWindow.h" "AppWindow.cpp")
+add_library(zxultra OBJECT "AppWindow.h" "AppWindow.cpp" "Error.h")
 target_include_directories(zxultra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(core)

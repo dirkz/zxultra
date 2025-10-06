@@ -4,6 +4,8 @@
 #include <d3d12.h>
 #include <string>
 
+#include "Error.h"
+
 namespace zxultra
 {
 
