@@ -1,14 +1,9 @@
 #include "AppWindow.h"
 
-#include <Dxgi.h>
-#include <d3d12.h>
-
 #include <format>
 #include <string>
 
 #include "Error.h"
-
-using Microsoft::WRL::ComPtr;
 
 namespace zxultra
 {
@@ -35,14 +30,32 @@ void DXWindow::LogAdapters()
     ComPtr<IDXGIFactory1> factory;
     ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(factory.GetAddressOf())));
 
-    ComPtr<IDXGIAdapter1> adapter;
     UINT i = 0;
-    while (factory->EnumAdapters1(i, adapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND)
+    ComPtr<IDXGIAdapter1> adapter;
+    while (factory->EnumAdapters1(i, &adapter) != DXGI_ERROR_NOT_FOUND)
     {
-        DXGI_ADAPTER_DESC1 description;
-        adapter->GetDesc1(&description);
+        DXGI_ADAPTER_DESC1 desc;
+        ThrowIfFailed(adapter->GetDesc1(&desc));
 
-        std::wstring msg = std::format(L"Adapter: {}\n", description.Description);
+        std::wstring msg = std::format(L"Adapter: {}\n", desc.Description);
+        OutputDebugString(msg.c_str());
+
+        LogAdapterOutputs(adapter);
+
+        ++i;
+    }
+}
+
+void DXWindow::LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter)
+{
+    UINT i = 0;
+    ComPtr<IDXGIOutput> output;
+    while (adapter->EnumOutputs(i, &output) != DXGI_ERROR_NOT_FOUND)
+    {
+        DXGI_OUTPUT_DESC desc;
+        ThrowIfFailed(output->GetDesc(&desc));
+
+        std::wstring msg = std::format(L"Output: {}\n", desc.DeviceName);
         OutputDebugString(msg.c_str());
 
         ++i;

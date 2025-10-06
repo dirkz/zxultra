@@ -1,6 +1,10 @@
 #pragma once
 
+#include <Dxgi.h>
 #include <windows.h>
+#include <wrl.h>
+
+using Microsoft::WRL::ComPtr;
 
 namespace zxultra
 {
@@ -14,6 +18,7 @@ struct DXWindow
     void Draw();
 
     void LogAdapters();
+    void LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter);
 };
 
 } // namespace zxultra
