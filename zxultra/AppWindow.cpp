@@ -7,6 +7,18 @@ namespace zxultra
 
 void DXWindow::OnHwndCreated(HWND hwnd)
 {
+#if defined(_DEBUG)
+    // Enable the D3D12 debug layer.
+    {
+
+        ComPtr<ID3D12Debug> debugController;
+        if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+        {
+            debugController->EnableDebugLayer();
+        }
+    }
+#endif
+
     ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&m_factory)));
     ThrowIfFailed(m_factory->EnumAdapters1(0, &m_adapter));
 }
