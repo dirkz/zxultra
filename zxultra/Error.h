@@ -1,11 +1,6 @@
 #pragma once
 
-#include <comdef.h>
-#include <windows.h>
-#include <wrl.h>
-
-#include <stdexcept>
-#include <string>
+#include "stdafx.h"
 
 namespace zxultra
 {
