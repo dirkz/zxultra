@@ -36,7 +36,7 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
 
-    m_fence = Fence{m_device.Get()};
+    m_frame.reset(new Frame{m_device.Get()});
 }
 
 void DXWindow::Resize(int width, int height)

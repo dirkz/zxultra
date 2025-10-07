@@ -7,7 +7,6 @@ namespace zxultra
 
 struct Fence
 {
-    Fence();
     Fence(ID3D12Device *device);
 
   private:

@@ -3,10 +3,6 @@
 namespace zxultra
 {
 
-Fence::Fence()
-{
-}
-
 Fence::Fence(ID3D12Device *device)
 {
     ThrowIfFailed(

@@ -4,7 +4,9 @@ add_library(zxultra
 	"AppWindow.cpp"
 	"Error.h"
 	"Fence.h"
-	"Fence.cpp")
+	"Fence.cpp"
+	"Frame.h"
+	"Frame.cpp")
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 

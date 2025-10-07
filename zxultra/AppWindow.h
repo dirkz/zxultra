@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 
-#include "Fence.h"
+#include "Frame.h"
 
 namespace zxultra
 {
@@ -22,7 +22,7 @@ struct DXWindow
     ComPtr<IDXGIFactory1> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
     ComPtr<ID3D12Device> m_device;
-    Fence m_fence;
+    std::unique_ptr<Frame> m_frame;
 };
 
 } // namespace zxultra
