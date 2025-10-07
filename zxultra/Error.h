@@ -23,6 +23,11 @@ inline void ThrowIfFailed(HRESULT hr)
     }
 }
 
+inline void HR(HRESULT hr)
+{
+    ThrowIfFailed(hr);
+}
+
 inline void CheckLastError()
 {
     DWORD error = GetLastError();

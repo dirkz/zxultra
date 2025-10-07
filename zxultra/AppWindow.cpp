@@ -21,11 +21,11 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     }
 #endif
 
-    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(m_factory.GetAddressOf())));
-    ThrowIfFailed(m_factory->EnumAdapters1(0, m_adapter.GetAddressOf()));
+    HR(CreateDXGIFactory1(IID_PPV_ARGS(m_factory.GetAddressOf())));
+    HR(m_factory->EnumAdapters1(0, m_adapter.GetAddressOf()));
 
-    ThrowIfFailed(D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0,
-                                    IID_PPV_ARGS(m_device.GetAddressOf())));
+    HR(D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0,
+                         IID_PPV_ARGS(m_device.GetAddressOf())));
 
     CD3DX12FeatureSupport features;
     features.Init(m_device.Get());
@@ -54,14 +54,14 @@ void DXWindow::Draw()
 void DXWindow::LogAdapters()
 {
     ComPtr<IDXGIFactory1> factory;
-    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(factory.GetAddressOf())));
+    HR(CreateDXGIFactory1(IID_PPV_ARGS(factory.GetAddressOf())));
 
     UINT i = 0;
     ComPtr<IDXGIAdapter1> adapter;
     while (factory->EnumAdapters1(i, adapter.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND)
     {
         DXGI_ADAPTER_DESC1 desc;
-        ThrowIfFailed(adapter->GetDesc1(&desc));
+        HR(adapter->GetDesc1(&desc));
 
         std::wstring msg = std::format(L"Adapter: {}\n", desc.Description);
         OutputDebugString(msg.c_str());
@@ -79,7 +79,7 @@ void DXWindow::LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter)
     while (adapter->EnumOutputs(i, output.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND)
     {
         DXGI_OUTPUT_DESC desc;
-        ThrowIfFailed(output->GetDesc(&desc));
+        HR(output->GetDesc(&desc));
 
         std::wstring msg = std::format(L"Output: {}\n", desc.DeviceName);
         OutputDebugString(msg.c_str());
