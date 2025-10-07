@@ -7,8 +7,8 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12CommandQueue *queue, HWND hwn
                      UINT qualityLevel)
 {
     DXGI_SAMPLE_DESC sampleDesc{};
-    sampleDesc.Count = sampleCount;
-    sampleDesc.Quality = qualityLevel;
+    sampleDesc.Count = 1;
+    sampleDesc.Quality = 0;
 
     DXGI_SWAP_CHAIN_DESC1 desc{};
     desc.Format = BackBufferFormat;

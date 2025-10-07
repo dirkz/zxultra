@@ -41,8 +41,8 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     HR(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(m_mainCommandQueue.GetAddressOf())));
 
     m_frame.reset(new Frame{m_device.Get()});
-    m_swapchain.reset(new Swapchain{m_factory.Get(), m_mainCommandQueue.Get(), hwnd, SampleCount,
-                                    qualityLevels - 1});
+    m_swapchain.reset(
+        new Swapchain{m_factory.Get(), m_mainCommandQueue.Get(), hwnd, SampleCount, qualityLevels});
 }
 
 void DXWindow::Resize(int width, int height)
