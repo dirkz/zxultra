@@ -22,6 +22,7 @@ struct DXWindow
     ComPtr<IDXGIFactory1> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
     ComPtr<ID3D12Device> m_device;
+    ComPtr<ID3D12CommandQueue> m_mainCommandQueue;
     std::unique_ptr<Frame> m_frame;
 };
 

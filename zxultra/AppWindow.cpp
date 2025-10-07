@@ -36,6 +36,11 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
 
+    D3D12_COMMAND_QUEUE_DESC queueDesc{};
+    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    HR(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(m_mainCommandQueue.GetAddressOf())));
+
     m_frame.reset(new Frame{m_device.Get()});
 }
 
