@@ -22,8 +22,18 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(m_factory.GetAddressOf())));
     ThrowIfFailed(m_factory->EnumAdapters1(0, m_adapter.GetAddressOf()));
 
-    ThrowIfFailed(
-        D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(m_device.GetAddressOf())));
+    ThrowIfFailed(D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0,
+                                    IID_PPV_ARGS(m_device.GetAddressOf())));
+
+    CD3DX12FeatureSupport features;
+    features.Init(m_device.Get());
+    D3D_FEATURE_LEVEL maxFeatureLevel = features.MaxSupportedFeatureLevel();
+
+    ThrowIfFailed(D3D12CreateDevice(m_adapter.Get(), maxFeatureLevel,
+                                    IID_PPV_ARGS(m_device.ReleaseAndGetAddressOf())));
+
+    features.Init(m_device.Get());
+    D3D12_RAYTRACING_TIER raytracingTier = features.RaytracingTier();
 }
 
 void DXWindow::Resize(int width, int height)
