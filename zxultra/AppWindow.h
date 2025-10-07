@@ -3,6 +3,7 @@
 #include "stdafx.h"
 
 #include "Frame.h"
+#include "Swapchain.h"
 
 namespace zxultra
 {
@@ -19,7 +20,7 @@ struct DXWindow
     void LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter);
 
   private:
-    ComPtr<IDXGIFactory1> m_factory;
+    ComPtr<IDXGIFactory2> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
     ComPtr<ID3D12Device> m_device;
     ComPtr<ID3D12CommandQueue> m_mainCommandQueue;
