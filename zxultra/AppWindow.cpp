@@ -1,7 +1,5 @@
 #include "AppWindow.h"
 
-#include "Error.h"
-
 namespace zxultra
 {
 
@@ -37,6 +35,8 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     UINT qualityLevels = 0;
     features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
+
+    m_fence = Fence{m_device.Get()};
 }
 
 void DXWindow::Resize(int width, int height)

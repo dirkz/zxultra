@@ -2,6 +2,8 @@
 
 #include "stdafx.h"
 
+#include "Fence.h"
+
 namespace zxultra
 {
 
@@ -20,6 +22,7 @@ struct DXWindow
     ComPtr<IDXGIFactory1> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
     ComPtr<ID3D12Device> m_device;
+    Fence m_fence;
 };
 
 } // namespace zxultra

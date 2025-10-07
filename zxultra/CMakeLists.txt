@@ -1,4 +1,10 @@
-add_library(zxultra OBJECT "AppWindow.h" "AppWindow.cpp" "Error.h")
+add_library(zxultra
+	OBJECT
+	"AppWindow.h"
+	"AppWindow.cpp"
+	"Error.h"
+	"Fence.h"
+	"Fence.cpp")
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 
