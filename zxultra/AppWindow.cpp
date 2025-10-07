@@ -28,11 +28,6 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     CD3DX12FeatureSupport features;
     features.Init(m_device.Get());
     D3D_FEATURE_LEVEL maxFeatureLevel = features.MaxSupportedFeatureLevel();
-
-    ThrowIfFailed(D3D12CreateDevice(m_adapter.Get(), maxFeatureLevel,
-                                    IID_PPV_ARGS(m_device.ReleaseAndGetAddressOf())));
-
-    features.Init(m_device.Get());
     D3D12_RAYTRACING_TIER raytracingTier = features.RaytracingTier();
 }
 
