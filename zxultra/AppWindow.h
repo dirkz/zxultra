@@ -26,8 +26,8 @@ struct DXWindow
 
     ComPtr<ID3D12CommandQueue> m_mainCommandQueue;
 
-    std::unique_ptr<Frame> m_frame;
-    std::unique_ptr<Swapchain> m_swapchain;
+    std::optional<Frame> m_frame;
+    std::optional<Swapchain> m_swapchain;
 };
 
 } // namespace zxultra

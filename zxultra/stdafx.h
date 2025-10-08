@@ -2,6 +2,7 @@
 
 #include <format>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 
