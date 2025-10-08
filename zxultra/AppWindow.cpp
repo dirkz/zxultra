@@ -3,9 +3,6 @@
 namespace zxultra
 {
 
-constexpr DXGI_FORMAT DepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-constexpr UINT SampleCount = 4;
-
 void DXWindow::OnHwndCreated(HWND hwnd)
 {
 #if defined(_DEBUG)
@@ -26,13 +23,14 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     HR(D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0,
                          IID_PPV_ARGS(m_device.GetAddressOf())));
 
-    // sample code
+    // sample code for querying features
     CD3DX12FeatureSupport features;
     features.Init(m_device.Get());
     D3D_FEATURE_LEVEL maxFeatureLevel = features.MaxSupportedFeatureLevel();
     D3D12_RAYTRACING_TIER raytracingTier = features.RaytracingTier();
 
-    // sample code
+    // sample code for querying multisampling capabilities
+    constexpr UINT SampleCount = 4;
     UINT qualityLevels = 0;
     features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
