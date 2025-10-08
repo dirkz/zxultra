@@ -26,11 +26,13 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     HR(D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0,
                          IID_PPV_ARGS(m_device.GetAddressOf())));
 
+    // sample code
     CD3DX12FeatureSupport features;
     features.Init(m_device.Get());
     D3D_FEATURE_LEVEL maxFeatureLevel = features.MaxSupportedFeatureLevel();
     D3D12_RAYTRACING_TIER raytracingTier = features.RaytracingTier();
 
+    // sample code
     UINT qualityLevels = 0;
     features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
