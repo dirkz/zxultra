@@ -3,8 +3,7 @@
 namespace zxultra
 {
 
-Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12CommandQueue *queue, HWND hwnd, UINT sampleCount,
-                     UINT qualityLevel)
+Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12CommandQueue *queue, HWND hwnd
 {
     DXGI_SAMPLE_DESC sampleDesc{};
     sampleDesc.Count = sampleCount;
