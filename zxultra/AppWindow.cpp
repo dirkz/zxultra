@@ -85,7 +85,9 @@ void DXWindow::Resize(int width, int height)
 
     if (width != m_swapchain.Width() || height != m_swapchain.Height())
     {
-        m_swapchain.Resize(width, height);
+        m_graphicsQueue.Flush();
+        m_swapchain.Resize(width, height, m_device.Get(), m_graphicsQueue.CommandList());
+        m_graphicsQueue.Flush();
     }
 }
 

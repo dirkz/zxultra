@@ -63,7 +63,7 @@ void Swapchain::CreateBuffers(ID3D12Device *device)
 
     for (auto i = 0; i < BufferCount; ++i)
     {
-        HR(m_swapchain->GetBuffer(i, IID_PPV_ARGS(m_buffers[i].ReleaseAndGetAddressOf())));
+        HR(m_swapchain->GetBuffer(i, IID_PPV_ARGS(m_buffers[i].GetAddressOf())));
         device->CreateRenderTargetView(m_buffers[i].Get(), nullptr, rtvHeapHandle);
         rtvHeapHandle.Offset(1, m_descriptorHandleSizes.RtvDescriptorHandleIncrementSize());
     }
@@ -114,8 +114,18 @@ void Swapchain::Present()
     m_currentBackBufferIndex = (m_currentBackBufferIndex + 1) % BufferCount;
 }
 
-void Swapchain::Resize(int width, int height)
+void Swapchain::Resize(int width, int height, ID3D12Device *device,
+                       ID3D12GraphicsCommandList *commandList)
 {
+    for (auto i = 0; i < BufferCount; ++i)
+    {
+        m_buffers[i].Reset();
+    }
+
+    HR(m_swapchain->ResizeBuffers(BufferCount, width, height, BackBufferFormat, 0));
+
+    CreateBuffers(device);
+    CreateDepthStencilBufferAndView(device, commandList);
 }
 
 } // namespace zxultra
