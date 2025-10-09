@@ -114,4 +114,8 @@ void Swapchain::Present()
     m_currentBackBufferIndex = (m_currentBackBufferIndex + 1) % BufferCount;
 }
 
+void Swapchain::Resize(int width, int height)
+{
+}
+
 } // namespace zxultra

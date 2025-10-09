@@ -116,6 +116,11 @@ void DXWindow::Resize(int width, int height)
     m_scissorRect.right = m_swapchain.Width();
     m_scissorRect.top = 0;
     m_scissorRect.bottom = m_swapchain.Height();
+
+    if (width != m_swapchain.Width() || height != m_swapchain.Height())
+    {
+        m_swapchain.Resize(width, height);
+    }
 }
 
 void DXWindow::Update(double elapsedSeconds)
