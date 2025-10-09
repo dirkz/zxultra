@@ -7,13 +7,9 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12Command
                      HWND hwnd, DescriptorHandleSizes &descriptorHandleSizes)
     : m_descriptorHandleSizes{descriptorHandleSizes}
 {
-    DXGI_SAMPLE_DESC sampleDesc{};
-    sampleDesc.Count = 1;
-    sampleDesc.Quality = 0;
-
     DXGI_SWAP_CHAIN_DESC1 desc{};
     desc.Format = BackBufferFormat;
-    desc.SampleDesc = sampleDesc;
+    desc.SampleDesc = SampleDescription();
     desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     desc.BufferCount = BufferCount;
     desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
@@ -35,6 +31,7 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12Command
     HR(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(m_dsvDescriptorHeap.GetAddressOf())));
 
     CreateBuffers(device);
+    CreateDepthStencilBufferAndView(device);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferDescriptorHandle() const
@@ -49,6 +46,15 @@ D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::DepthStencilDescriptorHandle() const
     return m_dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
+DXGI_SAMPLE_DESC Swapchain::SampleDescription() const
+{
+    DXGI_SAMPLE_DESC sampleDesc{};
+    sampleDesc.Count = 1;
+    sampleDesc.Quality = 0;
+
+    return sampleDesc;
+}
+
 void Swapchain::CreateBuffers(ID3D12Device *device)
 {
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle{
@@ -60,6 +66,34 @@ void Swapchain::CreateBuffers(ID3D12Device *device)
         device->CreateRenderTargetView(m_buffers[i].Get(), nullptr, rtvHeapHandle);
         rtvHeapHandle.Offset(1, m_descriptorHandleSizes.RtvDescriptorHandleIncrementSize());
     }
+}
+
+void Swapchain::CreateDepthStencilBufferAndView(ID3D12Device *device)
+{
+    D3D12_RESOURCE_DESC desc{};
+    desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    desc.Alignment = 0;
+    desc.Width = Width();
+    desc.Height = Height();
+    desc.DepthOrArraySize = 1;
+    desc.MipLevels = 1;
+    desc.Format = DepthStencilFormat;
+    desc.SampleDesc = SampleDescription();
+    desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+    D3D12_CLEAR_VALUE optClear{};
+    optClear.Format = DepthStencilFormat;
+    optClear.DepthStencil = D3D12_DEPTH_STENCIL_VALUE{1.f, 0};
+
+    CD3DX12_HEAP_PROPERTIES heapProperties = CD3DX12_HEAP_PROPERTIES{D3D12_HEAP_TYPE_DEFAULT};
+
+    HR(device->CreateCommittedResource(
+        &heapProperties, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COMMON, &optClear,
+        IID_PPV_ARGS(m_depthStencilBuffer.ReleaseAndGetAddressOf())));
+
+    device->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr,
+                                   DepthStencilDescriptorHandle());
 }
 
 } // namespace zxultra
