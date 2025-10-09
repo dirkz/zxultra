@@ -7,7 +7,9 @@ add_library(zxultra
 	"Fence.cpp"
 	"Swapchain.h"
 	"Swapchain.cpp"
-	"DescriptorHandleSizes.h")
+	"DescriptorHandleSizes.h"
+	"GraphicsQueue.h"
+	"GraphicsQueue.cpp")
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 

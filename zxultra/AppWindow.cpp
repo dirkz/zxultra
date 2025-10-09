@@ -42,47 +42,15 @@ static ComPtr<ID3D12Device> CreateDevice(IDXGIAdapter *adapter)
     return device;
 }
 
-static ComPtr<ID3D12CommandQueue> CreateCommandQueue(ID3D12Device *device)
-{
-    ComPtr<ID3D12CommandQueue> commandQueue;
-
-    D3D12_COMMAND_QUEUE_DESC queueDesc{};
-    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    HR(device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(commandQueue.GetAddressOf())));
-
-    return commandQueue;
-}
-
-static ComPtr<ID3D12CommandAllocator> CreateCommandAllocator(ID3D12Device *device)
-{
-    ComPtr<ID3D12CommandAllocator> commandAllocator;
-
-    HR(device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
-                                      IID_PPV_ARGS(commandAllocator.GetAddressOf())));
-
-    return commandAllocator;
-}
-
-static ComPtr<ID3D12GraphicsCommandList> CreateGraphicsCommandList(
-    ID3D12Device *device, ID3D12CommandAllocator *commandAllocator)
-{
-    ComPtr<ID3D12GraphicsCommandList> commandList;
-
-    HR(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, nullptr,
-                                 IID_PPV_ARGS(commandList.GetAddressOf())));
-
-    return commandList;
-}
-
 DXWindow::DXWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
-      m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
-      m_commandAllocator{CreateCommandAllocator(m_device.Get())},
-      m_commandList{CreateGraphicsCommandList(m_device.Get(), m_commandAllocator.Get())},
-      m_fence{m_device.Get()}, m_descriptorHandleSizes{m_device.Get()},
-      m_swapchain{m_factory.Get(),     m_device.Get(), m_commandQueue.Get(),
-                  m_commandList.Get(), hwnd,           m_descriptorHandleSizes}
+      m_device{CreateDevice(m_adapter.Get())}, m_graphicsQueue{m_device.Get()},
+      m_descriptorHandleSizes{m_device.Get()}, m_swapchain{m_factory.Get(),
+                                                           m_device.Get(),
+                                                           m_graphicsQueue.CommandQueue(),
+                                                           m_graphicsQueue.CommandList(),
+                                                           hwnd,
+                                                           m_descriptorHandleSizes}
 {
     // sample code for querying features
     CD3DX12FeatureSupport features;
@@ -97,10 +65,8 @@ DXWindow::DXWindow(HWND hwnd)
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
 
     // Wait for the swap chain initialization
-    HR(m_commandList->Close());
-    ID3D12CommandList *commandLists[]{m_commandList.Get()};
-    m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
-    m_fence.SignalAndWait(m_commandQueue.Get());
+    m_graphicsQueue.Execute();
+    m_graphicsQueue.Flush();
 }
 
 void DXWindow::Resize(int width, int height)
@@ -129,38 +95,35 @@ void DXWindow::Update(double elapsedSeconds)
 
 void DXWindow::Draw()
 {
-    HR(m_commandAllocator->Reset());
-    HR(m_commandList->Reset(m_commandAllocator.Get(), nullptr));
+    m_graphicsQueue.Reset();
 
     auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_PRESENT,
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-    m_commandList->ResourceBarrier(1, &transition1);
+    m_graphicsQueue.CommandList()->ResourceBarrier(1, &transition1);
 
-    m_commandList->RSSetViewports(1, &m_viewPort);
-    m_commandList->RSSetScissorRects(1, &m_scissorRect);
+    m_graphicsQueue.CommandList()->RSSetViewports(1, &m_viewPort);
+    m_graphicsQueue.CommandList()->RSSetScissorRects(1, &m_scissorRect);
 
-    m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
-                                         DirectX::Colors::CornflowerBlue, 0, nullptr);
-    m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
-                                         D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
-                                         0, nullptr);
+    m_graphicsQueue.CommandList()->ClearRenderTargetView(
+        m_swapchain.CurrentBackBufferDescriptorHandle(), DirectX::Colors::CornflowerBlue, 0,
+        nullptr);
+    m_graphicsQueue.CommandList()->ClearDepthStencilView(
+        m_swapchain.DepthStencilDescriptorHandle(),
+        D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0, 0, nullptr);
 
     auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET,
                                                             D3D12_RESOURCE_STATE_PRESENT);
 
-    m_commandList->ResourceBarrier(1, &transition2);
+    m_graphicsQueue.CommandList()->ResourceBarrier(1, &transition2);
 
-    HR(m_commandList->Close());
-
-    ID3D12CommandList *commandLists[]{m_commandList.Get()};
-    m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+    m_graphicsQueue.Execute();
 
     m_swapchain.Present();
 
-    m_fence.SignalAndWait(m_commandQueue.Get());
+    m_graphicsQueue.Flush();
 }
 
 void DXWindow::LogAdapters()
