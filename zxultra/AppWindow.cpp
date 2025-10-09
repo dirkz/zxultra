@@ -105,6 +105,17 @@ DXWindow::DXWindow(HWND hwnd)
 
 void DXWindow::Resize(int width, int height)
 {
+    m_viewPort.TopLeftX = 0;
+    m_viewPort.TopLeftY = 0;
+    m_viewPort.Width = static_cast<FLOAT>(width);
+    m_viewPort.Height = static_cast<FLOAT>(height);
+    m_viewPort.MinDepth = 0.f;
+    m_viewPort.MaxDepth = 1.f;
+
+    m_scissorRect.left = 0;
+    m_scissorRect.right = m_swapchain.Width();
+    m_scissorRect.top = 0;
+    m_scissorRect.bottom = m_swapchain.Height();
 }
 
 void DXWindow::Update(double elapsedSeconds)
@@ -122,23 +133,8 @@ void DXWindow::Draw()
 
     m_commandList->ResourceBarrier(1, &transition1);
 
-    D3D12_VIEWPORT viewport{};
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width = static_cast<FLOAT>(m_swapchain.Width());
-    viewport.Height = static_cast<FLOAT>(m_swapchain.Height());
-    viewport.MinDepth = 0.f;
-    viewport.MaxDepth = 1.f;
-
-    m_commandList->RSSetViewports(1, &viewport);
-
-    D3D12_RECT scissorRect{};
-    scissorRect.left = 0;
-    scissorRect.right = m_swapchain.Width();
-    scissorRect.top = 0;
-    scissorRect.bottom = m_swapchain.Height();
-
-    m_commandList->RSSetScissorRects(1, &scissorRect);
+    m_commandList->RSSetViewports(1, &m_viewPort);
+    m_commandList->RSSetScissorRects(1, &m_scissorRect);
 
     m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
                                          DirectX::Colors::CornflowerBlue, 0, nullptr);

@@ -34,6 +34,9 @@ struct DXWindow
 
     DescriptorHandleSizes m_descriptorHandleSizes;
     Swapchain m_swapchain;
+
+    D3D12_VIEWPORT m_viewPort;
+    D3D12_RECT m_scissorRect;
 };
 
 } // namespace zxultra
