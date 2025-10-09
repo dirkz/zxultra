@@ -100,7 +100,6 @@ void DXWindow::Draw()
     auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_PRESENT,
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET);
-
     m_graphicsQueue->ResourceBarrier(1, &transition1);
 
     m_graphicsQueue->RSSetViewports(1, &m_viewPort);
@@ -115,7 +114,6 @@ void DXWindow::Draw()
     auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET,
                                                             D3D12_RESOURCE_STATE_PRESENT);
-
     m_graphicsQueue->ResourceBarrier(1, &transition2);
 
     m_graphicsQueue.Execute();
