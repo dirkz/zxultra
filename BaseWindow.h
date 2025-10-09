@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Timer.h"
+#include "AppWindow.h"
 
 namespace zxultra
 {
@@ -12,8 +13,7 @@ namespace zxultra
 template <class T> struct BaseWindow
 {
     BaseWindow(HINSTANCE hInstance, const std::wstring &windowTitle, int desiredWidth,
-               int desiredHeight, T *appWindow)
-        : m_appWindow{appWindow}
+               int desiredHeight)
     {
         const std::wstring WindowClassName{L"zxultra_class"};
 
@@ -62,7 +62,8 @@ template <class T> struct BaseWindow
 
         m_hwnd = hwnd;
 
-        appWindow->OnHwndCreated(hwnd);
+        m_appWindow.emplace(hwnd);
+        m_appWindow->OnHwndCreated(hwnd);
     }
 
     inline void ShowWindow(int nShowCmd)
@@ -172,7 +173,7 @@ template <class T> struct BaseWindow
 
   private:
     HWND m_hwnd;
-    T *m_appWindow;
+    std::optional<T> m_appWindow;
     Timer m_timer;
 };
 

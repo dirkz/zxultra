@@ -11,6 +11,10 @@ namespace zxultra
 
 struct DXWindow
 {
+    // TODO: Remove this.
+    DXWindow();
+    DXWindow(HWND hwnd);
+
     void OnHwndCreated(HWND hwnd);
     void Resize(int width, int height);
 

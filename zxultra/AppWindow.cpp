@@ -3,6 +3,14 @@
 namespace zxultra
 {
 
+DXWindow::DXWindow()
+{
+}
+
+DXWindow::DXWindow(HWND hwnd)
+{
+}
+
 void DXWindow::OnHwndCreated(HWND hwnd)
 {
 #if defined(_DEBUG)
