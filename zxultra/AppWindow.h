@@ -27,6 +27,8 @@ struct DXWindow
     ComPtr<ID3D12Device> m_device;
 
     ComPtr<ID3D12CommandQueue> m_mainCommandQueue;
+    ComPtr<ID3D12CommandAllocator> m_mainCommandAllocator;
+    ComPtr<ID3D12GraphicsCommandList> m_mainCommandList;
 
     DescriptorHandleSizes m_descriptorHandleSizes;
     Frame m_frame;
