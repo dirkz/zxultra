@@ -15,6 +15,8 @@ struct GraphicsQueue
     void Flush();
     void Reset();
 
+    ID3D12GraphicsCommandList *operator->();
+
     inline ID3D12CommandQueue *CommandQueue() const
     {
         return m_commandQueue.Get();

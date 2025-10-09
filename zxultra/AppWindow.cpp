@@ -101,23 +101,22 @@ void DXWindow::Draw()
                                                             D3D12_RESOURCE_STATE_PRESENT,
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-    m_graphicsQueue.CommandList()->ResourceBarrier(1, &transition1);
+    m_graphicsQueue->ResourceBarrier(1, &transition1);
 
-    m_graphicsQueue.CommandList()->RSSetViewports(1, &m_viewPort);
-    m_graphicsQueue.CommandList()->RSSetScissorRects(1, &m_scissorRect);
+    m_graphicsQueue->RSSetViewports(1, &m_viewPort);
+    m_graphicsQueue->RSSetScissorRects(1, &m_scissorRect);
 
-    m_graphicsQueue.CommandList()->ClearRenderTargetView(
-        m_swapchain.CurrentBackBufferDescriptorHandle(), DirectX::Colors::CornflowerBlue, 0,
-        nullptr);
-    m_graphicsQueue.CommandList()->ClearDepthStencilView(
-        m_swapchain.DepthStencilDescriptorHandle(),
-        D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0, 0, nullptr);
+    m_graphicsQueue->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
+                                           DirectX::Colors::CornflowerBlue, 0, nullptr);
+    m_graphicsQueue->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
+                                           D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f,
+                                           0, 0, nullptr);
 
     auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET,
                                                             D3D12_RESOURCE_STATE_PRESENT);
 
-    m_graphicsQueue.CommandList()->ResourceBarrier(1, &transition2);
+    m_graphicsQueue->ResourceBarrier(1, &transition2);
 
     m_graphicsQueue.Execute();
 

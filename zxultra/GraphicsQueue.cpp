@@ -61,4 +61,9 @@ void GraphicsQueue::Reset()
     HR(m_commandList->Reset(m_commandAllocator.Get(), nullptr));
 }
 
+ID3D12GraphicsCommandList *GraphicsQueue::operator->()
+{
+    return m_commandList.Get();
+}
+
 } // namespace zxultra
