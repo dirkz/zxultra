@@ -63,6 +63,17 @@ DXWindow::DXWindow(HWND hwnd)
       m_device{CreateDevice(m_adapter.Get())},
       m_mainCommandQueue{CreateCommandQueue(m_device.Get())}
 {
+    // sample code for querying features
+    CD3DX12FeatureSupport features;
+    features.Init(m_device.Get());
+    D3D_FEATURE_LEVEL maxFeatureLevel = features.MaxSupportedFeatureLevel();
+    D3D12_RAYTRACING_TIER raytracingTier = features.RaytracingTier();
+
+    // sample code for querying multisampling capabilities
+    constexpr UINT SampleCount = 4;
+    UINT qualityLevels = 0;
+    features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
+                                      D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
 }
 
 void DXWindow::OnHwndCreated(HWND hwnd)
@@ -86,18 +97,6 @@ void DXWindow::OnHwndCreated(HWND hwnd)
                          IID_PPV_ARGS(m_device.GetAddressOf())));
 
     m_descriptorHandleSizes.reset(new DescriptorHandleSizes{m_device.Get()});
-
-    // sample code for querying features
-    CD3DX12FeatureSupport features;
-    features.Init(m_device.Get());
-    D3D_FEATURE_LEVEL maxFeatureLevel = features.MaxSupportedFeatureLevel();
-    D3D12_RAYTRACING_TIER raytracingTier = features.RaytracingTier();
-
-    // sample code for querying multisampling capabilities
-    constexpr UINT SampleCount = 4;
-    UINT qualityLevels = 0;
-    features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
-                                      D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
 
     D3D12_COMMAND_QUEUE_DESC queueDesc{};
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
