@@ -46,9 +46,22 @@ static ComPtr<ID3D12Device> CreateDevice(IDXGIAdapter *adapter)
     return device;
 }
 
+static ComPtr<ID3D12CommandQueue> CreateCommandQueue(ID3D12Device *device)
+{
+    ComPtr<ID3D12CommandQueue> commandQueue;
+
+    D3D12_COMMAND_QUEUE_DESC queueDesc{};
+    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    HR(device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(commandQueue.GetAddressOf())));
+
+    return commandQueue;
+}
+
 DXWindow::DXWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
-      m_device{CreateDevice(m_adapter.Get())}
+      m_device{CreateDevice(m_adapter.Get())},
+      m_mainCommandQueue{CreateCommandQueue(m_device.Get())}
 {
 }
 
