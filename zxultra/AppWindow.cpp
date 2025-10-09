@@ -156,6 +156,9 @@ void DXWindow::Draw()
 
     ID3D12CommandList *commandLists[]{m_commandList.Get()};
     m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+
+    m_swapchain.Present();
+
     m_fence.SignalAndWait(m_commandQueue.Get());
 }
 

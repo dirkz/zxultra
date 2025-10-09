@@ -108,4 +108,10 @@ ID3D12Resource *Swapchain::CurrentBackBufferResource() const
     return m_buffers[m_currentBackBufferIndex].Get();
 }
 
+void Swapchain::Present()
+{
+    HR(m_swapchain->Present(0, 0));
+    m_currentBackBufferIndex = (m_currentBackBufferIndex + 1) % BufferCount;
+}
+
 } // namespace zxultra

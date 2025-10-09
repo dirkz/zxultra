@@ -38,6 +38,8 @@ struct Swapchain
 
     ID3D12Resource *CurrentBackBufferResource() const;
 
+    void Present();
+
   private:
     ComPtr<IDXGISwapChain1> m_swapchain;
 
