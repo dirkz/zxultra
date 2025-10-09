@@ -103,4 +103,9 @@ void Swapchain::CreateDepthStencilBufferAndView(ID3D12Device *device,
     commandList->ResourceBarrier(1, &resourceBarrier);
 }
 
+ID3D12Resource *Swapchain::CurrentBackBufferResource() const
+{
+    return m_buffers[m_currentBackBufferIndex].Get();
+}
+
 } // namespace zxultra

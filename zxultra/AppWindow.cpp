@@ -96,6 +96,10 @@ DXWindow::DXWindow(HWND hwnd)
     features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
 
+    // Wait for the swap chain initialization
+    HR(m_commandList->Close());
+    ID3D12CommandList *commandLists[]{m_commandList.Get()};
+    m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
     m_fence.SignalAndWait(m_commandQueue.Get());
 }
 
@@ -109,6 +113,50 @@ void DXWindow::Update(double elapsedSeconds)
 
 void DXWindow::Draw()
 {
+    HR(m_commandAllocator->Reset());
+    HR(m_commandList->Reset(m_commandAllocator.Get(), nullptr));
+
+    auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
+                                                            D3D12_RESOURCE_STATE_PRESENT,
+                                                            D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+    m_commandList->ResourceBarrier(1, &transition1);
+
+    D3D12_VIEWPORT viewport{};
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = static_cast<FLOAT>(m_swapchain.Width());
+    viewport.Height = static_cast<FLOAT>(m_swapchain.Height());
+    viewport.MinDepth = 0.f;
+    viewport.MaxDepth = 1.f;
+
+    m_commandList->RSSetViewports(1, &viewport);
+
+    D3D12_RECT scissorRect{};
+    scissorRect.left = 0;
+    scissorRect.right = m_swapchain.Width();
+    scissorRect.top = 0;
+    scissorRect.bottom = m_swapchain.Height();
+
+    m_commandList->RSSetScissorRects(1, &scissorRect);
+
+    m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
+                                         DirectX::Colors::CornflowerBlue, 0, nullptr);
+    m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
+                                         D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
+                                         0, nullptr);
+
+    auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
+                                                            D3D12_RESOURCE_STATE_RENDER_TARGET,
+                                                            D3D12_RESOURCE_STATE_PRESENT);
+
+    m_commandList->ResourceBarrier(1, &transition2);
+
+    HR(m_commandList->Close());
+
+    ID3D12CommandList *commandLists[]{m_commandList.Get()};
+    m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+    m_fence.SignalAndWait(m_commandQueue.Get());
 }
 
 void DXWindow::LogAdapters()

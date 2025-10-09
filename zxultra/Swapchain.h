@@ -36,6 +36,8 @@ struct Swapchain
     void CreateDepthStencilBufferAndView(ID3D12Device *device,
                                          ID3D12GraphicsCommandList *commandList);
 
+    ID3D12Resource *CurrentBackBufferResource() const;
+
   private:
     ComPtr<IDXGISwapChain1> m_swapchain;
 
