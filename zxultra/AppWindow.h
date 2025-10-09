@@ -11,11 +11,8 @@ namespace zxultra
 
 struct DXWindow
 {
-    // TODO: Remove this.
-    DXWindow();
     DXWindow(HWND hwnd);
 
-    void OnHwndCreated(HWND hwnd);
     void Resize(int width, int height);
 
     void Update(double elapsedSeconds);
@@ -29,12 +26,11 @@ struct DXWindow
     ComPtr<IDXGIAdapter1> m_adapter;
     ComPtr<ID3D12Device> m_device;
 
-    std::unique_ptr<DescriptorHandleSizes> m_descriptorHandleSizes;
-
     ComPtr<ID3D12CommandQueue> m_mainCommandQueue;
 
-    std::unique_ptr<Frame> m_frame;
-    std::unique_ptr<Swapchain> m_swapchain;
+    DescriptorHandleSizes m_descriptorHandleSizes;
+    Frame m_frame;
+    Swapchain m_swapchain;
 };
 
 } // namespace zxultra

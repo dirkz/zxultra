@@ -63,7 +63,6 @@ template <class T> struct BaseWindow
         m_hwnd = hwnd;
 
         m_appWindow.emplace(hwnd);
-        m_appWindow->OnHwndCreated(hwnd);
     }
 
     inline void ShowWindow(int nShowCmd)

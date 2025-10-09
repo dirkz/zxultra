@@ -3,10 +3,6 @@
 namespace zxultra
 {
 
-DXWindow::DXWindow()
-{
-}
-
 static ComPtr<IDXGIFactory2> CreateFactory()
 {
 
@@ -61,7 +57,9 @@ static ComPtr<ID3D12CommandQueue> CreateCommandQueue(ID3D12Device *device)
 DXWindow::DXWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())},
-      m_mainCommandQueue{CreateCommandQueue(m_device.Get())}
+      m_mainCommandQueue{CreateCommandQueue(m_device.Get())},
+      m_descriptorHandleSizes{m_device.Get()}, m_frame{m_device.Get()},
+      m_swapchain{m_factory.Get(), m_mainCommandQueue.Get(), hwnd}
 {
     // sample code for querying features
     CD3DX12FeatureSupport features;
@@ -74,37 +72,6 @@ DXWindow::DXWindow(HWND hwnd)
     UINT qualityLevels = 0;
     features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
-}
-
-void DXWindow::OnHwndCreated(HWND hwnd)
-{
-#if defined(_DEBUG)
-    // Enable the D3D12 debug layer.
-    {
-
-        ComPtr<ID3D12Debug> debugController;
-        if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-        {
-            debugController->EnableDebugLayer();
-        }
-    }
-#endif
-
-    HR(CreateDXGIFactory1(IID_PPV_ARGS(m_factory.GetAddressOf())));
-    HR(m_factory->EnumAdapters1(0, m_adapter.GetAddressOf()));
-
-    HR(D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0,
-                         IID_PPV_ARGS(m_device.GetAddressOf())));
-
-    m_descriptorHandleSizes.reset(new DescriptorHandleSizes{m_device.Get()});
-
-    D3D12_COMMAND_QUEUE_DESC queueDesc{};
-    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    HR(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(m_mainCommandQueue.GetAddressOf())));
-
-    m_frame.reset(new Frame{m_device.Get()});
-    m_swapchain.reset(new Swapchain{m_factory.Get(), m_mainCommandQueue.Get(), hwnd});
 }
 
 void DXWindow::Resize(int width, int height)
