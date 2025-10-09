@@ -79,9 +79,9 @@ void DXWindow::Resize(int width, int height)
     m_viewPort.MaxDepth = 1.f;
 
     m_scissorRect.left = 0;
-    m_scissorRect.right = m_swapchain.Width();
+    m_scissorRect.right = width;
     m_scissorRect.top = 0;
-    m_scissorRect.bottom = m_swapchain.Height();
+    m_scissorRect.bottom = height;
 
     if (width != m_swapchain.Width() || height != m_swapchain.Height())
     {
