@@ -5,8 +5,6 @@ add_library(zxultra
 	"Error.h"
 	"Fence.h"
 	"Fence.cpp"
-	"Frame.h"
-	"Frame.cpp"
 	"Swapchain.h"
 	"Swapchain.cpp"
 	"DescriptorHandleSizes.h")
