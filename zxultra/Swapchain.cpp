@@ -3,8 +3,9 @@
 namespace zxultra
 {
 
-Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *queue,
-                     HWND hwnd, DescriptorHandleSizes &descriptorHandleSizes)
+Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *commandQueue,
+                     ID3D12GraphicsCommandList *commandList, HWND hwnd,
+                     DescriptorHandleSizes &descriptorHandleSizes)
     : m_descriptorHandleSizes{descriptorHandleSizes}
 {
     DXGI_SWAP_CHAIN_DESC1 desc{};
@@ -14,7 +15,7 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12Command
     desc.BufferCount = BufferCount;
     desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
-    HR(factory->CreateSwapChainForHwnd(queue, hwnd, &desc, nullptr, nullptr,
+    HR(factory->CreateSwapChainForHwnd(commandQueue, hwnd, &desc, nullptr, nullptr,
                                        m_swapchain.GetAddressOf()));
 
     HR(m_swapchain->GetDesc1(&desc));
@@ -31,7 +32,7 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12Command
     HR(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(m_dsvDescriptorHeap.GetAddressOf())));
 
     CreateBuffers(device);
-    CreateDepthStencilBufferAndView(device);
+    CreateDepthStencilBufferAndView(device, commandList);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferDescriptorHandle() const
@@ -68,7 +69,8 @@ void Swapchain::CreateBuffers(ID3D12Device *device)
     }
 }
 
-void Swapchain::CreateDepthStencilBufferAndView(ID3D12Device *device)
+void Swapchain::CreateDepthStencilBufferAndView(ID3D12Device *device,
+                                                ID3D12GraphicsCommandList *commandList)
 {
     D3D12_RESOURCE_DESC desc{};
     desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;

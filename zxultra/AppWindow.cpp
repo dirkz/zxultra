@@ -82,8 +82,8 @@ DXWindow::DXWindow(HWND hwnd)
       m_mainCommandAllocator{CreateCommandAllocator(m_device.Get())},
       m_mainCommandList{CreateGraphicsCommandList(m_device.Get(), m_mainCommandAllocator.Get())},
       m_descriptorHandleSizes{m_device.Get()}, m_frame{m_device.Get()},
-      m_swapchain{m_factory.Get(), m_device.Get(), m_mainCommandQueue.Get(), hwnd,
-                  m_descriptorHandleSizes}
+      m_swapchain{m_factory.Get(),         m_device.Get(), m_mainCommandQueue.Get(),
+                  m_mainCommandList.Get(), hwnd,           m_descriptorHandleSizes}
 {
     // sample code for querying features
     CD3DX12FeatureSupport features;

@@ -13,7 +13,8 @@ constexpr UINT BufferCount = 2;
 
 struct Swapchain
 {
-    Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *queue, HWND hwnd,
+    Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *commandQueue,
+              ID3D12GraphicsCommandList *commandList, HWND hwnd,
               DescriptorHandleSizes &descriptorHandleSizes);
 
     UINT Width() const
@@ -32,7 +33,8 @@ struct Swapchain
     DXGI_SAMPLE_DESC SampleDescription() const;
 
     void CreateBuffers(ID3D12Device *device);
-    void CreateDepthStencilBufferAndView(ID3D12Device *device);
+    void CreateDepthStencilBufferAndView(ID3D12Device *device,
+                                         ID3D12GraphicsCommandList *commandList);
 
   private:
     ComPtr<IDXGISwapChain1> m_swapchain;
