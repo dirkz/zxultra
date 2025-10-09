@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 
+#include "DescriptorHandleSizes.h"
 #include "Frame.h"
 #include "Swapchain.h"
 
@@ -23,6 +24,8 @@ struct DXWindow
     ComPtr<IDXGIFactory2> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
     ComPtr<ID3D12Device> m_device;
+
+    std::unique_ptr<DescriptorHandleSizes> m_descriptorHandleSizes;
 
     ComPtr<ID3D12CommandQueue> m_mainCommandQueue;
 

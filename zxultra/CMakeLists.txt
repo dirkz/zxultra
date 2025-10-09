@@ -8,7 +8,8 @@ add_library(zxultra
 	"Frame.h"
 	"Frame.cpp"
 	"Swapchain.h"
-	"Swapchain.cpp")
+	"Swapchain.cpp"
+	"DescriptorHandleSizes.h")
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 

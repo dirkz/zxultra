@@ -23,6 +23,8 @@ void DXWindow::OnHwndCreated(HWND hwnd)
     HR(D3D12CreateDevice(m_adapter.Get(), D3D_FEATURE_LEVEL_11_0,
                          IID_PPV_ARGS(m_device.GetAddressOf())));
 
+    m_descriptorHandleSizes.reset(new DescriptorHandleSizes{m_device.Get()});
+
     // sample code for querying features
     CD3DX12FeatureSupport features;
     features.Init(m_device.Get());
