@@ -3,6 +3,7 @@
 #include "stdafx.h"
 
 #include "DescriptorHandleSizes.h"
+#include "Fence.h"
 #include "Swapchain.h"
 
 namespace zxultra
@@ -28,6 +29,8 @@ struct DXWindow
     ComPtr<ID3D12CommandQueue> m_commandQueue;
     ComPtr<ID3D12CommandAllocator> m_commandAllocator;
     ComPtr<ID3D12GraphicsCommandList> m_commandList;
+
+    Fence m_fence;
 
     DescriptorHandleSizes m_descriptorHandleSizes;
     Swapchain m_swapchain;

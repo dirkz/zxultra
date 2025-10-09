@@ -9,6 +9,8 @@ struct Fence
 {
     Fence(ID3D12Device *device);
 
+    void SignalAndWait(ID3D12CommandQueue *commandQueue);
+
   private:
     UINT64 m_value = 0;
     ComPtr<ID3D12Fence1> m_fence;

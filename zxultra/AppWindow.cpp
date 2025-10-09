@@ -80,7 +80,7 @@ DXWindow::DXWindow(HWND hwnd)
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
       m_commandAllocator{CreateCommandAllocator(m_device.Get())},
       m_commandList{CreateGraphicsCommandList(m_device.Get(), m_commandAllocator.Get())},
-      m_descriptorHandleSizes{m_device.Get()},
+      m_fence{m_device.Get()}, m_descriptorHandleSizes{m_device.Get()},
       m_swapchain{m_factory.Get(),     m_device.Get(), m_commandQueue.Get(),
                   m_commandList.Get(), hwnd,           m_descriptorHandleSizes}
 {
@@ -95,6 +95,8 @@ DXWindow::DXWindow(HWND hwnd)
     UINT qualityLevels = 0;
     features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
+
+    m_fence.SignalAndWait(m_commandQueue.Get());
 }
 
 void DXWindow::Resize(int width, int height)
