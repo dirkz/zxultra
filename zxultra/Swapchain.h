@@ -2,6 +2,8 @@
 
 #include "stdafx.h"
 
+#include "DescriptorHandleSizes.h"
+
 namespace zxultra
 {
 
@@ -11,7 +13,8 @@ constexpr UINT BufferCount = 2;
 
 struct Swapchain
 {
-    Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *queue, HWND hwnd);
+    Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *queue, HWND hwnd,
+              DescriptorHandleSizes &descriptorHandleSizes);
 
     UINT Width() const
     {
@@ -23,6 +26,9 @@ struct Swapchain
         return m_height;
     }
 
+    D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferDescriptorHandle() const;
+    D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilDescriptorHandle() const;
+
   private:
     ComPtr<IDXGISwapChain1> m_swapchain;
 
@@ -31,6 +37,10 @@ struct Swapchain
 
     ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap;
     ComPtr<ID3D12DescriptorHeap> m_dsvDescriptorHeap;
+
+    INT m_currentBackBufferIndex = 0;
+
+    DescriptorHandleSizes m_descriptorHandleSizes;
 };
 
 } // namespace zxultra
