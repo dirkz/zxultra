@@ -59,7 +59,7 @@ DXWindow::DXWindow(HWND hwnd)
       m_device{CreateDevice(m_adapter.Get())},
       m_mainCommandQueue{CreateCommandQueue(m_device.Get())},
       m_descriptorHandleSizes{m_device.Get()}, m_frame{m_device.Get()},
-      m_swapchain{m_factory.Get(), m_mainCommandQueue.Get(), hwnd}
+      m_swapchain{m_factory.Get(), m_device.Get(), m_mainCommandQueue.Get(), hwnd}
 {
     // sample code for querying features
     CD3DX12FeatureSupport features;

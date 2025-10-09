@@ -11,7 +11,7 @@ constexpr UINT BufferCount = 2;
 
 struct Swapchain
 {
-    Swapchain(IDXGIFactory2 *factory, ID3D12CommandQueue *queue, HWND hwnd);
+    Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *queue, HWND hwnd);
 
     UINT Width() const
     {
@@ -28,6 +28,9 @@ struct Swapchain
 
     UINT m_width;
     UINT m_height;
+
+    ComPtr<ID3D12DescriptorHeap> m_rtvDescriptorHeap;
+    ComPtr<ID3D12DescriptorHeap> m_dsvDescriptorHeap;
 };
 
 } // namespace zxultra
