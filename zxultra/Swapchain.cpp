@@ -88,7 +88,7 @@ void Swapchain::CreateDepthStencilBufferAndView(ID3D12Device *device,
     optClear.Format = DepthStencilFormat;
     optClear.DepthStencil = D3D12_DEPTH_STENCIL_VALUE{1.f, 0};
 
-    CD3DX12_HEAP_PROPERTIES heapProperties = CD3DX12_HEAP_PROPERTIES{D3D12_HEAP_TYPE_DEFAULT};
+    auto heapProperties = CD3DX12_HEAP_PROPERTIES{D3D12_HEAP_TYPE_DEFAULT};
 
     HR(device->CreateCommittedResource(
         &heapProperties, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COMMON, &optClear,
@@ -96,6 +96,11 @@ void Swapchain::CreateDepthStencilBufferAndView(ID3D12Device *device,
 
     device->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr,
                                    DepthStencilDescriptorHandle());
+
+    auto resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        m_depthStencilBuffer.Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
+
+    commandList->ResourceBarrier(1, &resourceBarrier);
 }
 
 } // namespace zxultra
