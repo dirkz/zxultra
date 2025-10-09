@@ -13,7 +13,7 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12CommandQueue *queue, HWND hwn
     desc.Format = BackBufferFormat;
     desc.SampleDesc = sampleDesc;
     desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    desc.BufferCount = 2;
+    desc.BufferCount = BufferCount;
     desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
     HR(factory->CreateSwapChainForHwnd(queue, hwnd, &desc, nullptr, nullptr,
