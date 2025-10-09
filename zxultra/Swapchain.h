@@ -29,6 +29,8 @@ struct Swapchain
     D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferDescriptorHandle() const;
     D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilDescriptorHandle() const;
 
+    void CreateBuffers(ID3D12Device *device);
+
   private:
     ComPtr<IDXGISwapChain1> m_swapchain;
 
@@ -41,6 +43,8 @@ struct Swapchain
     INT m_currentBackBufferIndex = 0;
 
     DescriptorHandleSizes m_descriptorHandleSizes;
+
+    std::array<ComPtr<ID3D12Resource>, BufferCount> m_buffers;
 };
 
 } // namespace zxultra

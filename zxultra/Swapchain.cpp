@@ -33,6 +33,8 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12Command
     heapDesc.NumDescriptors = 1;
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     HR(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(m_dsvDescriptorHeap.GetAddressOf())));
+
+    CreateBuffers(device);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferDescriptorHandle() const
@@ -45,6 +47,19 @@ D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferDescriptorHandle() const
 D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::DepthStencilDescriptorHandle() const
 {
     return m_dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+void Swapchain::CreateBuffers(ID3D12Device *device)
+{
+    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle{
+        m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart()};
+
+    for (auto i = 0; i < BufferCount; ++i)
+    {
+        HR(m_swapchain->GetBuffer(i, IID_PPV_ARGS(m_buffers[i].ReleaseAndGetAddressOf())));
+        device->CreateRenderTargetView(m_buffers[i].Get(), nullptr, rtvHeapHandle);
+        rtvHeapHandle.Offset(1, m_descriptorHandleSizes.RtvDescriptorHandleIncrementSize());
+    }
 }
 
 } // namespace zxultra
