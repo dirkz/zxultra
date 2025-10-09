@@ -20,6 +20,8 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12CommandQueue *queue, HWND hwn
                                        m_swapchain.GetAddressOf()));
 
     HR(m_swapchain->GetDesc1(&desc));
+    m_width = desc.Width;
+    m_height = desc.Height;
 }
 
 } // namespace zxultra

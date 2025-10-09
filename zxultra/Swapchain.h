@@ -13,8 +13,21 @@ struct Swapchain
 {
     Swapchain(IDXGIFactory2 *factory, ID3D12CommandQueue *queue, HWND hwnd);
 
+    UINT Width() const
+    {
+        return m_width;
+    }
+
+    UINT Height() const
+    {
+        return m_height;
+    }
+
   private:
     ComPtr<IDXGISwapChain1> m_swapchain;
+
+    UINT m_width;
+    UINT m_height;
 };
 
 } // namespace zxultra
