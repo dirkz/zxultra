@@ -2,9 +2,8 @@
 
 #include <string>
 
-#include "BaseWindow.h"
-
 #include "AppWindow.h"
+#include "BaseWindow.h"
 
 using namespace zxultra;
 
