@@ -126,6 +126,8 @@ void Swapchain::Resize(int width, int height, ID3D12Device *device,
 
     CreateBuffers(device);
     CreateDepthStencilBufferAndView(device, commandList);
+
+    m_currentBackBufferIndex = 0;
 }
 
 } // namespace zxultra

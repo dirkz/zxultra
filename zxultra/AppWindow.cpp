@@ -71,26 +71,27 @@ DXWindow::DXWindow(HWND hwnd)
 
 void DXWindow::Resize(int width, int height)
 {
-    m_viewPort.TopLeftX = 0;
-    m_viewPort.TopLeftY = 0;
-    m_viewPort.Width = static_cast<FLOAT>(width);
-    m_viewPort.Height = static_cast<FLOAT>(height);
-    m_viewPort.MinDepth = 0.f;
-    m_viewPort.MaxDepth = 1.f;
-
-    m_scissorRect.left = 0;
-    m_scissorRect.right = width;
-    m_scissorRect.top = 0;
-    m_scissorRect.bottom = height;
-
     if (width != m_swapchain.Width() || height != m_swapchain.Height())
     {
         m_graphicsQueue.Flush();
-		m_graphicsQueue.Reset();
+
+        m_viewPort.TopLeftX = 0;
+        m_viewPort.TopLeftY = 0;
+        m_viewPort.Width = static_cast<FLOAT>(width);
+        m_viewPort.Height = static_cast<FLOAT>(height);
+        m_viewPort.MinDepth = 0.f;
+        m_viewPort.MaxDepth = 1.f;
+
+        m_scissorRect.left = 0;
+        m_scissorRect.right = width;
+        m_scissorRect.top = 0;
+        m_scissorRect.bottom = height;
+
+        m_graphicsQueue.Reset();
 
         m_swapchain.Resize(width, height, m_device.Get(), m_graphicsQueue.CommandList());
 
-        m_graphicsQueue.Flush();
+        m_graphicsQueue.Execute();
     }
 }
 
@@ -100,6 +101,8 @@ void DXWindow::Update(double elapsedSeconds)
 
 void DXWindow::Draw()
 {
+    m_graphicsQueue.Flush();
+
     m_graphicsQueue.Reset();
 
     auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
@@ -124,8 +127,6 @@ void DXWindow::Draw()
     m_graphicsQueue.Execute();
 
     m_swapchain.Present();
-
-    m_graphicsQueue.Flush();
 }
 
 void DXWindow::LogAdapters()
