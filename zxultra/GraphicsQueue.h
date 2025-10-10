@@ -11,6 +11,9 @@ struct GraphicsQueue
 {
     GraphicsQueue(ID3D12Device *device);
 
+    /// <summary>
+    /// Executes the command list.
+    /// </summary>
     void Execute();
 
     /// <summary>
@@ -18,6 +21,9 @@ struct GraphicsQueue
     /// </summary>
     void Flush();
 
+    /// <summary>
+    /// Resets the command list and allocator.
+    /// </summary>
     void Reset();
 
     ID3D12GraphicsCommandList *operator->();
