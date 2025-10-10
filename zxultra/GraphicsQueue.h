@@ -12,7 +12,12 @@ struct GraphicsQueue
     GraphicsQueue(ID3D12Device *device);
 
     void Execute();
+
+    /// <summary>
+    /// Flush the command queue.
+    /// </summary>
     void Flush();
+
     void Reset();
 
     ID3D12GraphicsCommandList *operator->();

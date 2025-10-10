@@ -117,6 +117,7 @@ void Swapchain::Present()
 void Swapchain::Resize(int width, int height, ID3D12Device *device,
                        ID3D12GraphicsCommandList *commandList)
 {
+    // Have to release all buffers up-front, before the swap chain resize
     for (auto i = 0; i < BufferCount; ++i)
     {
         m_buffers[i].Reset();
