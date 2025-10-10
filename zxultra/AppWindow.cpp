@@ -42,7 +42,7 @@ static ComPtr<ID3D12Device> CreateDevice(IDXGIAdapter *adapter)
     return device;
 }
 
-DXWindow::DXWindow(HWND hwnd)
+AppWindow::AppWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())}, m_graphicsQueue{m_device.Get()},
       m_descriptorHandleSizes{m_device.Get()}, m_swapchain{m_factory.Get(),
@@ -69,7 +69,7 @@ DXWindow::DXWindow(HWND hwnd)
     m_graphicsQueue.Flush();
 }
 
-void DXWindow::Resize(int width, int height)
+void AppWindow::Resize(int width, int height)
 {
     if (width != m_swapchain.Width() || height != m_swapchain.Height())
     {
@@ -95,11 +95,11 @@ void DXWindow::Resize(int width, int height)
     }
 }
 
-void DXWindow::Update(double elapsedSeconds)
+void AppWindow::Update(double elapsedSeconds)
 {
 }
 
-void DXWindow::Draw()
+void AppWindow::Draw()
 {
     m_graphicsQueue.Flush();
 
@@ -129,12 +129,12 @@ void DXWindow::Draw()
     m_swapchain.Present();
 }
 
-void DXWindow::WillShutdown()
+void AppWindow::WillShutdown()
 {
     m_graphicsQueue.Flush();
 }
 
-void DXWindow::LogAdapters()
+void AppWindow::LogAdapters()
 {
     ComPtr<IDXGIFactory1> factory;
     HR(CreateDXGIFactory1(IID_PPV_ARGS(factory.GetAddressOf())));
@@ -155,7 +155,7 @@ void DXWindow::LogAdapters()
     }
 }
 
-void DXWindow::LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter)
+void AppWindow::LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter)
 {
     UINT i = 0;
     ComPtr<IDXGIOutput> output;

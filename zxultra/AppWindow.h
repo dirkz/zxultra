@@ -10,9 +10,9 @@
 namespace zxultra
 {
 
-struct DXWindow
+struct AppWindow
 {
-    DXWindow(HWND hwnd);
+    AppWindow(HWND hwnd);
 
     void Resize(int width, int height);
 
