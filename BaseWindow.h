@@ -103,6 +103,11 @@ template <class T> struct BaseWindow
         m_appWindow->Draw();
     }
 
+    inline void WillShutdown()
+    {
+        m_appWindow->WillShutdown();
+    }
+
     inline void Resize(int width, int height)
     {
         m_appWindow->Resize(width, height);
@@ -122,6 +127,7 @@ template <class T> struct BaseWindow
                 return 0;
 
             case WM_DESTROY:
+                baseWindow->WillShutdown();
                 PostQuitMessage(0);
                 return 0;
 

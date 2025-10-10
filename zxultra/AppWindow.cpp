@@ -129,6 +129,11 @@ void DXWindow::Draw()
     m_swapchain.Present();
 }
 
+void DXWindow::WillShutdown()
+{
+    m_graphicsQueue.Flush();
+}
+
 void DXWindow::LogAdapters()
 {
     ComPtr<IDXGIFactory1> factory;

@@ -19,6 +19,8 @@ struct DXWindow
     void Update(double elapsedSeconds);
     void Draw();
 
+    void WillShutdown();
+
     void LogAdapters();
     void LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter);
 
