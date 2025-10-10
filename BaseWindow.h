@@ -87,11 +87,6 @@ template <class T> struct BaseWindow
         m_timer.Start();
     }
 
-    inline void OnHwndCreated(HWND hwnd)
-    {
-        m_appWindow->OnHwndCreated(hwnd);
-    }
-
     inline void Update()
     {
         double elapsedSeconds = m_timer.ElapsedSeconds();
