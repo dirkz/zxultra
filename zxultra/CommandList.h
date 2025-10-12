@@ -26,7 +26,10 @@ struct CommandList
     /// </summary>
     void Reset();
 
-    ID3D12GraphicsCommandList *operator->();
+    inline ID3D12GraphicsCommandList *operator->()
+    {
+        return m_commandList.Get();
+    }
 
     inline ID3D12CommandAllocator *CommandAllocator() const
     {

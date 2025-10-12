@@ -48,9 +48,4 @@ void CommandList::Reset()
     HR(m_commandList->Reset(m_commandAllocator.Get(), nullptr));
 }
 
-ID3D12GraphicsCommandList *CommandList::operator->()
-{
-    return m_commandList.Get();
-}
-
 } // namespace zxultra
