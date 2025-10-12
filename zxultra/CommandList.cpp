@@ -26,7 +26,7 @@ static ComPtr<ID3D12GraphicsCommandList> CreateGraphicsCommandList(
 
 CommandList::CommandList(ID3D12Device *device)
     : m_commandAllocator{CreateCommandAllocator(device)},
-      m_commandList{CreateGraphicsCommandList(device, m_commandAllocator.Get())}, m_fence{device}
+      m_commandList{CreateGraphicsCommandList(device, m_commandAllocator.Get())}
 {
 }
 

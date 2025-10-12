@@ -44,7 +44,6 @@ struct CommandList
   private:
     ComPtr<ID3D12CommandAllocator> m_commandAllocator;
     ComPtr<ID3D12GraphicsCommandList> m_commandList;
-    Fence m_fence;
 };
 
 } // namespace zxultra
