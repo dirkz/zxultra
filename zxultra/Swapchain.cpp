@@ -3,6 +3,15 @@
 namespace zxultra
 {
 
+DXGI_SAMPLE_DESC Swapchain::SampleDescription()
+{
+    DXGI_SAMPLE_DESC sampleDesc{};
+    sampleDesc.Count = 1;
+    sampleDesc.Quality = 0;
+
+    return sampleDesc;
+}
+
 Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *commandQueue,
                      ID3D12GraphicsCommandList *commandList, HWND hwnd,
                      DescriptorHandleSizes &descriptorHandleSizes)
@@ -33,27 +42,6 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12Command
 
     CreateBuffers(device);
     CreateDepthStencilBufferAndView(device, commandList);
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferDescriptorHandle() const
-{
-    return CD3DX12_CPU_DESCRIPTOR_HANDLE{
-        m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), m_currentBackBufferIndex,
-        m_descriptorHandleSizes.RtvDescriptorHandleIncrementSize()};
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::DepthStencilDescriptorHandle() const
-{
-    return m_dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-}
-
-DXGI_SAMPLE_DESC Swapchain::SampleDescription() const
-{
-    DXGI_SAMPLE_DESC sampleDesc{};
-    sampleDesc.Count = 1;
-    sampleDesc.Quality = 0;
-
-    return sampleDesc;
 }
 
 void Swapchain::CreateBuffers(ID3D12Device *device)
@@ -103,11 +91,6 @@ void Swapchain::CreateDepthStencilBufferAndView(ID3D12Device *device,
     commandList->ResourceBarrier(1, &resourceBarrier);
 }
 
-ID3D12Resource *Swapchain::CurrentBackBufferResource() const
-{
-    return m_buffers[m_currentBackBufferIndex].Get();
-}
-
 void Swapchain::Present()
 {
     HR(m_swapchain->Present(0, 0));
@@ -129,6 +112,23 @@ void Swapchain::Resize(int width, int height, ID3D12Device *device,
     CreateDepthStencilBufferAndView(device, commandList);
 
     m_currentBackBufferIndex = 0;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferDescriptorHandle() const
+{
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE{
+        m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), m_currentBackBufferIndex,
+        m_descriptorHandleSizes.RtvDescriptorHandleIncrementSize()};
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::DepthStencilDescriptorHandle() const
+{
+    return m_dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+ID3D12Resource *Swapchain::CurrentBackBufferResource() const
+{
+    return m_buffers[m_currentBackBufferIndex].Get();
 }
 
 } // namespace zxultra
