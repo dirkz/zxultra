@@ -7,9 +7,9 @@
 namespace zxultra
 {
 
-struct GraphicsQueue
+struct CommandList
 {
-    GraphicsQueue(ID3D12Device *device, ID3D12CommandQueue *commandQueue);
+    CommandList(ID3D12Device *device, ID3D12CommandQueue *commandQueue);
 
     /// <summary>
     /// Executes the command list.
@@ -38,7 +38,7 @@ struct GraphicsQueue
         return m_commandAllocator.Get();
     }
 
-    inline ID3D12GraphicsCommandList *CommandList() const
+    inline ID3D12GraphicsCommandList *GetCommandList() const
     {
         return m_commandList.Get();
     }

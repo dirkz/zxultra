@@ -1,4 +1,4 @@
-#include "GraphicsQueue.h"
+#include "CommandList.h"
 
 namespace zxultra
 {
@@ -24,31 +24,31 @@ static ComPtr<ID3D12GraphicsCommandList> CreateGraphicsCommandList(
     return commandList;
 }
 
-GraphicsQueue::GraphicsQueue(ID3D12Device *device, ID3D12CommandQueue *commandQueue)
+CommandList::CommandList(ID3D12Device *device, ID3D12CommandQueue *commandQueue)
     : m_commandQueue{commandQueue}, m_commandAllocator{CreateCommandAllocator(device)},
       m_commandList{CreateGraphicsCommandList(device, m_commandAllocator.Get())}, m_fence{device}
 {
 }
 
-void GraphicsQueue::Execute()
+void CommandList::Execute()
 {
     HR(m_commandList->Close());
     ID3D12CommandList *commandLists[]{m_commandList.Get()};
     m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 }
 
-void GraphicsQueue::Flush()
+void CommandList::Flush()
 {
     m_fence.SignalAndWait(CommandQueue());
 }
 
-void GraphicsQueue::Reset()
+void CommandList::Reset()
 {
     HR(m_commandAllocator->Reset());
     HR(m_commandList->Reset(m_commandAllocator.Get(), nullptr));
 }
 
-ID3D12GraphicsCommandList *GraphicsQueue::operator->()
+ID3D12GraphicsCommandList *CommandList::operator->()
 {
     return m_commandList.Get();
 }

@@ -57,13 +57,13 @@ static ComPtr<ID3D12CommandQueue> CreateCommandQueue(ID3D12Device *device)
 AppWindow::AppWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
-      m_graphicsQueue{m_device.Get(), m_commandQueue.Get()},
-      m_descriptorHandleSizes{m_device.Get()}, m_swapchain{m_factory.Get(),
-                                                           m_device.Get(),
-                                                           m_graphicsQueue.CommandQueue(),
-                                                           m_graphicsQueue.CommandList(),
-                                                           hwnd,
-                                                           m_descriptorHandleSizes}
+      m_commandList{m_device.Get(), m_commandQueue.Get()}, m_descriptorHandleSizes{m_device.Get()},
+      m_swapchain{m_factory.Get(),
+                  m_device.Get(),
+                  m_commandQueue.Get(),
+                  m_commandList.GetCommandList(),
+                  hwnd,
+                  m_descriptorHandleSizes}
 {
     // sample code for querying features
     CD3DX12FeatureSupport features;
@@ -78,15 +78,15 @@ AppWindow::AppWindow(HWND hwnd)
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
 
     // Wait for the swap chain initialization
-    m_graphicsQueue.Execute();
-    m_graphicsQueue.Flush();
+    m_commandList.Execute();
+    m_commandList.Flush();
 }
 
 void AppWindow::Resize(int width, int height)
 {
     if (width != m_swapchain.Width() || height != m_swapchain.Height())
     {
-        m_graphicsQueue.Flush();
+        m_commandList.Flush();
 
         m_viewPort.TopLeftX = 0;
         m_viewPort.TopLeftY = 0;
@@ -100,11 +100,11 @@ void AppWindow::Resize(int width, int height)
         m_scissorRect.top = 0;
         m_scissorRect.bottom = height;
 
-        m_graphicsQueue.Reset();
+        m_commandList.Reset();
 
-        m_swapchain.Resize(width, height, m_device.Get(), m_graphicsQueue.CommandList());
+        m_swapchain.Resize(width, height, m_device.Get(), m_commandList.GetCommandList());
 
-        m_graphicsQueue.Execute();
+        m_commandList.Execute();
     }
 }
 
@@ -114,37 +114,37 @@ void AppWindow::Update(double elapsedSeconds)
 
 void AppWindow::Draw()
 {
-    m_graphicsQueue.Flush();
+    m_commandList.Flush();
 
-    m_graphicsQueue.Reset();
+    m_commandList.Reset();
 
     auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_PRESENT,
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET);
-    m_graphicsQueue->ResourceBarrier(1, &transition1);
+    m_commandList->ResourceBarrier(1, &transition1);
 
-    m_graphicsQueue->RSSetViewports(1, &m_viewPort);
-    m_graphicsQueue->RSSetScissorRects(1, &m_scissorRect);
+    m_commandList->RSSetViewports(1, &m_viewPort);
+    m_commandList->RSSetScissorRects(1, &m_scissorRect);
 
-    m_graphicsQueue->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
-                                           DirectX::Colors::CornflowerBlue, 0, nullptr);
-    m_graphicsQueue->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
-                                           D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f,
-                                           0, 0, nullptr);
+    m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
+                                         DirectX::Colors::CornflowerBlue, 0, nullptr);
+    m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
+                                         D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
+                                         0, nullptr);
 
     auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET,
                                                             D3D12_RESOURCE_STATE_PRESENT);
-    m_graphicsQueue->ResourceBarrier(1, &transition2);
+    m_commandList->ResourceBarrier(1, &transition2);
 
-    m_graphicsQueue.Execute();
+    m_commandList.Execute();
 
     m_swapchain.Present();
 }
 
 void AppWindow::WillShutdown()
 {
-    m_graphicsQueue.Flush();
+    m_commandList.Flush();
 }
 
 void AppWindow::LogAdapters()

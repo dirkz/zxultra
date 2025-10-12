@@ -2,9 +2,9 @@
 
 #include "stdafx.h"
 
+#include "CommandList.h"
 #include "DescriptorHandleSizes.h"
 #include "Fence.h"
-#include "GraphicsQueue.h"
 #include "Swapchain.h"
 
 namespace zxultra
@@ -30,7 +30,7 @@ struct AppWindow
     ComPtr<ID3D12Device> m_device;
     ComPtr<ID3D12CommandQueue> m_commandQueue;
 
-    GraphicsQueue m_graphicsQueue;
+    CommandList m_commandList;
 
     DescriptorHandleSizes m_descriptorHandleSizes;
     Swapchain m_swapchain;
