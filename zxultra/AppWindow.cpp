@@ -57,13 +57,13 @@ static ComPtr<ID3D12CommandQueue> CreateCommandQueue(ID3D12Device *device)
 AppWindow::AppWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
-      m_graphicsQueue{m_device.Get()}, m_descriptorHandleSizes{m_device.Get()},
-      m_swapchain{m_factory.Get(),
-                  m_device.Get(),
-                  m_graphicsQueue.CommandQueue(),
-                  m_graphicsQueue.CommandList(),
-                  hwnd,
-                  m_descriptorHandleSizes}
+      m_graphicsQueue{m_device.Get(), m_commandQueue.Get()},
+      m_descriptorHandleSizes{m_device.Get()}, m_swapchain{m_factory.Get(),
+                                                           m_device.Get(),
+                                                           m_graphicsQueue.CommandQueue(),
+                                                           m_graphicsQueue.CommandList(),
+                                                           hwnd,
+                                                           m_descriptorHandleSizes}
 {
     // sample code for querying features
     CD3DX12FeatureSupport features;

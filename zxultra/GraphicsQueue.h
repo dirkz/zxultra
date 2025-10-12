@@ -9,7 +9,7 @@ namespace zxultra
 
 struct GraphicsQueue
 {
-    GraphicsQueue(ID3D12Device *device);
+    GraphicsQueue(ID3D12Device *device, ID3D12CommandQueue *commandQueue);
 
     /// <summary>
     /// Executes the command list.

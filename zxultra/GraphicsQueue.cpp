@@ -3,18 +3,6 @@
 namespace zxultra
 {
 
-static ComPtr<ID3D12CommandQueue> CreateCommandQueue(ID3D12Device *device)
-{
-    ComPtr<ID3D12CommandQueue> commandQueue;
-
-    D3D12_COMMAND_QUEUE_DESC queueDesc{};
-    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    HR(device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(commandQueue.GetAddressOf())));
-
-    return commandQueue;
-}
-
 static ComPtr<ID3D12CommandAllocator> CreateCommandAllocator(ID3D12Device *device)
 {
     ComPtr<ID3D12CommandAllocator> commandAllocator;
@@ -36,9 +24,8 @@ static ComPtr<ID3D12GraphicsCommandList> CreateGraphicsCommandList(
     return commandList;
 }
 
-GraphicsQueue::GraphicsQueue(ID3D12Device *device)
-    : m_commandQueue{CreateCommandQueue(device)},
-      m_commandAllocator{CreateCommandAllocator(device)},
+GraphicsQueue::GraphicsQueue(ID3D12Device *device, ID3D12CommandQueue *commandQueue)
+    : m_commandQueue{commandQueue}, m_commandAllocator{CreateCommandAllocator(device)},
       m_commandList{CreateGraphicsCommandList(device, m_commandAllocator.Get())}, m_fence{device}
 {
 }
