@@ -28,6 +28,7 @@ struct AppWindow
     ComPtr<IDXGIFactory2> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
     ComPtr<ID3D12Device> m_device;
+    ComPtr<ID3D12CommandQueue> m_commandQueue;
 
     GraphicsQueue m_graphicsQueue;
 
