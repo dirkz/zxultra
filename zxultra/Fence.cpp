@@ -8,7 +8,7 @@ Fence::Fence(ID3D12Device *device)
     HR(device->CreateFence(m_value, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_fence.GetAddressOf())));
 }
 
-void Fence::SignalAndWait(ID3D12CommandQueue *commandQueue)
+void Fence::Flush(ID3D12CommandQueue *commandQueue)
 {
     m_value++;
 

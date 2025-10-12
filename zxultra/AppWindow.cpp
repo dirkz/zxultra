@@ -57,13 +57,10 @@ static ComPtr<ID3D12CommandQueue> CreateCommandQueue(ID3D12Device *device)
 AppWindow::AppWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
-      m_commandList{m_device.Get()}, m_descriptorHandleSizes{m_device.Get()},
-      m_swapchain{m_factory.Get(),
-                  m_device.Get(),
-                  m_commandQueue.Get(),
-                  m_commandList.Get(),
-                  hwnd,
-                  m_descriptorHandleSizes}
+      m_fence{m_device.Get()}, m_commandList{m_device.Get()},
+      m_descriptorHandleSizes{m_device.Get()},
+      m_swapchain{m_factory.Get(),     m_device.Get(), m_commandQueue.Get(),
+                  m_commandList.Get(), hwnd,           m_descriptorHandleSizes}
 {
     // sample code for querying features
     CD3DX12FeatureSupport features;
@@ -79,14 +76,14 @@ AppWindow::AppWindow(HWND hwnd)
 
     // Wait for the swap chain initialization
     m_commandList.Execute(m_commandQueue.Get());
-    m_commandList.Flush(m_commandQueue.Get());
+    m_fence.Flush(m_commandQueue.Get());
 }
 
 void AppWindow::Resize(int width, int height)
 {
     if (width != m_swapchain.Width() || height != m_swapchain.Height())
     {
-        m_commandList.Flush(m_commandQueue.Get());
+        m_fence.Flush(m_commandQueue.Get());
 
         m_viewPort.TopLeftX = 0;
         m_viewPort.TopLeftY = 0;
@@ -114,7 +111,7 @@ void AppWindow::Update(double elapsedSeconds)
 
 void AppWindow::Draw()
 {
-    m_commandList.Flush(m_commandQueue.Get());
+    m_fence.Flush(m_commandQueue.Get());
 
     m_commandList.Reset();
 
@@ -144,7 +141,7 @@ void AppWindow::Draw()
 
 void AppWindow::WillShutdown()
 {
-    m_commandList.Flush(m_commandQueue.Get());
+    m_fence.Flush(m_commandQueue.Get());
 }
 
 void AppWindow::LogAdapters()

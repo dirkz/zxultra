@@ -9,7 +9,7 @@ struct Fence
 {
     Fence(ID3D12Device *device);
 
-    void SignalAndWait(ID3D12CommandQueue *commandQueue);
+    void Flush(ID3D12CommandQueue *commandQueue);
 
   private:
     UINT64 m_value = 0;

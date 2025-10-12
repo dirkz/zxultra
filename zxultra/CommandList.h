@@ -17,11 +17,6 @@ struct CommandList
     void Execute(ID3D12CommandQueue *commandQueue);
 
     /// <summary>
-    /// Flush the given command queue.
-    /// </summary>
-    void Flush(ID3D12CommandQueue *commandQueue);
-
-    /// <summary>
     /// Resets the command list and allocator.
     /// </summary>
     void Reset();

@@ -37,11 +37,6 @@ void CommandList::Execute(ID3D12CommandQueue *commandQueue)
     commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 }
 
-void CommandList::Flush(ID3D12CommandQueue *commandQueue)
-{
-    m_fence.SignalAndWait(commandQueue);
-}
-
 void CommandList::Reset()
 {
     HR(m_commandAllocator->Reset());

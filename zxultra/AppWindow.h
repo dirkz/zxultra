@@ -30,6 +30,7 @@ struct AppWindow
     ComPtr<ID3D12Device> m_device;
     ComPtr<ID3D12CommandQueue> m_commandQueue;
 
+    Fence m_fence;
     CommandList m_commandList;
 
     DescriptorHandleSizes m_descriptorHandleSizes;
