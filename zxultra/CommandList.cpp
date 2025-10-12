@@ -24,22 +24,22 @@ static ComPtr<ID3D12GraphicsCommandList> CreateGraphicsCommandList(
     return commandList;
 }
 
-CommandList::CommandList(ID3D12Device *device, ID3D12CommandQueue *commandQueue)
-    : m_commandQueue{commandQueue}, m_commandAllocator{CreateCommandAllocator(device)},
+CommandList::CommandList(ID3D12Device *device)
+    : m_commandAllocator{CreateCommandAllocator(device)},
       m_commandList{CreateGraphicsCommandList(device, m_commandAllocator.Get())}, m_fence{device}
 {
 }
 
-void CommandList::Execute()
+void CommandList::Execute(ID3D12CommandQueue *commandQueue)
 {
     HR(m_commandList->Close());
     ID3D12CommandList *commandLists[]{m_commandList.Get()};
-    m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+    commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 }
 
-void CommandList::Flush()
+void CommandList::Flush(ID3D12CommandQueue *commandQueue)
 {
-    m_fence.SignalAndWait(CommandQueue());
+    m_fence.SignalAndWait(commandQueue);
 }
 
 void CommandList::Reset()

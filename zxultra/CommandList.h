@@ -9,17 +9,17 @@ namespace zxultra
 
 struct CommandList
 {
-    CommandList(ID3D12Device *device, ID3D12CommandQueue *commandQueue);
+    CommandList(ID3D12Device *device);
 
     /// <summary>
-    /// Executes the command list.
+    /// Executes the command list on the given command queue.
     /// </summary>
-    void Execute();
+    void Execute(ID3D12CommandQueue *commandQueue);
 
     /// <summary>
-    /// Flush the command queue.
+    /// Flush the given command queue.
     /// </summary>
-    void Flush();
+    void Flush(ID3D12CommandQueue *commandQueue);
 
     /// <summary>
     /// Resets the command list and allocator.
@@ -27,11 +27,6 @@ struct CommandList
     void Reset();
 
     ID3D12GraphicsCommandList *operator->();
-
-    inline ID3D12CommandQueue *CommandQueue() const
-    {
-        return m_commandQueue.Get();
-    }
 
     inline ID3D12CommandAllocator *CommandAllocator() const
     {
@@ -44,7 +39,6 @@ struct CommandList
     }
 
   private:
-    ComPtr<ID3D12CommandQueue> m_commandQueue;
     ComPtr<ID3D12CommandAllocator> m_commandAllocator;
     ComPtr<ID3D12GraphicsCommandList> m_commandList;
     Fence m_fence;
