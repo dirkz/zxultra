@@ -61,7 +61,7 @@ AppWindow::AppWindow(HWND hwnd)
       m_swapchain{m_factory.Get(),
                   m_device.Get(),
                   m_commandQueue.Get(),
-                  m_commandList.GetCommandList(),
+                  m_commandList.Get(),
                   hwnd,
                   m_descriptorHandleSizes}
 {
@@ -102,7 +102,7 @@ void AppWindow::Resize(int width, int height)
 
         m_commandList.Reset();
 
-        m_swapchain.Resize(width, height, m_device.Get(), m_commandList.GetCommandList());
+        m_swapchain.Resize(width, height, m_device.Get(), m_commandList.Get());
 
         m_commandList.Execute(m_commandQueue.Get());
     }

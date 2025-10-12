@@ -33,7 +33,7 @@ struct CommandList
         return m_commandAllocator.Get();
     }
 
-    inline ID3D12GraphicsCommandList *GetCommandList() const
+    inline ID3D12GraphicsCommandList *Get() const
     {
         return m_commandList.Get();
     }
