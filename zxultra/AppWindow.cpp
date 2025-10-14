@@ -95,15 +95,15 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
     const std::array vertexArray{v0, v1, v2};
     const std::span vertices{vertexArray};
 
-    m_vertexBuffer =
-        uploadBuffers.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(), vertices);
-
-    m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-    m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertices.size_bytes());
-    m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
-
     VertexBuffer<VertexWithColor, UINT16> vertexBuffer{};
     vertexBuffer.Add(vertices);
+
+    m_vertexBuffer = uploadBuffers.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(),
+                                                       vertexBuffer.Vertices());
+
+    m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+    m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Vertices().size_bytes());
+    m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
 }
 
 void AppWindow::Resize(int width, int height)
