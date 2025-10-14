@@ -90,10 +90,11 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
     VertexWithColor v1{{-0.5f, +0.5f, 0.f}, Colors::Green};
     VertexWithColor v2{{+0.5f, +0.5f, 0.f}, Colors::Blue};
 
-    const std::array vertices{v0, v1, v2};
+    const std::array vertexArray{v0, v1, v2};
+    const std::span vertices{vertexArray};
 
     m_vertexBuffer =
-        uploadBuffers.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(), std::span{vertices});
+        uploadBuffers.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(), vertices);
 }
 
 void AppWindow::Resize(int width, int height)
