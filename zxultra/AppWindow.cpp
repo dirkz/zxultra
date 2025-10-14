@@ -98,6 +98,7 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
 
     m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
     m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertices.size_bytes());
+    m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
 }
 
 void AppWindow::Resize(int width, int height)
@@ -149,6 +150,8 @@ void AppWindow::Draw()
     m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
                                          D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
                                          0, nullptr);
+
+    m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 
     auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET,
