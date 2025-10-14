@@ -12,7 +12,7 @@ add_library(zxultra OBJECT
 	"UploadBuffers.h"
 	"UploadBuffers.cpp"
 	"VertexWithColor.h"
-	"Util.h")
+	)
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 
