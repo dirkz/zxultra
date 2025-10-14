@@ -7,6 +7,8 @@
 namespace zxultra
 {
 
+using VertexIndexType = UINT16;
+
 static ComPtr<IDXGIFactory2> CreateFactory()
 {
 
@@ -92,7 +94,7 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
     VertexWithColor v1{{-0.5f, +0.5f, 0.f}, Colors::Green};
     VertexWithColor v2{{+0.5f, +0.5f, 0.f}, Colors::Blue};
 
-    VertexBuffer<VertexWithColor, UINT16> vertexBuffer{v0, v1, v2};
+    VertexBuffer<VertexWithColor, VertexIndexType> vertexBuffer{v0, v1, v2};
 
     m_vertexBuffer = uploadBuffers.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(),
                                                        vertexBuffer.Vertices());
@@ -100,6 +102,14 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
     m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
     m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Vertices().size_bytes());
     m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
+
+    m_indexBuffer = uploadBuffers.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(),
+                                                      vertexBuffer.Indices());
+
+    m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
+    m_indexBufferView.SizeInBytes = vertexBuffer.Indices().size_bytes();
+    m_indexBufferView.Format =
+        sizeof(VertexIndexType) == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
 }
 
 void AppWindow::Resize(int width, int height)
