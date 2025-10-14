@@ -3,6 +3,7 @@
 #include <functional>
 #include <span>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 namespace zxultra
@@ -10,14 +11,23 @@ namespace zxultra
 
 template <class T, class I, class H = std::hash<T>, class E = std::equal_to<T>> struct VertexBuffer
 {
-    void Add(const T& v)
+    void Add(const T &v)
     {
         auto index = m_vertexIndex.find(v);
         if (index != m_vertexIndex.end())
         {
+            auto pair = *index;
+            I i = pair.second;
+            m_indices.push_back(i);
+        }
+        else
+        {
+            I newIndex = static_cast<I>(m_vertices.size());
+            m_vertices.push_back(v);
+            m_indices.push_back(newIndex);
         }
     }
-    
+
     std::span<T> Vertices()
     {
         return std::span{m_vertices};

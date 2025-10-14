@@ -34,7 +34,7 @@ bool operator==(const VertexWithColor &v1, const VertexWithColor &v2)
 
 template <> struct std::hash<zxultra::VertexWithColor>
 {
-    std::size_t operator()(const zxultra::VertexWithColor &v)
+    std::size_t operator()(const zxultra::VertexWithColor &v) const noexcept
     {
         using zxultra::hash_combine;
 

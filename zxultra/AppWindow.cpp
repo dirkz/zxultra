@@ -1,5 +1,7 @@
 #include "AppWindow.h"
 
+#include <VertexBuffer.h>
+
 #include "VertexWithColor.h"
 
 namespace zxultra
@@ -99,6 +101,12 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
     m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
     m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertices.size_bytes());
     m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
+
+    VertexBuffer<VertexWithColor, UINT16> vertexBuffer{};
+    for (const VertexWithColor& v : vertices)
+    {
+        vertexBuffer.Add(v);
+    }
 }
 
 void AppWindow::Resize(int width, int height)
