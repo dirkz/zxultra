@@ -28,6 +28,14 @@ template <class T, class I, class H = std::hash<T>, class E = std::equal_to<T>> 
         }
     }
 
+    template <std::size_t N> void Add(const std::span<const T, N> &vertices)
+    {
+        for (const T &v : vertices)
+        {
+            Add(v);
+        }
+    }
+
     std::span<T> Vertices()
     {
         return std::span{m_vertices};

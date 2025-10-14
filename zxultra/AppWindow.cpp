@@ -103,10 +103,7 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
     m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
 
     VertexBuffer<VertexWithColor, UINT16> vertexBuffer{};
-    for (const VertexWithColor& v : vertices)
-    {
-        vertexBuffer.Add(v);
-    }
+    vertexBuffer.Add(vertices);
 }
 
 void AppWindow::Resize(int width, int height)
