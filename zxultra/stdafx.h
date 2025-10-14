@@ -2,6 +2,7 @@
 
 #include <array>
 #include <format>
+#include <initializer_list>
 #include <memory>
 #include <optional>
 #include <stdexcept>
@@ -24,5 +25,7 @@
 #include <dxgi1_6.h>
 
 #include "Error.h"
+
+using namespace DirectX;
 
 using Microsoft::WRL::ComPtr;

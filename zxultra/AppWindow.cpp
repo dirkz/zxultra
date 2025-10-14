@@ -1,6 +1,6 @@
 #include "AppWindow.h"
 
-#include "UploadBuffers.h"
+#include "VertexWithColor.h"
 
 namespace zxultra
 {
@@ -77,10 +77,20 @@ AppWindow::AppWindow(HWND hwnd)
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
 
     UploadBuffers uploadBuffers{};
+    CreateVertexBuffers(uploadBuffers);
 
     // Wait for the swap chain initialization and buffer uploads.
     m_commandList.Execute(m_commandQueue.Get());
     m_fence.Flush(m_commandQueue.Get());
+}
+
+void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
+{
+    VertexWithColor v0{{-0.5f, -0.5f, 0.f}, Colors::Red};
+    VertexWithColor v1{{-0.5f, +0.5f, 0.f}, Colors::Green};
+    VertexWithColor v2{{+0.5f, +0.5f, 0.f}, Colors::Blue};
+
+    std::array vertices{v0, v1, v2};
 }
 
 void AppWindow::Resize(int width, int height)
@@ -128,7 +138,7 @@ void AppWindow::Draw()
     m_commandList->RSSetScissorRects(1, &m_scissorRect);
 
     m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
-                                         DirectX::Colors::CornflowerBlue, 0, nullptr);
+                                         Colors::CornflowerBlue, 0, nullptr);
     m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
                                          D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
                                          0, nullptr);

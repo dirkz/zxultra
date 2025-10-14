@@ -6,6 +6,7 @@
 #include "DescriptorHandleSizes.h"
 #include "Fence.h"
 #include "Swapchain.h"
+#include "UploadBuffers.h"
 
 namespace zxultra
 {
@@ -13,6 +14,8 @@ namespace zxultra
 struct AppWindow
 {
     AppWindow(HWND hwnd);
+
+    void CreateVertexBuffers(UploadBuffers &uploadBuffers);
 
     void Resize(int width, int height);
 
