@@ -97,7 +97,7 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
         uploadBuffers.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(), vertices);
 
     m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-    m_vertexBufferView.SizeInBytes = 0;
+    m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertices.size_bytes());
 }
 
 void AppWindow::Resize(int width, int height)
