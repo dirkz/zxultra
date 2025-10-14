@@ -11,10 +11,10 @@ struct UploadBuffers
                                                ID3D12GraphicsCommandList *commandList,
                                                const void *pData, size_t dataSize);
 
-    template <class T>
+    template <class T, std::size_t N = std::dynamic_extent>
     ComPtr<ID3D12Resource> CreateDefaultBuffer(ID3D12Device *device,
                                                ID3D12GraphicsCommandList *commandList,
-                                               std::span<T> elements)
+                                               std::span<T, N> elements)
     {
         size_t dataSize = elements.size() * sizeof(T);
         const void *pData = elements.data();

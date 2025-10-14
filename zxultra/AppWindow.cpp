@@ -90,7 +90,7 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
     VertexWithColor v1{{-0.5f, +0.5f, 0.f}, Colors::Green};
     VertexWithColor v2{{+0.5f, +0.5f, 0.f}, Colors::Blue};
 
-    const std::vector<VertexWithColor> vertices{v0, v1, v2};
+    const std::array vertices{v0, v1, v2};
     std::span vertexSpan{vertices};
 
     m_vertexBuffer =
