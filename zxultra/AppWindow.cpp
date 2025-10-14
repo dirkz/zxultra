@@ -7,7 +7,7 @@
 namespace zxultra
 {
 
-using VertexIndexType = UINT16;
+using VertexIndexType = std::uint16_t;
 
 static ComPtr<IDXGIFactory2> CreateFactory()
 {
@@ -107,7 +107,7 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
                                                       vertexBuffer.Indices());
 
     m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
-    m_indexBufferView.SizeInBytes = vertexBuffer.Indices().size_bytes();
+    m_indexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Indices().size_bytes());
     m_indexBufferView.Format =
         sizeof(VertexIndexType) == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
 }
