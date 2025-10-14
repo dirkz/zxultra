@@ -9,7 +9,9 @@ add_library(zxultra
 	"Swapchain.cpp"
 	"DescriptorHandleSizes.h"
 	"CommandList.h"
-	"CommandList.cpp")
+	"CommandList.cpp"
+	"UploadBuffers.h"
+	"UploadBuffers.cpp")
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 
