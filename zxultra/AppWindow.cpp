@@ -1,5 +1,7 @@
 #include "AppWindow.h"
 
+#include "UploadBuffers.h"
+
 namespace zxultra
 {
 
@@ -74,7 +76,9 @@ AppWindow::AppWindow(HWND hwnd)
     features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
                                       D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
 
-    // Wait for the swap chain initialization
+    UploadBuffers uploadBuffers{};
+
+    // Wait for the swap chain initialization and buffer uploads.
     m_commandList.Execute(m_commandQueue.Get());
     m_fence.Flush(m_commandQueue.Get());
 }
