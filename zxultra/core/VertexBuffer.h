@@ -16,8 +16,7 @@ template <class T, class I, class H = std::hash<T>, class E = std::equal_to<T>> 
         auto index = m_vertexIndex.find(v);
         if (index != m_vertexIndex.end())
         {
-            auto pair = *index;
-            I i = pair.second;
+            I i = index->second;
             m_indices.push_back(i);
         }
         else
@@ -25,6 +24,7 @@ template <class T, class I, class H = std::hash<T>, class E = std::equal_to<T>> 
             I newIndex = static_cast<I>(m_vertices.size());
             m_vertices.push_back(v);
             m_indices.push_back(newIndex);
+            m_vertexIndex.insert(std::make_pair(v, newIndex));
         }
     }
 
