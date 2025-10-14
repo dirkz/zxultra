@@ -41,6 +41,8 @@ struct AppWindow
 
     D3D12_VIEWPORT m_viewPort{};
     D3D12_RECT m_scissorRect{};
+
+    ComPtr<ID3D12Resource> m_vertexBuffer;
 };
 
 } // namespace zxultra
