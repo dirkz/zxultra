@@ -10,6 +10,7 @@ namespace zxultra
 struct VertexWithColor
 {
     friend std::hash<zxultra::VertexWithColor>;
+    friend bool operator==(const VertexWithColor &v1, const VertexWithColor &v2);
 
     VertexWithColor(XMFLOAT3 position, FXMVECTOR color) : m_position{position}
     {
@@ -20,6 +21,14 @@ struct VertexWithColor
     XMFLOAT3 m_position;
     XMFLOAT4 m_color;
 };
+
+bool operator==(const VertexWithColor &v1, const VertexWithColor &v2)
+{
+    return v1.m_position.x == v2.m_position.x && v1.m_position.y == v2.m_position.y &&
+           v1.m_position.z == v2.m_position.z && v1.m_color.x == v2.m_color.x &&
+           v1.m_color.y == v2.m_color.y && v1.m_color.z == v2.m_color.z &&
+           v1.m_color.w == v2.m_color.w;
+}
 
 } // namespace zxultra
 
