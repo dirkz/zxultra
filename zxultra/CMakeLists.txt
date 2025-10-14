@@ -1,5 +1,4 @@
-add_library(zxultra
-	OBJECT
+add_library(zxultra OBJECT
 	"AppWindow.h"
 	"AppWindow.cpp"
 	"Error.h"
