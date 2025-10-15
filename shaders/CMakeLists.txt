@@ -1,3 +1,4 @@
+# All vertex/fragmentshaders with VS, PS entry points in a single file.
 set (SHADERS PositionColor.hlsl)
 
 add_custom_target(shaders)
