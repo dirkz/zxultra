@@ -4,6 +4,8 @@
 
 #include <Util.h>
 
+#include "Constants.h"
+
 namespace zxultra
 {
 
@@ -16,6 +18,21 @@ struct VertexWithColor
     {
         XMStoreFloat4(&m_color, color);
     };
+
+    std::array<D3D12_INPUT_ELEMENT_DESC, 2> ElementDescriptions()
+    {
+        constexpr UINT semanticIndex = 0;
+        constexpr UINT inputSlot = 0;
+        constexpr UINT instanceDataStepRate = 0;
+        return {D3D12_INPUT_ELEMENT_DESC{
+                    SemanticPosition, semanticIndex, DXGI_FORMAT_R32G32B32_FLOAT, inputSlot,
+                    offsetof(VertexWithColor, m_position),
+                    D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, instanceDataStepRate},
+                D3D12_INPUT_ELEMENT_DESC{
+                    SemanticColor, semanticIndex, DXGI_FORMAT_R32G32B32A32_FLOAT, inputSlot,
+                    offsetof(VertexWithColor, m_color), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+                    instanceDataStepRate}};
+    }
 
   private:
     XMFLOAT3 m_position;
