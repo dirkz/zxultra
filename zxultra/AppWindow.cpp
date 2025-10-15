@@ -7,7 +7,11 @@
 namespace zxultra
 {
 
-using VertexIndexType = std::uint16_t;
+// Note: This must match the `IndexFormat'!
+using IndexType = std::uint16_t;
+
+// Note: This must match the `IndexType'!
+constexpr DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT;
 
 static ComPtr<IDXGIFactory2> CreateFactory()
 {
@@ -94,7 +98,7 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
     VertexWithColor v1{{-0.5f, +0.5f, 0.f}, Colors::Green};
     VertexWithColor v2{{+0.5f, +0.5f, 0.f}, Colors::Blue};
 
-    VertexBuffer<VertexWithColor, VertexIndexType> vertexBuffer{v0, v1, v2};
+    VertexBuffer<VertexWithColor, IndexType> vertexBuffer{v0, v1, v2};
 
     m_vertexBuffer = uploadBuffers.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(),
                                                        vertexBuffer.Vertices());
@@ -108,8 +112,7 @@ void AppWindow::CreateVertexBuffers(UploadBuffers &uploadBuffers)
 
     m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
     m_indexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Indices().size_bytes());
-    m_indexBufferView.Format =
-        sizeof(VertexIndexType) == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
+    m_indexBufferView.Format = IndexFormat;
 }
 
 void AppWindow::Resize(int width, int height)
