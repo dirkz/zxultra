@@ -6,7 +6,7 @@ cbuffer cbPerObject : register(b0)
 struct Vertex
 {
     float3 Position : POSITION;
-    float4 Color : COLOR[n];
+    float4 Color : COLOR;
 };
 
 struct Fragment
