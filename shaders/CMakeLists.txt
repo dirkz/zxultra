@@ -15,7 +15,13 @@ foreach(SHADER ${SHADERS})
 	add_custom_command(
 		OUTPUT ${SHADER_TARGET_VS}
 		DEPENDS ${SHADER_SRC}
-		COMMAND dxc.exe -T vs_6_0 -E VS -Fo ${SHADER_TARGET_PS} ${SHADER_SRC}
+		COMMAND dxc.exe -T vs_6_0 -E VS -Fo ${SHADER_TARGET_VS} ${SHADER_SRC}
+	)
+
+	add_custom_command(
+		OUTPUT ${SHADER_TARGET_PS}
+		DEPENDS ${SHADER_SRC}
+		COMMAND dxc.exe -T vs_6_0 -E PS -Fo ${SHADER_TARGET_PS} ${SHADER_SRC}
 	)
 
 	target_sources(shaders PRIVATE ${SHADER_TARGET_VS})
