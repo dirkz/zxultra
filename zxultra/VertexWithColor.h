@@ -19,7 +19,7 @@ struct VertexWithColor
         XMStoreFloat4(&m_color, color);
     };
 
-    std::array<D3D12_INPUT_ELEMENT_DESC, 2> ElementDescriptions()
+    std::vector<D3D12_INPUT_ELEMENT_DESC> ElementDescriptions()
     {
         constexpr UINT semanticIndex = 0;
         constexpr UINT inputSlot = 0;
