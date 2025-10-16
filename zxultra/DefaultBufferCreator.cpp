@@ -1,11 +1,11 @@
-#include "UploadBuffers.h"
+#include "DefaultBufferCreator.h"
 
 namespace zxultra
 {
 
-ComPtr<ID3D12Resource> UploadBuffers::CreateDefaultBuffer(ID3D12Device *device,
-                                                          ID3D12GraphicsCommandList *commandList,
-                                                          const void *pData, size_t dataSize)
+ComPtr<ID3D12Resource> DefaultBufferCreator::CreateDefaultBuffer(
+    ID3D12Device *device, ID3D12GraphicsCommandList *commandList, const void *pData,
+    size_t dataSize)
 {
     ComPtr<ID3D12Resource> defaultBuffer;
 

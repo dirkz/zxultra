@@ -3,10 +3,10 @@
 #include "stdafx.h"
 
 #include "CommandList.h"
+#include "DefaultBufferCreator.h"
 #include "DescriptorHandleSizes.h"
 #include "Fence.h"
 #include "Swapchain.h"
-#include "UploadBuffers.h"
 
 namespace zxultra
 {
@@ -15,7 +15,7 @@ struct AppWindow
 {
     AppWindow(HWND hwnd);
 
-    void CreateVertexBuffers(UploadBuffers &uploadBuffers);
+    void CreateVertexBuffers(DefaultBufferCreator &bufferCreator);
 
     void Resize(int width, int height);
 

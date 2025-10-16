@@ -9,8 +9,8 @@ add_library(zxultra OBJECT
 	"DescriptorHandleSizes.h"
 	"CommandList.h"
 	"CommandList.cpp"
-	"UploadBuffers.h"
-	"UploadBuffers.cpp"
+	"DefaultBufferCreator.h"
+	"DefaultBufferCreator.cpp"
 	"VertexWithColor.h"
 	"Constants.h")
 

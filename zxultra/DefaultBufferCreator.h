@@ -5,7 +5,7 @@
 namespace zxultra
 {
 
-struct UploadBuffers
+struct DefaultBufferCreator
 {
     ComPtr<ID3D12Resource> CreateDefaultBuffer(ID3D12Device *device,
                                                ID3D12GraphicsCommandList *commandList,
