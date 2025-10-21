@@ -66,6 +66,18 @@ template <class T> struct ConstantBuffer
         return m_mappedBuffer;
     }
 
+    inline const T &operator[](size_t n) const
+    {
+        const T *buffer = reinterpret_cast<const T *>(m_mappedBuffer);
+        return buffer[n];
+    }
+
+    inline T &operator[](size_t n)
+    {
+        T *buffer = reinterpret_cast<T *>(m_mappedBuffer);
+        return buffer[n];
+    }
+
   private:
     // Note: Move semantics!
 
