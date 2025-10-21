@@ -3,6 +3,7 @@
 #include "stdafx.h"
 
 #include "CommandList.h"
+#include "ConstantBuffer.h"
 #include "DefaultBufferCreator.h"
 #include "DescriptorHandleSizes.h"
 #include "Fence.h"

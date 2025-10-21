@@ -12,7 +12,7 @@ add_library(zxultra OBJECT
 	"DefaultBufferCreator.h"
 	"DefaultBufferCreator.cpp"
 	"VertexWithColor.h"
-	"Constants.h")
+	"Constants.h" "ConstantBuffer.h")
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 
