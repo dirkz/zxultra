@@ -74,15 +74,16 @@ AppWindow::AppWindow(HWND hwnd)
 {
     // sample code for querying features
     CD3DX12FeatureSupport features;
-    features.Init(m_device.Get());
+    HR(features.Init(m_device.Get()));
     D3D_FEATURE_LEVEL maxFeatureLevel = features.MaxSupportedFeatureLevel();
     D3D12_RAYTRACING_TIER raytracingTier = features.RaytracingTier();
 
     // sample code for querying multisampling capabilities
     constexpr UINT SampleCount = 4;
-    UINT qualityLevels = 0;
-    features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
-                                      D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE, qualityLevels);
+    UINT numQualityLevels = 0;
+    HR(features.MultisampleQualityLevels(BackBufferFormat, SampleCount,
+                                         D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE,
+                                         numQualityLevels));
 
     DefaultBufferCreator uploadBuffers{};
     CreateVertexBuffers(uploadBuffers);
