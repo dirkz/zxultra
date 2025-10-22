@@ -26,12 +26,12 @@ struct Swapchain
     void Resize(int width, int height, ID3D12Device *device,
                 ID3D12GraphicsCommandList *commandList);
 
-    UINT Width() const
+    inline UINT Width() const
     {
         return m_width;
     }
 
-    UINT Height() const
+    inline UINT Height() const
     {
         return m_height;
     }
