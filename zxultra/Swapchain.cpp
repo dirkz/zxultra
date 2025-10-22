@@ -112,6 +112,11 @@ void Swapchain::Resize(int width, int height, ID3D12Device *device,
     CreateDepthStencilBufferAndView(device, commandList);
 
     m_currentBackBufferIndex = 0;
+
+    DXGI_SWAP_CHAIN_DESC1 desc{};
+    HR(m_swapchain->GetDesc1(&desc));
+    m_width = desc.Width;
+    m_height = desc.Height;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferDescriptorHandle() const
