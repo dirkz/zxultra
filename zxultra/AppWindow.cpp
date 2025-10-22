@@ -2,16 +2,11 @@
 
 #include <VertexBuffer.h>
 
+#include "Formats.h"
 #include "VertexWithColor.h"
 
 namespace zxultra
 {
-
-// Note: This must match `IndexFormat'.
-using IndexType = std::uint16_t;
-
-// Note: This must match `IndexType'.
-constexpr DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT;
 
 static ComPtr<IDXGIFactory2> CreateFactory()
 {
