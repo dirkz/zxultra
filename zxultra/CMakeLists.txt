@@ -14,7 +14,9 @@ add_library(zxultra OBJECT
 	"VertexWithColor.h"
 	"Constants.h"
 	"ConstantBuffer.h"
-	"Formats.h")
+	"Formats.h"
+	"Blob.h"
+	"Blob.cpp")
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 

@@ -2,6 +2,7 @@
 
 #include <VertexBuffer.h>
 
+#include "Blob.h"
 #include "Formats.h"
 #include "VertexWithColor.h"
 
@@ -88,6 +89,9 @@ AppWindow::AppWindow(HWND hwnd)
     m_fence.Flush(m_commandQueue.Get());
 
     ConstantBuffer<int> constantBuffer{m_device.Get(), 512};
+
+    ComPtr<ID3DBlob> vertexShaderBlob = LoadBlob(L"shaders", L"PositionColor.hlsl_VS.cso");
+    ComPtr<ID3DBlob> fragmentShaderBlob = LoadBlob(L"shaders", L"PositionColor.hlsl_PS.cso");
 }
 
 void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
