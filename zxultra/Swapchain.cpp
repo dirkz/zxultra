@@ -149,4 +149,15 @@ D3D12_VIEWPORT Swapchain::FullViewport() const
     return viewport;
 }
 
+D3D12_RECT Swapchain::FullScissorRect() const
+{
+    D3D12_RECT scissorRect{};
+    scissorRect.left = 0;
+    scissorRect.right = m_width;
+    scissorRect.top = 0;
+    scissorRect.bottom = m_height;
+
+    return D3D12_RECT();
+}
+
 } // namespace zxultra
