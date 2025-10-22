@@ -136,4 +136,17 @@ ID3D12Resource *Swapchain::CurrentBackBufferResource() const
     return m_buffers[m_currentBackBufferIndex].Get();
 }
 
+D3D12_VIEWPORT Swapchain::FullViewport() const
+{
+    D3D12_VIEWPORT viewport{};
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = static_cast<FLOAT>(m_width);
+    viewport.Height = static_cast<FLOAT>(m_height);
+    viewport.MinDepth = 0.f;
+    viewport.MaxDepth = 1.f;
+
+    return viewport;
+}
+
 } // namespace zxultra

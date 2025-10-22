@@ -40,7 +40,6 @@ struct AppWindow
     DescriptorHandleSizes m_descriptorHandleSizes;
     Swapchain m_swapchain;
 
-    D3D12_VIEWPORT m_viewPort{};
     D3D12_RECT m_scissorRect{};
 
     ComPtr<ID3D12Resource> m_vertexBuffer;

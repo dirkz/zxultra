@@ -119,13 +119,6 @@ void AppWindow::Resize(int width, int height)
     {
         m_fence.Flush(m_commandQueue.Get());
 
-        m_viewPort.TopLeftX = 0;
-        m_viewPort.TopLeftY = 0;
-        m_viewPort.Width = static_cast<FLOAT>(width);
-        m_viewPort.Height = static_cast<FLOAT>(height);
-        m_viewPort.MinDepth = 0.f;
-        m_viewPort.MaxDepth = 1.f;
-
         m_scissorRect.left = 0;
         m_scissorRect.right = width;
         m_scissorRect.top = 0;
@@ -154,7 +147,9 @@ void AppWindow::Draw()
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET);
     m_commandList->ResourceBarrier(1, &transition1);
 
-    m_commandList->RSSetViewports(1, &m_viewPort);
+    D3D12_VIEWPORT viewport = m_swapchain.FullViewport();
+    m_commandList->RSSetViewports(1, &viewport);
+
     m_commandList->RSSetScissorRects(1, &m_scissorRect);
 
     m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),

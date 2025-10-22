@@ -41,6 +41,8 @@ struct Swapchain
 
     ID3D12Resource *CurrentBackBufferResource() const;
 
+    D3D12_VIEWPORT FullViewport() const;
+
   private:
     ComPtr<IDXGISwapChain1> m_swapchain;
 
