@@ -6,6 +6,7 @@
 #include "DefaultBufferCreator.h"
 #include "DescriptorHandleSizes.h"
 #include "Fence.h"
+#include "FrameData.h"
 #include "Swapchain.h"
 
 namespace zxultra
@@ -44,6 +45,8 @@ struct AppWindow
 
     ComPtr<ID3D12Resource> m_indexBuffer;
     D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
+
+    FrameData m_frameData;
 };
 
 } // namespace zxultra

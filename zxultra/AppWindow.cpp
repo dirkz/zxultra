@@ -4,7 +4,6 @@
 
 #include "Blob.h"
 #include "Formats.h"
-#include "FrameData.h"
 #include "VertexWithColor.h"
 
 namespace zxultra
@@ -67,7 +66,8 @@ AppWindow::AppWindow(HWND hwnd)
       m_fence{m_device.Get()}, m_commandList{m_device.Get()},
       m_descriptorHandleSizes{m_device.Get()},
       m_swapchain{m_factory.Get(),     m_device.Get(), m_commandQueue.Get(),
-                  m_commandList.Get(), hwnd,           m_descriptorHandleSizes}
+                  m_commandList.Get(), hwnd,           m_descriptorHandleSizes},
+      m_frameData{m_device.Get()}
 {
     // sample code for querying features
     CD3DX12FeatureSupport features;
@@ -88,8 +88,6 @@ AppWindow::AppWindow(HWND hwnd)
     // Wait for the swap chain initialization and buffer uploads.
     m_commandList.Execute(m_commandQueue.Get());
     m_fence.Flush(m_commandQueue.Get());
-
-    FrameData frameData{m_device.Get()};
 
     ComPtr<ID3DBlob> vertexShaderBlob = LoadBlob(L"shaders", L"PositionColor_VS.cso");
     ComPtr<ID3DBlob> fragmentShaderBlob = LoadBlob(L"shaders", L"PositionColor_PS.cso");
