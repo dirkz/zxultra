@@ -16,7 +16,9 @@ add_library(zxultra OBJECT
 	"ConstantBuffer.h"
 	"Formats.h"
 	"Blob.h"
-	"Blob.cpp")
+	"Blob.cpp"
+	"FrameData.h"
+	"FrameData.cpp")
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 
