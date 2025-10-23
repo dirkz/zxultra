@@ -17,9 +17,10 @@ template <class T> struct ConstantBuffer
     {
     }
 
-    ConstantBuffer(ID3D12Device *device, UINT numElements) : m_numElements{numElements}
+    ConstantBuffer(ID3D12Device *device, UINT numElements)
+        : m_numElements{numElements}, m_elementSize{RoundedBufferElementSize(sizeof(T))}
     {
-        UINT bufferSize = RoundedBufferElementSize(sizeof(T)) * numElements;
+        UINT bufferSize = m_elementSize * numElements;
 
         auto heapProperties = CD3DX12_HEAP_PROPERTIES{D3D12_HEAP_TYPE_UPLOAD};
         auto resourceDescription = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
@@ -61,6 +62,11 @@ template <class T> struct ConstantBuffer
         return m_resource.Get();
     }
 
+    inline D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress(UINT n) const
+    {
+        return Resource()->GetGPUVirtualAddress() + n *m_elementSize;
+    }
+
     inline BYTE *MappedBuffer() const
     {
         return m_mappedBuffer;
@@ -81,6 +87,7 @@ template <class T> struct ConstantBuffer
   private:
     // Note: Move semantics!
 
+    UINT m_elementSize = 0;
     UINT m_numElements = 0;
     ComPtr<ID3D12Resource> m_resource;
     BYTE *m_mappedBuffer = nullptr;
