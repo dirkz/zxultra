@@ -89,7 +89,9 @@ AppWindow::AppWindow(HWND hwnd)
     m_fence.Flush(m_commandQueue.Get());
 
     // TODO: Combine all constant buffers with the corresponding descriptor heaps?
-    ConstantBuffer<int> constantBuffer{m_device.Get(), 512};
+    ConstantBuffer<XMFLOAT4X4> cbProjection{m_device.Get(), 1};
+    ConstantBuffer<XMFLOAT4X4> cbView{m_device.Get(), 1};
+    ConstantBuffer<XMFLOAT4X4> cbModel{m_device.Get(), 1};
 
     ComPtr<ID3DBlob> vertexShaderBlob = LoadBlob(L"shaders", L"PositionColor_VS.cso");
     ComPtr<ID3DBlob> fragmentShaderBlob = LoadBlob(L"shaders", L"PositionColor_PS.cso");
