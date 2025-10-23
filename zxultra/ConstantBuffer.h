@@ -52,6 +52,11 @@ template <class T> struct ConstantBuffer
         }
     }
 
+    inline UINT ElementSize() const
+    {
+        return m_elementSize;
+    }
+
     inline UINT Size() const
     {
         return m_numElements;
