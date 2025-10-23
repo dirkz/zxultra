@@ -91,8 +91,8 @@ AppWindow::AppWindow(HWND hwnd)
     // TODO: Combine all constant buffers with the corresponding descriptor heaps?
     ConstantBuffer<int> constantBuffer{m_device.Get(), 512};
 
-    ComPtr<ID3DBlob> vertexShaderBlob = LoadBlob(L"shaders", L"PositionColor.hlsl_VS.cso");
-    ComPtr<ID3DBlob> fragmentShaderBlob = LoadBlob(L"shaders", L"PositionColor.hlsl_PS.cso");
+    ComPtr<ID3DBlob> vertexShaderBlob = LoadBlob(L"shaders", L"PositionColor_VS.cso");
+    ComPtr<ID3DBlob> fragmentShaderBlob = LoadBlob(L"shaders", L"PositionColor_PS.cso");
 }
 
 void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)

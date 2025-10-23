@@ -26,7 +26,7 @@ Fragment VS(Vertex v)
     return fragment;
 }
 
-float4 PS(Fragment fragment)
+float4 PS(Fragment fragment) : SV_Target
 {
     return fragment.Color;
 }
