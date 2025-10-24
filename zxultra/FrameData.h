@@ -27,8 +27,9 @@ struct FrameData
     }
 
     template <class T>
-    inline UINT Add(ID3D12Device *device, UINT incrementSize, INT startingIndex,
-                    const ConstantBuffer<T> &constantBuffer)
+    inline UINT CreateConstantBufferViews(ID3D12Device *device, UINT incrementSize,
+                                          INT startingIndex,
+                                          const ConstantBuffer<T> &constantBuffer)
     {
         INT index = startingIndex;
 

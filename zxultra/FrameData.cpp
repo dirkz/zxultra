@@ -17,7 +17,9 @@ FrameData::FrameData(ID3D12Device *device)
         device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
     INT index = 0;
-    index = Add(device, incrementSize, index, m_cbProjection);
+    index = CreateConstantBufferViews(device, incrementSize, index, m_cbProjection);
+    index = CreateConstantBufferViews(device, incrementSize, index, m_cbView);
+    index = CreateConstantBufferViews(device, incrementSize, index, m_cbModel);
 }
 
 } // namespace zxultra
