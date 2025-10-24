@@ -89,6 +89,21 @@ template <class T> struct ConstantBuffer
         return buffer[n];
     }
 
+    inline std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> DescriptorHandles()
+    {
+        CD3DX12_GPU_DESCRIPTOR_HANDLE base{Resource()->GetGPUVirtualAddress()};
+
+        std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> handles{base};
+
+        for (INT i = 1; i < Size(); ++i)
+        {
+            CD3DX12_GPU_DESCRIPTOR_HANDLE handle{base, i, ElementSize()};
+            handles.push_back(handle);
+        }
+
+        return handles;
+    }
+
   private:
     // Note: Move semantics!
 
