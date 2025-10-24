@@ -13,7 +13,11 @@ FrameData::FrameData(ID3D12Device *device)
 
     HR(device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(m_descriptorHeap.GetAddressOf())));
 
-    auto projectionDescriptions = m_cbProjection.ConstantBufferViewDescriptions();
+    UINT incrementSize =
+        device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+    INT index = 0;
+    index = Add(device, incrementSize, index, m_cbProjection);
 }
 
 } // namespace zxultra

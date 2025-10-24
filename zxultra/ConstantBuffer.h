@@ -89,7 +89,7 @@ template <class T> struct ConstantBuffer
         return buffer[n];
     }
 
-    inline std::vector<D3D12_CONSTANT_BUFFER_VIEW_DESC> ConstantBufferViewDescriptions()
+    inline std::vector<D3D12_CONSTANT_BUFFER_VIEW_DESC> ConstantBufferViewDescriptions() const
     {
         std::vector<D3D12_CONSTANT_BUFFER_VIEW_DESC> descriptions;
 

@@ -26,6 +26,27 @@ struct FrameData
         return m_cbModel;
     }
 
+    template <class T>
+    inline UINT Add(ID3D12Device *device, UINT incrementSize, INT startingIndex,
+                    const ConstantBuffer<T> &constantBuffer)
+    {
+        INT index = startingIndex;
+
+        CD3DX12_CPU_DESCRIPTOR_HANDLE base{m_descriptorHeap->GetCPUDescriptorHandleForHeapStart()};
+
+        for (const D3D12_CONSTANT_BUFFER_VIEW_DESC &desc :
+             constantBuffer.ConstantBufferViewDescriptions())
+        {
+            CD3DX12_CPU_DESCRIPTOR_HANDLE handle{base, index, incrementSize};
+            device->CreateConstantBufferView(
+                &desc, m_descriptorHeap->GetCPUDescriptorHandleForHeapStart());
+
+            index++;
+        }
+
+        return index;
+    }
+
   private:
     ConstantBuffer<XMFLOAT4X4> m_cbProjection;
     ConstantBuffer<XMFLOAT4X4> m_cbView;
