@@ -69,7 +69,7 @@ template <class T> struct ConstantBuffer
 
     inline D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress(UINT n) const
     {
-        return Resource()->GetGPUVirtualAddress() + n *m_elementSize;
+        return Resource()->GetGPUVirtualAddress() + n * m_elementSize;
     }
 
     inline BYTE *MappedBuffer() const
@@ -89,29 +89,15 @@ template <class T> struct ConstantBuffer
         return buffer[n];
     }
 
-    inline std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> DescriptorHandles()
-    {
-        CD3DX12_GPU_DESCRIPTOR_HANDLE base{Resource()->GetGPUVirtualAddress()};
-
-        std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> handles{base};
-
-        for (INT i = 1; i < Size(); ++i)
-        {
-            CD3DX12_GPU_DESCRIPTOR_HANDLE handle{base, i, ElementSize()};
-            handles.push_back(handle);
-        }
-
-        return handles;
-    }
-
     inline std::vector<D3D12_CONSTANT_BUFFER_VIEW_DESC> ConstantBufferViewDescriptions()
     {
         std::vector<D3D12_CONSTANT_BUFFER_VIEW_DESC> descriptions;
 
-        for (const auto &descriptorHandle : DescriptorHandles())
+        for (UINT64 i = 0; i < Size(); ++i)
         {
             D3D12_CONSTANT_BUFFER_VIEW_DESC constantBufferViewDescription{};
-            constantBufferViewDescription.BufferLocation = descriptorHandle.ptr;
+            constantBufferViewDescription.BufferLocation =
+                Resource()->GetGPUVirtualAddress() + i * ElementSize();
             constantBufferViewDescription.SizeInBytes = ElementSize();
         }
 
