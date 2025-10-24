@@ -12,6 +12,8 @@ FrameData::FrameData(ID3D12Device *device)
     desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
     HR(device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(m_descriptorHeap.GetAddressOf())));
+
+    auto projectionDescriptions = m_cbProjection.ConstantBufferViewDescriptions();
 }
 
 } // namespace zxultra

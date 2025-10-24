@@ -104,6 +104,20 @@ template <class T> struct ConstantBuffer
         return handles;
     }
 
+    inline std::vector<D3D12_CONSTANT_BUFFER_VIEW_DESC> ConstantBufferViewDescriptions()
+    {
+        std::vector<D3D12_CONSTANT_BUFFER_VIEW_DESC> descriptions;
+
+        for (const auto &descriptorHandle : DescriptorHandles())
+        {
+            D3D12_CONSTANT_BUFFER_VIEW_DESC constantBufferViewDescription{};
+            constantBufferViewDescription.BufferLocation = descriptorHandle.ptr;
+            constantBufferViewDescription.SizeInBytes = ElementSize();
+        }
+
+        return descriptions;
+    }
+
   private:
     // Note: Move semantics!
 
