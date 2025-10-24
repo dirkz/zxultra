@@ -99,6 +99,8 @@ template <class T> struct ConstantBuffer
             constantBufferViewDescription.BufferLocation =
                 Resource()->GetGPUVirtualAddress() + i * ElementSize();
             constantBufferViewDescription.SizeInBytes = ElementSize();
+
+            descriptions.push_back(constantBufferViewDescription);
         }
 
         return descriptions;
