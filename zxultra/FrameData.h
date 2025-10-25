@@ -39,8 +39,7 @@ struct FrameData
              constantBuffer.ConstantBufferViewDescriptions())
         {
             CD3DX12_CPU_DESCRIPTOR_HANDLE handle{base, index, incrementSize};
-            device->CreateConstantBufferView(
-                &desc, m_descriptorHeap->GetCPUDescriptorHandleForHeapStart());
+            device->CreateConstantBufferView(&desc, handle);
 
             index++;
         }
