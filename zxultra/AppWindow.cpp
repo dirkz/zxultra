@@ -124,7 +124,7 @@ void AppWindow::Resize(int width, int height)
 
         m_commandList.Reset();
 
-        m_swapchain.Resize(width, height, m_device.Get(), m_commandList.Get());
+        m_swapchain.Resize(width, height, m_commandList.Get());
 
         m_commandList.Execute(m_commandQueue.Get());
     }

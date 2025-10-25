@@ -18,13 +18,11 @@ struct Swapchain
               ID3D12GraphicsCommandList *commandList, HWND hwnd,
               DescriptorHandleSizes &descriptorHandleSizes);
 
-    void CreateBuffers(ID3D12Device *device);
-    void CreateDepthStencilBufferAndView(ID3D12Device *device,
-                                         ID3D12GraphicsCommandList *commandList);
+    void CreateBuffers();
+    void CreateDepthStencilBufferAndView(ID3D12GraphicsCommandList *commandList);
 
     void Present();
-    void Resize(int width, int height, ID3D12Device *device,
-                ID3D12GraphicsCommandList *commandList);
+    void Resize(int width, int height, ID3D12GraphicsCommandList *commandList);
 
     inline UINT Width() const
     {
@@ -45,6 +43,7 @@ struct Swapchain
     D3D12_RECT FullScissorRect() const;
 
   private:
+    ComPtr<ID3D12Device> m_device;
     ComPtr<IDXGISwapChain1> m_swapchain;
 
     UINT m_width;

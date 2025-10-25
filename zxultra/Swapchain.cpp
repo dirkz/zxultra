@@ -15,7 +15,7 @@ DXGI_SAMPLE_DESC Swapchain::SampleDescription()
 Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *commandQueue,
                      ID3D12GraphicsCommandList *commandList, HWND hwnd,
                      DescriptorHandleSizes &descriptorHandleSizes)
-    : m_descriptorHandleSizes{descriptorHandleSizes}
+    : m_device{device}, m_descriptorHandleSizes{descriptorHandleSizes}
 {
     DXGI_SWAP_CHAIN_DESC1 desc{};
     desc.Format = BackBufferFormat;
@@ -40,11 +40,11 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12Command
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     HR(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(m_dsvDescriptorHeap.GetAddressOf())));
 
-    CreateBuffers(device);
-    CreateDepthStencilBufferAndView(device, commandList);
+    CreateBuffers();
+    CreateDepthStencilBufferAndView(commandList);
 }
 
-void Swapchain::CreateBuffers(ID3D12Device *device)
+void Swapchain::CreateBuffers()
 {
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle{
         m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart()};
@@ -52,13 +52,12 @@ void Swapchain::CreateBuffers(ID3D12Device *device)
     for (auto i = 0; i < BufferCount; ++i)
     {
         HR(m_swapchain->GetBuffer(i, IID_PPV_ARGS(m_buffers[i].GetAddressOf())));
-        device->CreateRenderTargetView(m_buffers[i].Get(), nullptr, rtvHeapHandle);
+        m_device->CreateRenderTargetView(m_buffers[i].Get(), nullptr, rtvHeapHandle);
         rtvHeapHandle.Offset(1, m_descriptorHandleSizes.RtvDescriptorHandleIncrementSize());
     }
 }
 
-void Swapchain::CreateDepthStencilBufferAndView(ID3D12Device *device,
-                                                ID3D12GraphicsCommandList *commandList)
+void Swapchain::CreateDepthStencilBufferAndView(ID3D12GraphicsCommandList *commandList)
 {
     D3D12_RESOURCE_DESC desc{};
     desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
@@ -78,12 +77,12 @@ void Swapchain::CreateDepthStencilBufferAndView(ID3D12Device *device,
 
     auto heapProperties = CD3DX12_HEAP_PROPERTIES{D3D12_HEAP_TYPE_DEFAULT};
 
-    HR(device->CreateCommittedResource(
+    HR(m_device->CreateCommittedResource(
         &heapProperties, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COMMON, &optClear,
         IID_PPV_ARGS(m_depthStencilBuffer.ReleaseAndGetAddressOf())));
 
-    device->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr,
-                                   DepthStencilDescriptorHandle());
+    m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr,
+                                     DepthStencilDescriptorHandle());
 
     auto resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
         m_depthStencilBuffer.Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
@@ -97,8 +96,7 @@ void Swapchain::Present()
     m_currentBackBufferIndex = (m_currentBackBufferIndex + 1) % BufferCount;
 }
 
-void Swapchain::Resize(int width, int height, ID3D12Device *device,
-                       ID3D12GraphicsCommandList *commandList)
+void Swapchain::Resize(int width, int height, ID3D12GraphicsCommandList *commandList)
 {
     // Have to release all buffers up-front, before the swap chain resize
     for (auto i = 0; i < BufferCount; ++i)
@@ -108,8 +106,8 @@ void Swapchain::Resize(int width, int height, ID3D12Device *device,
 
     HR(m_swapchain->ResizeBuffers(BufferCount, width, height, BackBufferFormat, 0));
 
-    CreateBuffers(device);
-    CreateDepthStencilBufferAndView(device, commandList);
+    CreateBuffers();
+    CreateDepthStencilBufferAndView(commandList);
 
     m_currentBackBufferIndex = 0;
 
