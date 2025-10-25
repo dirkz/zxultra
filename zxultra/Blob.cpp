@@ -21,15 +21,24 @@ std::filesystem::path GetBasePath()
 
 ComPtr<ID3DBlob> LoadBlob(const std::filesystem::path &filePath)
 {
-    std::ifstream ifs{filePath.c_str(), std::ios::binary | std::ios::in | std::ios::ate};
+    std::ifstream ifs{filePath.c_str(), std::ios::binary | std::ios::ate};
     if (!ifs)
     {
         throw std::runtime_error{"cannot open blob file"};
     }
+
     size_t size = ifs.tellg();
+    ifs.seekg(0);
 
     ComPtr<ID3DBlob> blob;
     HR(D3DCreateBlob(size, blob.GetAddressOf()));
+
+    ifs.read(reinterpret_cast<char *>(blob->GetBufferPointer()), size);
+    if (!ifs)
+    {
+        auto numBytesRead = ifs.gcount();
+        throw std::runtime_error{"cannot read bytes from blob file"};
+    }
 
     return blob;
 }

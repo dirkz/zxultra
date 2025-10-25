@@ -90,6 +90,7 @@ AppWindow::AppWindow(HWND hwnd)
     m_fence.Flush(m_commandQueue.Get());
 
     CreateRootSignature();
+    CreatePipelineState();
 }
 
 void AppWindow::Resize(int width, int height)
@@ -258,8 +259,6 @@ void AppWindow::CreateRootSignature()
     HR(m_device->CreateRootSignature(nodeMask, serializedRootSignature->GetBufferPointer(),
                                      serializedRootSignature->GetBufferSize(),
                                      IID_PPV_ARGS(m_rootSignature.GetAddressOf())));
-
-    CreatePipelineState();
 }
 
 void AppWindow::CreatePipelineState()
