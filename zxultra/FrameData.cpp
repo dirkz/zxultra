@@ -16,4 +16,9 @@ FrameData::FrameData(ID3D12Device *device)
     index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbModel);
 }
 
+std::array<ID3D12DescriptorHeap *, 1> FrameData::DescriptorHeaps()
+{
+    return {m_descriptorHeap.Get()};
+}
+
 } // namespace zxultra

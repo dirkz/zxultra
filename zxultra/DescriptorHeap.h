@@ -32,6 +32,21 @@ struct DescriptorHeap
         return index;
     }
 
+    ID3D12DescriptorHeap *Get()
+    {
+        return m_descriptorHeap.Get();
+    }
+
+    ID3D12DescriptorHeap *operator*()
+    {
+        return m_descriptorHeap.Get();
+    }
+
+    ID3D12DescriptorHeap *operator->()
+    {
+        return m_descriptorHeap.Get();
+    }
+
   private:
     ComPtr<ID3D12Device> m_device;
     ComPtr<ID3D12DescriptorHeap> m_descriptorHeap;

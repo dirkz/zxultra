@@ -108,13 +108,26 @@ void AppWindow::Resize(int width, int height)
 
 void AppWindow::Update(double elapsedSeconds)
 {
+    XMMATRIX identity = XMMatrixIdentity();
+
+    XMStoreFloat4x4(&m_frameData.CbModel()[0], identity);
+    XMStoreFloat4x4(&m_frameData.CbView()[0], identity);
+    XMStoreFloat4x4(&m_frameData.CbProjection()[0], identity);
 }
 
 void AppWindow::Draw()
 {
     m_fence.Flush(m_commandQueue.Get());
 
-    m_commandList.Reset();
+    m_commandList.Reset(m_pipelineState.Get());
+    m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
+
+    auto descriptorHeaps = m_frameData.DescriptorHeaps();
+    m_commandList->SetDescriptorHeaps(static_cast<UINT>(descriptorHeaps.size()),
+                                      descriptorHeaps.data());
+
+    m_commandList->SetGraphicsRootDescriptorTable(
+        0, m_frameData.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
     auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_PRESENT,

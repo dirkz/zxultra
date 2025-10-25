@@ -27,6 +27,13 @@ struct FrameData
         return m_cbModel;
     }
 
+    std::array<ID3D12DescriptorHeap *, 1> DescriptorHeaps();
+
+    DescriptorHeap& GetDescriptorHeap()
+    {
+        return m_descriptorHeap;
+    }
+
   private:
     ConstantBuffer<XMFLOAT4X4> m_cbProjection;
     ConstantBuffer<XMFLOAT4X4> m_cbView;

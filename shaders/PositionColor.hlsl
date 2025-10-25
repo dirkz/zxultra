@@ -1,6 +1,16 @@
-cbuffer cbPerObject : register(b0)
+cbuffer cbWorld : register(b0)
 {
-    float4x4 WorldViewProjection;
+    float4x4 World;
+}
+
+cbuffer cbView : register(b1)
+{
+    float4x4 View;
+}
+
+cbuffer cbProjection : register(b2)
+{
+    float4x4 Projection;
 }
 
 struct Vertex
@@ -20,7 +30,10 @@ Fragment VS(Vertex v)
     Fragment fragment;
 
     float4 hPosition = float4(v.Position, 1);
-    fragment.Position = mul(hPosition, WorldViewProjection);
+    float4 position = mul(hPosition, World);
+    position = mul(hPosition, View);
+    position = mul(hPosition, Projection);
+    fragment.Position = position;
     fragment.Color = v.Color;
     
     return fragment;
