@@ -19,7 +19,7 @@ struct CommandList
     /// <summary>
     /// Resets the command list and allocator.
     /// </summary>
-    void Reset();
+    void Reset(ID3D12PipelineState *pipelineState = nullptr);
 
     inline ID3D12GraphicsCommandList *operator*()
     {

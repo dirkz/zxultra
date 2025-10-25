@@ -37,10 +37,10 @@ void CommandList::Execute(ID3D12CommandQueue *commandQueue)
     commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 }
 
-void CommandList::Reset()
+void CommandList::Reset(ID3D12PipelineState *pipelineState)
 {
     HR(m_commandAllocator->Reset());
-    HR(m_commandList->Reset(m_commandAllocator.Get(), nullptr));
+    HR(m_commandList->Reset(m_commandAllocator.Get(), pipelineState));
 }
 
 } // namespace zxultra
