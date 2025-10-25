@@ -3,6 +3,7 @@
 #include "stdafx.h"
 
 #include "ConstantBuffer.h"
+#include "DescriptorHeap.h"
 
 namespace zxultra
 {
@@ -52,7 +53,7 @@ struct FrameData
     ConstantBuffer<XMFLOAT4X4> m_cbView;
     ConstantBuffer<XMFLOAT4X4> m_cbModel;
 
-    ComPtr<ID3D12DescriptorHeap> m_descriptorHeap;
+    DescriptorHeap m_descriptorHeap;
 };
 
 } // namespace zxultra
