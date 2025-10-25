@@ -13,7 +13,7 @@ struct DescriptorHeap
                    D3D12_DESCRIPTOR_HEAP_FLAGS flags);
 
     template <class T>
-    inline UINT CreateConstantBufferViews(ID3D12Device *device, INT startingIndex,
+    inline UINT CreateConstantBufferViews(INT startingIndex,
                                           const ConstantBuffer<T> &constantBuffer)
     {
         INT index = startingIndex;
@@ -24,7 +24,7 @@ struct DescriptorHeap
              constantBuffer.ConstantBufferViewDescriptions())
         {
             CD3DX12_CPU_DESCRIPTOR_HANDLE handle{base, index, m_descriptorHandleIncrementSize};
-            device->CreateConstantBufferView(&desc, handle);
+            m_device->CreateConstantBufferView(&desc, handle);
 
             index++;
         }
@@ -33,6 +33,7 @@ struct DescriptorHeap
     }
 
   private:
+    ComPtr<ID3D12Device> m_device;
     ComPtr<ID3D12DescriptorHeap> m_descriptorHeap;
     UINT m_descriptorHandleIncrementSize;
 };

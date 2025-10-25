@@ -10,9 +10,9 @@ FrameData::FrameData(ID3D12Device *device)
                        D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE}
 {
     INT index = 0;
-    index = m_descriptorHeap.CreateConstantBufferViews(device, index, m_cbProjection);
-    index = m_descriptorHeap.CreateConstantBufferViews(device, index, m_cbView);
-    index = m_descriptorHeap.CreateConstantBufferViews(device, index, m_cbModel);
+    index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbProjection);
+    index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbView);
+    index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbModel);
 }
 
 } // namespace zxultra

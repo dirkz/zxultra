@@ -5,7 +5,8 @@ namespace zxultra
 
 DescriptorHeap::DescriptorHeap(ID3D12Device *device, UINT numDescriptors,
                                D3D12_DESCRIPTOR_HEAP_TYPE type, D3D12_DESCRIPTOR_HEAP_FLAGS flags)
-    : m_descriptorHandleIncrementSize{device->GetDescriptorHandleIncrementSize(type)}
+    : m_device{device},
+      m_descriptorHandleIncrementSize{device->GetDescriptorHandleIncrementSize(type)}
 {
     D3D12_DESCRIPTOR_HEAP_DESC desc{};
     desc.NumDescriptors = numDescriptors;
