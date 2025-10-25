@@ -148,6 +148,8 @@ void AppWindow::Draw()
 
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 
+    //m_commandList->DrawIndexedInstanced(3, 1, 0, 0, 0);
+
     auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET,
                                                             D3D12_RESOURCE_STATE_PRESENT);
@@ -256,6 +258,8 @@ void AppWindow::CreateRootSignature()
     HR(m_device->CreateRootSignature(nodeMask, serializedRootSignature->GetBufferPointer(),
                                      serializedRootSignature->GetBufferSize(),
                                      IID_PPV_ARGS(m_rootSignature.GetAddressOf())));
+
+    CreatePipelineState();
 }
 
 void AppWindow::CreatePipelineState()
