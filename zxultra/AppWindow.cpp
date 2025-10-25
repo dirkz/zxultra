@@ -82,7 +82,7 @@ AppWindow::AppWindow(HWND hwnd)
                                          D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE,
                                          numQualityLevels));
 
-    DefaultBufferCreator uploadBuffers{};
+    DefaultBufferCreator uploadBuffers{m_device.Get()};
     CreateVertexBuffers(uploadBuffers);
 
     // Wait for the swap chain initialization and buffer uploads.
@@ -101,15 +101,14 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
 
     VertexBuffer<VertexWithColor, IndexType> vertexBuffer{v0, v1, v2};
 
-    m_vertexBuffer = bufferCreator.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(),
-                                                       vertexBuffer.Vertices());
+    m_vertexBuffer =
+        bufferCreator.CreateDefaultBuffer(m_commandList.Get(), vertexBuffer.Vertices());
 
     m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
     m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Vertices().size_bytes());
     m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
 
-    m_indexBuffer = bufferCreator.CreateDefaultBuffer(m_device.Get(), m_commandList.Get(),
-                                                      vertexBuffer.Indices());
+    m_indexBuffer = bufferCreator.CreateDefaultBuffer(m_commandList.Get(), vertexBuffer.Indices());
 
     m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
     m_indexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Indices().size_bytes());

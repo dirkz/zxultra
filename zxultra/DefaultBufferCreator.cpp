@@ -3,24 +3,27 @@
 namespace zxultra
 {
 
+DefaultBufferCreator::DefaultBufferCreator(ID3D12Device *device) : m_device{device}
+{
+}
+
 ComPtr<ID3D12Resource> DefaultBufferCreator::CreateDefaultBuffer(
-    ID3D12Device *device, ID3D12GraphicsCommandList *commandList, const void *pData,
-    size_t dataSize)
+    ID3D12GraphicsCommandList *commandList, const void *pData, size_t dataSize)
 {
     ComPtr<ID3D12Resource> defaultBuffer;
 
     CD3DX12_HEAP_PROPERTIES heapPropertiesDefault{D3D12_HEAP_TYPE_DEFAULT};
     auto resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(dataSize);
-    HR(device->CreateCommittedResource(&heapPropertiesDefault, D3D12_HEAP_FLAG_NONE, &resourceDesc,
-                                       D3D12_RESOURCE_STATE_COMMON, nullptr,
-                                       IID_PPV_ARGS(defaultBuffer.GetAddressOf())));
+    HR(m_device->CreateCommittedResource(&heapPropertiesDefault, D3D12_HEAP_FLAG_NONE,
+                                         &resourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr,
+                                         IID_PPV_ARGS(defaultBuffer.GetAddressOf())));
 
     ComPtr<ID3D12Resource> uploadBuffer;
 
     CD3DX12_HEAP_PROPERTIES heapPropertiesUpload{D3D12_HEAP_TYPE_UPLOAD};
-    HR(device->CreateCommittedResource(&heapPropertiesUpload, D3D12_HEAP_FLAG_NONE, &resourceDesc,
-                                       D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-                                       IID_PPV_ARGS(uploadBuffer.GetAddressOf())));
+    HR(m_device->CreateCommittedResource(&heapPropertiesUpload, D3D12_HEAP_FLAG_NONE, &resourceDesc,
+                                         D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+                                         IID_PPV_ARGS(uploadBuffer.GetAddressOf())));
 
     m_uploadBuffers.push_back(uploadBuffer);
 
