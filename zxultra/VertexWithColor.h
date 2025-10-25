@@ -14,12 +14,7 @@ struct VertexWithColor
     friend std::hash<zxultra::VertexWithColor>;
     friend bool operator==(const VertexWithColor &v1, const VertexWithColor &v2);
 
-    VertexWithColor(XMFLOAT3 position, FXMVECTOR color) : m_position{position}
-    {
-        XMStoreFloat4(&m_color, color);
-    };
-
-    std::vector<D3D12_INPUT_ELEMENT_DESC> ElementDescriptions()
+    static std::vector<D3D12_INPUT_ELEMENT_DESC> ElementDescriptions()
     {
         constexpr UINT semanticIndex = 0;
         constexpr UINT inputSlot = 0;
@@ -33,6 +28,11 @@ struct VertexWithColor
                     offsetof(VertexWithColor, m_color), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
                     instanceDataStepRate}};
     }
+
+    VertexWithColor(XMFLOAT3 position, FXMVECTOR color) : m_position{position}
+    {
+        XMStoreFloat4(&m_color, color);
+    };
 
   private:
     XMFLOAT3 m_position;

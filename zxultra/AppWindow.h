@@ -29,6 +29,7 @@ struct AppWindow
   private:
     void CreateVertexBuffers(DefaultBufferCreator &bufferCreator);
     void CreateRootSignature();
+    void CreatePipelineState();
 
     ComPtr<IDXGIFactory2> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
@@ -50,6 +51,7 @@ struct AppWindow
     FrameData m_frameData;
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
+    ComPtr<ID3D12PipelineState> m_pipelineState;
 };
 
 } // namespace zxultra

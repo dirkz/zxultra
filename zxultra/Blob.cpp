@@ -42,4 +42,9 @@ ComPtr<ID3DBlob> LoadBlob(const std::wstring &relativeBase, const std::wstring &
     return LoadBlob(filePath);
 }
 
+D3D12_SHADER_BYTECODE ByteCode(ComPtr<ID3DBlob> blob)
+{
+    return D3D12_SHADER_BYTECODE{blob->GetBufferPointer(), blob->GetBufferSize()};
+}
+
 } // namespace zxultra

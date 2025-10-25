@@ -89,9 +89,6 @@ AppWindow::AppWindow(HWND hwnd)
     m_commandList.Execute(m_commandQueue.Get());
     m_fence.Flush(m_commandQueue.Get());
 
-    ComPtr<ID3DBlob> vertexShaderBlob = LoadBlob(L"shaders", L"PositionColor_VS.cso");
-    ComPtr<ID3DBlob> fragmentShaderBlob = LoadBlob(L"shaders", L"PositionColor_PS.cso");
-
     CreateRootSignature();
 }
 
@@ -246,6 +243,37 @@ void AppWindow::CreateRootSignature()
     HR(m_device->CreateRootSignature(nodeMask, serializedRootSignature->GetBufferPointer(),
                                      serializedRootSignature->GetBufferSize(),
                                      IID_PPV_ARGS(m_rootSignature.GetAddressOf())));
+}
+
+void AppWindow::CreatePipelineState()
+{
+    ComPtr<ID3DBlob> vertexShaderBlob = LoadBlob(L"shaders", L"PositionColor_VS.cso");
+    ComPtr<ID3DBlob> fragmentShaderBlob = LoadBlob(L"shaders", L"PositionColor_PS.cso");
+
+    D3D12_SHADER_BYTECODE vsByteCode = ByteCode(vertexShaderBlob);
+    D3D12_SHADER_BYTECODE psByteCode = ByteCode(fragmentShaderBlob);
+
+    std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescriptions =
+        VertexWithColor::ElementDescriptions();
+    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{inputElementDescriptions.data(),
+                                            static_cast<UINT>(inputElementDescriptions.size())};
+
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC desc{};
+    desc.pRootSignature = m_rootSignature.Get();
+    desc.VS = vsByteCode;
+    desc.PS = psByteCode;
+    desc.InputLayout = inputLayoutDesc;
+    desc.BlendState = CD3DX12_BLEND_DESC{CD3DX12_DEFAULT{}};
+    desc.SampleMask = UINT_MAX;
+    desc.RasterizerState = CD3DX12_RASTERIZER_DESC{CD3DX12_DEFAULT{}};
+    desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{CD3DX12_DEFAULT{}};
+    desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    desc.NumRenderTargets = 1;
+    desc.RTVFormats[0] = BackBufferFormat;
+    desc.DSVFormat = DepthStencilFormat;
+    desc.SampleDesc = Swapchain::SampleDescription();
+
+    HR(m_device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(m_pipelineState.GetAddressOf())));
 }
 
 } // namespace zxultra
