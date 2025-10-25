@@ -91,28 +91,8 @@ AppWindow::AppWindow(HWND hwnd)
 
     ComPtr<ID3DBlob> vertexShaderBlob = LoadBlob(L"shaders", L"PositionColor_VS.cso");
     ComPtr<ID3DBlob> fragmentShaderBlob = LoadBlob(L"shaders", L"PositionColor_PS.cso");
-}
 
-void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
-{
-    VertexWithColor v0{{-0.5f, -0.5f, 0.f}, Colors::Red};
-    VertexWithColor v1{{-0.5f, +0.5f, 0.f}, Colors::Green};
-    VertexWithColor v2{{+0.5f, +0.5f, 0.f}, Colors::Blue};
-
-    VertexBuffer<VertexWithColor, IndexType> vertexBuffer{v0, v1, v2};
-
-    m_vertexBuffer =
-        bufferCreator.CreateDefaultBuffer(m_commandList.Get(), vertexBuffer.Vertices());
-
-    m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-    m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Vertices().size_bytes());
-    m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
-
-    m_indexBuffer = bufferCreator.CreateDefaultBuffer(m_commandList.Get(), vertexBuffer.Indices());
-
-    m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
-    m_indexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Indices().size_bytes());
-    m_indexBufferView.Format = IndexFormat;
+    CreateRootSignature();
 }
 
 void AppWindow::Resize(int width, int height)
@@ -208,6 +188,43 @@ void AppWindow::LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter)
 
         ++i;
     }
+}
+
+void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
+{
+    VertexWithColor v0{{-0.5f, -0.5f, 0.f}, Colors::Red};
+    VertexWithColor v1{{-0.5f, +0.5f, 0.f}, Colors::Green};
+    VertexWithColor v2{{+0.5f, +0.5f, 0.f}, Colors::Blue};
+
+    VertexBuffer<VertexWithColor, IndexType> vertexBuffer{v0, v1, v2};
+
+    m_vertexBuffer =
+        bufferCreator.CreateDefaultBuffer(m_commandList.Get(), vertexBuffer.Vertices());
+
+    m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+    m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Vertices().size_bytes());
+    m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
+
+    m_indexBuffer = bufferCreator.CreateDefaultBuffer(m_commandList.Get(), vertexBuffer.Indices());
+
+    m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
+    m_indexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Indices().size_bytes());
+    m_indexBufferView.Format = IndexFormat;
+}
+
+void AppWindow::CreateRootSignature()
+{
+    CD3DX12_ROOT_PARAMETER rootParameters[1]{};
+    CD3DX12_DESCRIPTOR_RANGE descriptorRange{};
+    constexpr UINT baseShaderRegister = 0;
+    descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, NumConstantBuffers, baseShaderRegister);
+    rootParameters[0].InitAsDescriptorTable(1, &descriptorRange);
+
+    constexpr UINT numStaticSamples = 0;
+    constexpr D3D12_STATIC_SAMPLER_DESC *samplerDescription = nullptr;
+    CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDescription{
+        _countof(rootParameters), rootParameters, numStaticSamples, samplerDescription,
+        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT};
 }
 
 } // namespace zxultra

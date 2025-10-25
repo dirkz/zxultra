@@ -16,8 +16,6 @@ struct AppWindow
 {
     AppWindow(HWND hwnd);
 
-    void CreateVertexBuffers(DefaultBufferCreator &bufferCreator);
-
     void Resize(int width, int height);
 
     void Update(double elapsedSeconds);
@@ -29,6 +27,9 @@ struct AppWindow
     void LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter);
 
   private:
+    void CreateVertexBuffers(DefaultBufferCreator &bufferCreator);
+    void CreateRootSignature();
+
     ComPtr<IDXGIFactory2> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
     ComPtr<ID3D12Device> m_device;
