@@ -10,8 +10,14 @@ using namespace zxultra;
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
-    BaseWindow<AppWindow> baseWindow{hInstance, L"ZFX Ultra", 1280, 800};
-    baseWindow.ShowWindow(nShowCmd);
+    int result = 0;
 
-    return baseWindow.RunMessageLoop();
+    {
+        BaseWindow<AppWindow> baseWindow{hInstance, L"ZFX Ultra", 1280, 800};
+        baseWindow.ShowWindow(nShowCmd);
+
+        result = baseWindow.RunMessageLoop();
+    }
+
+    return result;
 }
