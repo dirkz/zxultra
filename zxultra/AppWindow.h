@@ -48,6 +48,8 @@ struct AppWindow
     D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
 
     FrameData m_frameData;
+
+    ComPtr<ID3D12RootSignature> m_rootSignature;
 };
 
 } // namespace zxultra

@@ -225,6 +225,27 @@ void AppWindow::CreateRootSignature()
     CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDescription{
         _countof(rootParameters), rootParameters, numStaticSamples, samplerDescription,
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT};
+
+    ComPtr<ID3DBlob> serializedRootSignature = nullptr;
+    ComPtr<ID3DBlob> errorBlob = nullptr;
+    HRESULT hr = D3D12SerializeRootSignature(
+        &rootSignatureDescription, D3D_ROOT_SIGNATURE_VERSION_1,
+        serializedRootSignature.GetAddressOf(), errorBlob.GetAddressOf());
+
+    if (!SUCCEEDED(hr) && errorBlob.Get() != nullptr)
+    {
+        const WCHAR *msg = reinterpret_cast<WCHAR *>(errorBlob->GetBufferPointer());
+        OutputDebugString(L"D3D12SerializeRootSignature failed with the following error:\n");
+        OutputDebugString(msg);
+        OutputDebugString(L"\n");
+    }
+
+    HR(hr);
+
+    constexpr UINT nodeMask = 0;
+    HR(m_device->CreateRootSignature(nodeMask, serializedRootSignature->GetBufferPointer(),
+                                     serializedRootSignature->GetBufferSize(),
+                                     IID_PPV_ARGS(m_rootSignature.GetAddressOf())));
 }
 
 } // namespace zxultra
