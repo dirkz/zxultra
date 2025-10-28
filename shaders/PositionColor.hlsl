@@ -1,6 +1,6 @@
-cbuffer cbWorld : register(b0)
+cbuffer cbProjection : register(b0)
 {
-    float4x4 World;
+    float4x4 Projection;
 }
 
 cbuffer cbView : register(b1)
@@ -8,9 +8,9 @@ cbuffer cbView : register(b1)
     float4x4 View;
 }
 
-cbuffer cbProjection : register(b2)
+cbuffer cbWorld : register(b2)
 {
-    float4x4 Projection;
+    float4x4 World;
 }
 
 struct Vertex
