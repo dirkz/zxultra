@@ -82,7 +82,7 @@ void Swapchain::CreateDepthStencilBufferAndView(ID3D12GraphicsCommandList *comma
         IID_PPV_ARGS(m_depthStencilBuffer.ReleaseAndGetAddressOf())));
 
     m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr,
-                                     DepthStencilDescriptorHandle());
+                                     DepthStencilCPUDescriptorHandle());
 
     auto resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
         m_depthStencilBuffer.Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
@@ -117,14 +117,14 @@ void Swapchain::Resize(int width, int height, ID3D12GraphicsCommandList *command
     m_height = desc.Height;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferDescriptorHandle() const
+D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferCPUDescriptorHandle() const
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE{
         m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), m_currentBackBufferIndex,
         m_descriptorHandleSizes.RtvDescriptorHandleIncrementSize()};
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::DepthStencilDescriptorHandle() const
+D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::DepthStencilCPUDescriptorHandle() const
 {
     return m_dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 }

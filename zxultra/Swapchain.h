@@ -34,8 +34,8 @@ struct Swapchain
         return m_height;
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferDescriptorHandle() const;
-    D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilDescriptorHandle() const;
+    D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferCPUDescriptorHandle() const;
+    D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilCPUDescriptorHandle() const;
 
     ID3D12Resource *CurrentBackBufferResource() const;
 

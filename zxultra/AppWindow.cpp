@@ -133,10 +133,10 @@ void AppWindow::Draw()
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET);
     m_commandList->ResourceBarrier(1, &transition1);
 
-    m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
+    m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferCPUDescriptorHandle(),
                                          Colors::CornflowerBlue, 0, nullptr);
 
-    m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
+    m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilCPUDescriptorHandle(),
                                          D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
                                          0, nullptr);
 
