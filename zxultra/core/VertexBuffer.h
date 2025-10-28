@@ -74,11 +74,6 @@ template <class T, class I, class H = std::hash<T>, class E = std::equal_to<T>> 
         return std::span{m_indices};
     }
 
-    inline unsigned int NumVertices() const
-    {
-        return static_cast<unsigned int>(m_vertices.size());
-    }
-
     inline unsigned int NumIndices() const
     {
         return static_cast<unsigned int>(m_indices.size());
