@@ -140,6 +140,10 @@ void AppWindow::Draw()
                                          D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
                                          0, nullptr);
 
+    D3D12_CPU_DESCRIPTOR_HANDLE backBuffer = m_swapchain.CurrentBackBufferCPUDescriptorHandle();
+    D3D12_CPU_DESCRIPTOR_HANDLE depthStencilBuffer = m_swapchain.DepthStencilCPUDescriptorHandle();
+    m_commandList->OMSetRenderTargets(1, &backBuffer, true, &depthStencilBuffer);
+
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
     auto descriptorHeaps = m_frameData.DescriptorHeaps();
