@@ -144,18 +144,17 @@ void AppWindow::Draw()
     D3D12_CPU_DESCRIPTOR_HANDLE depthStencilBuffer = m_swapchain.DepthStencilCPUDescriptorHandle();
     m_commandList->OMSetRenderTargets(1, &backBuffer, true, &depthStencilBuffer);
 
-    m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
-
     auto descriptorHeaps = m_frameData.DescriptorHeaps();
     m_commandList->SetDescriptorHeaps(static_cast<UINT>(descriptorHeaps.size()),
                                       descriptorHeaps.data());
+
+    m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
     m_commandList->SetGraphicsRootDescriptorTable(
         0, m_frameData.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     m_commandList->IASetIndexBuffer(&m_indexBufferView);
-
     m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     m_commandList->DrawIndexedInstanced(3, 1, 0, 0, 0);
