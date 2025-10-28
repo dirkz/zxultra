@@ -6,7 +6,6 @@ add_library(zxultra OBJECT
 	"Fence.cpp"
 	"Swapchain.h"
 	"Swapchain.cpp"
-	"DescriptorHandleSizes.h"
 	"CommandList.h"
 	"CommandList.cpp"
 	"DefaultBufferCreator.h"

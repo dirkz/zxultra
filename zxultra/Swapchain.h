@@ -2,7 +2,6 @@
 
 #include "stdafx.h"
 
-#include "DescriptorHandleSizes.h"
 #include "Formats.h"
 
 namespace zxultra

@@ -6,7 +6,6 @@
 
 #include "CommandList.h"
 #include "DefaultBufferCreator.h"
-#include "DescriptorHandleSizes.h"
 #include "Fence.h"
 #include "FrameData.h"
 #include "Swapchain.h"
@@ -42,7 +41,6 @@ struct AppWindow
     Fence m_fence;
     CommandList m_commandList;
 
-    DescriptorHandleSizes m_descriptorHandleSizes;
     Swapchain m_swapchain;
 
     VertexBuffer<VertexWithColor, IndexType> m_vertexBuffer;
