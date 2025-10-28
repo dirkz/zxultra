@@ -108,15 +108,15 @@ void Swapchain::Resize(int width, int height, ID3D12GraphicsCommandList *command
 
     HR(m_swapchain->ResizeBuffers(BufferCount, width, height, BackBufferFormat, 0));
 
-    CreateBuffers();
-    CreateDepthStencilBufferAndView(commandList);
-
-    m_currentBackBufferIndex = 0;
-
     DXGI_SWAP_CHAIN_DESC1 desc{};
     HR(m_swapchain->GetDesc1(&desc));
     m_width = desc.Width;
     m_height = desc.Height;
+
+    CreateBuffers();
+    CreateDepthStencilBufferAndView(commandList);
+
+    m_currentBackBufferIndex = 0;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferCPUDescriptorHandle() const
