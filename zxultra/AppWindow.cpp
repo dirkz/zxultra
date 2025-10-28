@@ -131,7 +131,7 @@ void AppWindow::Draw()
     m_commandList->ResourceBarrier(1, &transition1);
 
     m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferCPUDescriptorHandle(),
-                                         Colors::CornflowerBlue, 0, nullptr);
+                                         Colors::Black, 0, nullptr);
 
     m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilCPUDescriptorHandle(),
                                          D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
