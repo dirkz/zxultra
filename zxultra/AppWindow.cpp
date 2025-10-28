@@ -111,6 +111,9 @@ AppWindow::AppWindow(HWND hwnd)
 
     CreateRootSignature();
     CreatePipelineState();
+
+    // Drawing will start with a reset of this command list.
+    HR(m_graphicsCommandList->Close());
 }
 
 void AppWindow::Resize(int width, int height)
@@ -144,51 +147,53 @@ void AppWindow::Draw()
 {
     m_fence.Flush(m_commandQueue.Get());
 
-    m_commandListForInitialization.Reset(m_pipelineState.Get());
+    HR(m_graphicsCommandList->Reset(m_frameData.CommandAllocator(), m_pipelineState.Get()));
 
     D3D12_VIEWPORT viewport = m_swapchain.FullViewport();
-    m_commandListForInitialization->RSSetViewports(1, &viewport);
+    m_graphicsCommandList->RSSetViewports(1, &viewport);
 
     D3D12_RECT scissorRect = m_swapchain.FullScissorRect();
-    m_commandListForInitialization->RSSetScissorRects(1, &scissorRect);
+    m_graphicsCommandList->RSSetScissorRects(1, &scissorRect);
 
     auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_PRESENT,
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET);
-    m_commandListForInitialization->ResourceBarrier(1, &transition1);
+    m_graphicsCommandList->ResourceBarrier(1, &transition1);
 
-    m_commandListForInitialization->ClearRenderTargetView(
-        m_swapchain.CurrentBackBufferCPUDescriptorHandle(), Colors::Black, 0, nullptr);
+    m_graphicsCommandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferCPUDescriptorHandle(),
+                                                 Colors::Black, 0, nullptr);
 
-    m_commandListForInitialization->ClearDepthStencilView(
-        m_swapchain.DepthStencilCPUDescriptorHandle(),
-        D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0, 0, nullptr);
+    m_graphicsCommandList->ClearDepthStencilView(m_swapchain.DepthStencilCPUDescriptorHandle(),
+                                                 D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
+                                                 1.f, 0, 0, nullptr);
 
     D3D12_CPU_DESCRIPTOR_HANDLE backBuffer = m_swapchain.CurrentBackBufferCPUDescriptorHandle();
     D3D12_CPU_DESCRIPTOR_HANDLE depthStencilBuffer = m_swapchain.DepthStencilCPUDescriptorHandle();
-    m_commandListForInitialization->OMSetRenderTargets(1, &backBuffer, true, &depthStencilBuffer);
+    m_graphicsCommandList->OMSetRenderTargets(1, &backBuffer, true, &depthStencilBuffer);
 
     auto descriptorHeaps = m_frameData.DescriptorHeaps();
-    m_commandListForInitialization->SetDescriptorHeaps(static_cast<UINT>(descriptorHeaps.size()),
-                                                       descriptorHeaps.data());
+    m_graphicsCommandList->SetDescriptorHeaps(static_cast<UINT>(descriptorHeaps.size()),
+                                              descriptorHeaps.data());
 
-    m_commandListForInitialization->SetGraphicsRootSignature(m_rootSignature.Get());
+    m_graphicsCommandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
-    m_commandListForInitialization->SetGraphicsRootDescriptorTable(
+    m_graphicsCommandList->SetGraphicsRootDescriptorTable(
         0, m_frameData.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
-    m_commandListForInitialization->IASetVertexBuffers(0, 1, &m_vertexBufferView);
-    m_commandListForInitialization->IASetIndexBuffer(&m_indexBufferView);
-    m_commandListForInitialization->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    m_graphicsCommandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+    m_graphicsCommandList->IASetIndexBuffer(&m_indexBufferView);
+    m_graphicsCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_commandListForInitialization->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
+    m_graphicsCommandList->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
 
     auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET,
                                                             D3D12_RESOURCE_STATE_PRESENT);
-    m_commandListForInitialization->ResourceBarrier(1, &transition2);
+    m_graphicsCommandList->ResourceBarrier(1, &transition2);
 
-    m_commandListForInitialization.Execute(m_commandQueue.Get());
+    HR(m_graphicsCommandList->Close());
+    ID3D12CommandList *commandLists[]{m_graphicsCommandList.Get()};
+    m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 
     m_swapchain.Present();
 }
