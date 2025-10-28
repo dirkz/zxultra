@@ -39,6 +39,10 @@ struct AppWindow
     ComPtr<ID3D12CommandQueue> m_commandQueue;
 
     Fence m_fence;
+
+    /// <summary>
+    /// For initialization and swap chain resizing.
+    /// </summary>
     CommandList m_commandList;
 
     Swapchain m_swapchain;
