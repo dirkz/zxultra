@@ -60,8 +60,9 @@ static ComPtr<ID3D12CommandQueue> CreateCommandQueue(ID3D12Device *device)
 AppWindow::AppWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
-      m_fence{m_device.Get()}, m_commandList{m_device.Get()},
-      m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(), m_commandList.Get(), hwnd},
+      m_fence{m_device.Get()}, m_commandListForInitialization{m_device.Get()},
+      m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(),
+                  m_commandListForInitialization.Get(), hwnd},
       m_frameData{m_device.Get()}
 {
     // sample code for querying features
@@ -81,7 +82,7 @@ AppWindow::AppWindow(HWND hwnd)
     CreateVertexBuffers(uploadBuffers);
 
     // Wait for the swap chain initialization and buffer uploads.
-    m_commandList.Execute(m_commandQueue.Get());
+    m_commandListForInitialization.Execute(m_commandQueue.Get());
     m_fence.Flush(m_commandQueue.Get());
 
     CreateRootSignature();
@@ -94,11 +95,11 @@ void AppWindow::Resize(int width, int height)
     {
         m_fence.Flush(m_commandQueue.Get());
 
-        m_commandList.Reset();
+        m_commandListForInitialization.Reset();
 
-        m_swapchain.Resize(width, height, m_commandList.Get());
+        m_swapchain.Resize(width, height, m_commandListForInitialization.Get());
 
-        m_commandList.Execute(m_commandQueue.Get());
+        m_commandListForInitialization.Execute(m_commandQueue.Get());
     }
 }
 
@@ -119,51 +120,51 @@ void AppWindow::Draw()
 {
     m_fence.Flush(m_commandQueue.Get());
 
-    m_commandList.Reset(m_pipelineState.Get());
+    m_commandListForInitialization.Reset(m_pipelineState.Get());
 
     D3D12_VIEWPORT viewport = m_swapchain.FullViewport();
-    m_commandList->RSSetViewports(1, &viewport);
+    m_commandListForInitialization->RSSetViewports(1, &viewport);
 
     D3D12_RECT scissorRect = m_swapchain.FullScissorRect();
-    m_commandList->RSSetScissorRects(1, &scissorRect);
+    m_commandListForInitialization->RSSetScissorRects(1, &scissorRect);
 
     auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_PRESENT,
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET);
-    m_commandList->ResourceBarrier(1, &transition1);
+    m_commandListForInitialization->ResourceBarrier(1, &transition1);
 
-    m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferCPUDescriptorHandle(),
-                                         Colors::Black, 0, nullptr);
+    m_commandListForInitialization->ClearRenderTargetView(
+        m_swapchain.CurrentBackBufferCPUDescriptorHandle(), Colors::Black, 0, nullptr);
 
-    m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilCPUDescriptorHandle(),
-                                         D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
-                                         0, nullptr);
+    m_commandListForInitialization->ClearDepthStencilView(
+        m_swapchain.DepthStencilCPUDescriptorHandle(),
+        D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0, 0, nullptr);
 
     D3D12_CPU_DESCRIPTOR_HANDLE backBuffer = m_swapchain.CurrentBackBufferCPUDescriptorHandle();
     D3D12_CPU_DESCRIPTOR_HANDLE depthStencilBuffer = m_swapchain.DepthStencilCPUDescriptorHandle();
-    m_commandList->OMSetRenderTargets(1, &backBuffer, true, &depthStencilBuffer);
+    m_commandListForInitialization->OMSetRenderTargets(1, &backBuffer, true, &depthStencilBuffer);
 
     auto descriptorHeaps = m_frameData.DescriptorHeaps();
-    m_commandList->SetDescriptorHeaps(static_cast<UINT>(descriptorHeaps.size()),
-                                      descriptorHeaps.data());
+    m_commandListForInitialization->SetDescriptorHeaps(static_cast<UINT>(descriptorHeaps.size()),
+                                                       descriptorHeaps.data());
 
-    m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
+    m_commandListForInitialization->SetGraphicsRootSignature(m_rootSignature.Get());
 
-    m_commandList->SetGraphicsRootDescriptorTable(
+    m_commandListForInitialization->SetGraphicsRootDescriptorTable(
         0, m_frameData.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
-    m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
-    m_commandList->IASetIndexBuffer(&m_indexBufferView);
-    m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    m_commandListForInitialization->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+    m_commandListForInitialization->IASetIndexBuffer(&m_indexBufferView);
+    m_commandListForInitialization->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_commandList->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
+    m_commandListForInitialization->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
 
     auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET,
                                                             D3D12_RESOURCE_STATE_PRESENT);
-    m_commandList->ResourceBarrier(1, &transition2);
+    m_commandListForInitialization->ResourceBarrier(1, &transition2);
 
-    m_commandList.Execute(m_commandQueue.Get());
+    m_commandListForInitialization.Execute(m_commandQueue.Get());
 
     m_swapchain.Present();
 }
@@ -218,15 +219,15 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
 
     m_vertexBuffer = VertexBuffer<VertexWithColor, IndexType>{v0, v1, v2};
 
-    m_vertexBufferResource =
-        bufferCreator.CreateDefaultBuffer(m_commandList.Get(), m_vertexBuffer.Vertices());
+    m_vertexBufferResource = bufferCreator.CreateDefaultBuffer(m_commandListForInitialization.Get(),
+                                                               m_vertexBuffer.Vertices());
 
     m_vertexBufferView.BufferLocation = m_vertexBufferResource->GetGPUVirtualAddress();
     m_vertexBufferView.SizeInBytes = static_cast<UINT>(m_vertexBuffer.Vertices().size_bytes());
     m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
 
-    m_indexBufferResource =
-        bufferCreator.CreateDefaultBuffer(m_commandList.Get(), m_vertexBuffer.Indices());
+    m_indexBufferResource = bufferCreator.CreateDefaultBuffer(m_commandListForInitialization.Get(),
+                                                              m_vertexBuffer.Indices());
 
     m_indexBufferView.BufferLocation = m_indexBufferResource->GetGPUVirtualAddress();
     m_indexBufferView.SizeInBytes = static_cast<UINT>(m_vertexBuffer.Indices().size_bytes());

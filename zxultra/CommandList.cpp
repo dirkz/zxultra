@@ -26,21 +26,21 @@ static ComPtr<ID3D12GraphicsCommandList> CreateGraphicsCommandList(
 
 CommandList::CommandList(ID3D12Device *device)
     : m_commandAllocator{CreateCommandAllocator(device)},
-      m_commandList{CreateGraphicsCommandList(device, m_commandAllocator.Get())}
+      m_commandListForInitialization{CreateGraphicsCommandList(device, m_commandAllocator.Get())}
 {
 }
 
 void CommandList::Execute(ID3D12CommandQueue *commandQueue)
 {
-    HR(m_commandList->Close());
-    ID3D12CommandList *commandLists[]{m_commandList.Get()};
+    HR(m_commandListForInitialization->Close());
+    ID3D12CommandList *commandLists[]{m_commandListForInitialization.Get()};
     commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 }
 
 void CommandList::Reset(ID3D12PipelineState *pipelineState)
 {
     HR(m_commandAllocator->Reset());
-    HR(m_commandList->Reset(m_commandAllocator.Get(), pipelineState));
+    HR(m_commandListForInitialization->Reset(m_commandAllocator.Get(), pipelineState));
 }
 
 } // namespace zxultra

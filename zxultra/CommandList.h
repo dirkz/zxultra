@@ -23,12 +23,12 @@ struct CommandList
 
     inline ID3D12GraphicsCommandList *operator*()
     {
-        return m_commandList.Get();
+        return m_commandListForInitialization.Get();
     }
 
     inline ID3D12GraphicsCommandList *operator->()
     {
-        return m_commandList.Get();
+        return m_commandListForInitialization.Get();
     }
 
     inline ID3D12CommandAllocator *CommandAllocator() const
@@ -38,12 +38,12 @@ struct CommandList
 
     inline ID3D12GraphicsCommandList *Get() const
     {
-        return m_commandList.Get();
+        return m_commandListForInitialization.Get();
     }
 
   private:
     ComPtr<ID3D12CommandAllocator> m_commandAllocator;
-    ComPtr<ID3D12GraphicsCommandList> m_commandList;
+    ComPtr<ID3D12GraphicsCommandList> m_commandListForInitialization;
 };
 
 } // namespace zxultra

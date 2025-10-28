@@ -43,7 +43,7 @@ struct AppWindow
     /// <summary>
     /// For initialization and swap chain resizing.
     /// </summary>
-    CommandList m_commandList;
+    CommandList m_commandListForInitialization;
 
     Swapchain m_swapchain;
 
