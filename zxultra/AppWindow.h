@@ -41,9 +41,19 @@ struct AppWindow
     Fence m_fence;
 
     /// <summary>
-    /// For initialization and swap chain resizing.
+    /// A command list abstraction for initialization and swap chain resizing.
     /// </summary>
     CommandList m_commandListForInitialization;
+
+    /// <summary>
+    /// Command allocator only used in the creation of the graphics command list.
+    /// </summary>
+    ComPtr<ID3D12CommandAllocator> m_noopCommandAllocator;
+
+    /// <summary>
+    /// The command list for drawing.
+    /// </summary>
+    ComPtr<ID3D12GraphicsCommandList> m_graphicsCommandList;
 
     Swapchain m_swapchain;
 

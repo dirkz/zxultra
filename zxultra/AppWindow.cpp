@@ -57,10 +57,34 @@ static ComPtr<ID3D12CommandQueue> CreateCommandQueue(ID3D12Device *device)
     return commandQueue;
 }
 
+static ComPtr<ID3D12CommandAllocator> CreateCommandAllocator(ID3D12Device *device)
+{
+    ComPtr<ID3D12CommandAllocator> commandAllocator;
+
+    HR(device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+                                      IID_PPV_ARGS(commandAllocator.GetAddressOf())));
+
+    return commandAllocator;
+}
+
+static ComPtr<ID3D12GraphicsCommandList> CreateGraphicsCommandList(
+    ID3D12Device *device, ID3D12CommandAllocator *commandAllocator)
+{
+    ComPtr<ID3D12GraphicsCommandList> commandList;
+
+    HR(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, nullptr,
+                                 IID_PPV_ARGS(commandList.GetAddressOf())));
+
+    return commandList;
+}
+
 AppWindow::AppWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
       m_fence{m_device.Get()}, m_commandListForInitialization{m_device.Get()},
+      m_noopCommandAllocator{CreateCommandAllocator(m_device.Get())},
+      m_graphicsCommandList{
+          CreateGraphicsCommandList(m_device.Get(), m_noopCommandAllocator.Get())},
       m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(),
                   m_commandListForInitialization.Get(), hwnd},
       m_frameData{m_device.Get()}
