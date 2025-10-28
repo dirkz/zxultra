@@ -121,6 +121,25 @@ void AppWindow::Draw()
     m_fence.Flush(m_commandQueue.Get());
 
     m_commandList.Reset(m_pipelineState.Get());
+
+    D3D12_VIEWPORT viewport = m_swapchain.FullViewport();
+    m_commandList->RSSetViewports(1, &viewport);
+
+    D3D12_RECT scissorRect = m_swapchain.FullScissorRect();
+    m_commandList->RSSetScissorRects(1, &scissorRect);
+
+    auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
+                                                            D3D12_RESOURCE_STATE_PRESENT,
+                                                            D3D12_RESOURCE_STATE_RENDER_TARGET);
+    m_commandList->ResourceBarrier(1, &transition1);
+
+    m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
+                                         Colors::CornflowerBlue, 0, nullptr);
+
+    m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
+                                         D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
+                                         0, nullptr);
+
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
     auto descriptorHeaps = m_frameData.DescriptorHeaps();
@@ -129,23 +148,6 @@ void AppWindow::Draw()
 
     m_commandList->SetGraphicsRootDescriptorTable(
         0, m_frameData.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
-
-    auto transition1 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
-                                                            D3D12_RESOURCE_STATE_PRESENT,
-                                                            D3D12_RESOURCE_STATE_RENDER_TARGET);
-    m_commandList->ResourceBarrier(1, &transition1);
-
-    D3D12_VIEWPORT viewport = m_swapchain.FullViewport();
-    m_commandList->RSSetViewports(1, &viewport);
-
-    D3D12_RECT scissorRect = m_swapchain.FullScissorRect();
-    m_commandList->RSSetScissorRects(1, &scissorRect);
-
-    m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferDescriptorHandle(),
-                                         Colors::CornflowerBlue, 0, nullptr);
-    m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilDescriptorHandle(),
-                                         D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
-                                         0, nullptr);
 
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     m_commandList->IASetIndexBuffer(&m_indexBufferView);
