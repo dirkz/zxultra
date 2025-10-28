@@ -1,10 +1,7 @@
 #include "AppWindow.h"
 
-#include <VertexBuffer.h>
-
 #include "Blob.h"
 #include "Formats.h"
-#include "VertexWithColor.h"
 
 namespace zxultra
 {
@@ -157,7 +154,7 @@ void AppWindow::Draw()
     m_commandList->IASetIndexBuffer(&m_indexBufferView);
     m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_commandList->DrawIndexedInstanced(3, 1, 0, 0, 0);
+    m_commandList->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
 
     auto transition2 = CD3DX12_RESOURCE_BARRIER::Transition(m_swapchain.CurrentBackBufferResource(),
                                                             D3D12_RESOURCE_STATE_RENDER_TARGET,
@@ -217,19 +214,20 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
     VertexWithColor v1{{+0.0f, +0.5f, 0.f}, Colors::Green};
     VertexWithColor v2{{+0.5f, -0.5f, 0.f}, Colors::Blue};
 
-    VertexBuffer<VertexWithColor, IndexType> vertexBuffer{v0, v1, v2};
+    m_vertexBuffer = VertexBuffer<VertexWithColor, IndexType>{v0, v1, v2};
 
-    m_vertexBuffer =
-        bufferCreator.CreateDefaultBuffer(m_commandList.Get(), vertexBuffer.Vertices());
+    m_vertexBufferResource =
+        bufferCreator.CreateDefaultBuffer(m_commandList.Get(), m_vertexBuffer.Vertices());
 
-    m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-    m_vertexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Vertices().size_bytes());
+    m_vertexBufferView.BufferLocation = m_vertexBufferResource->GetGPUVirtualAddress();
+    m_vertexBufferView.SizeInBytes = static_cast<UINT>(m_vertexBuffer.Vertices().size_bytes());
     m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
 
-    m_indexBuffer = bufferCreator.CreateDefaultBuffer(m_commandList.Get(), vertexBuffer.Indices());
+    m_indexBufferResource =
+        bufferCreator.CreateDefaultBuffer(m_commandList.Get(), m_vertexBuffer.Indices());
 
-    m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
-    m_indexBufferView.SizeInBytes = static_cast<UINT>(vertexBuffer.Indices().size_bytes());
+    m_indexBufferView.BufferLocation = m_indexBufferResource->GetGPUVirtualAddress();
+    m_indexBufferView.SizeInBytes = static_cast<UINT>(m_vertexBuffer.Indices().size_bytes());
     m_indexBufferView.Format = IndexFormat;
 }
 

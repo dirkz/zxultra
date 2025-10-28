@@ -39,7 +39,7 @@ struct VertexWithColor
     XMFLOAT4 m_color;
 };
 
-bool operator==(const VertexWithColor &v1, const VertexWithColor &v2)
+inline bool operator==(const VertexWithColor &v1, const VertexWithColor &v2)
 {
     return v1.m_position.x == v2.m_position.x && v1.m_position.y == v2.m_position.y &&
            v1.m_position.z == v2.m_position.z && v1.m_color.x == v2.m_color.x &&

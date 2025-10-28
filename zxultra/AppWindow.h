@@ -2,12 +2,15 @@
 
 #include "stdafx.h"
 
+#include <VertexBuffer.h>
+
 #include "CommandList.h"
 #include "DefaultBufferCreator.h"
 #include "DescriptorHandleSizes.h"
 #include "Fence.h"
 #include "FrameData.h"
 #include "Swapchain.h"
+#include "VertexWithColor.h"
 
 namespace zxultra
 {
@@ -42,10 +45,12 @@ struct AppWindow
     DescriptorHandleSizes m_descriptorHandleSizes;
     Swapchain m_swapchain;
 
-    ComPtr<ID3D12Resource> m_vertexBuffer;
+    VertexBuffer<VertexWithColor, IndexType> m_vertexBuffer;
+
+    ComPtr<ID3D12Resource> m_vertexBufferResource;
     D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 
-    ComPtr<ID3D12Resource> m_indexBuffer;
+    ComPtr<ID3D12Resource> m_indexBufferResource;
     D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
 
     FrameData m_frameData;
