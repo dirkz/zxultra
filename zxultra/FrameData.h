@@ -34,7 +34,14 @@ struct FrameData
         return m_descriptorHeap;
     }
 
+    ID3D12CommandAllocator* CommandAllocator() const
+    {
+        return m_commandAllocator.Get();
+    }
+
   private:
+    ComPtr<ID3D12CommandAllocator> m_commandAllocator;
+
     ConstantBuffer<XMFLOAT4X4> m_cbProjection;
     ConstantBuffer<XMFLOAT4X4> m_cbView;
     ConstantBuffer<XMFLOAT4X4> m_cbModel;
