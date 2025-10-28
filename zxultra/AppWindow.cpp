@@ -214,8 +214,8 @@ void AppWindow::LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter)
 void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
 {
     VertexWithColor v0{{-0.5f, -0.5f, 0.f}, Colors::Red};
-    VertexWithColor v1{{-0.5f, +0.5f, 0.f}, Colors::Green};
-    VertexWithColor v2{{+0.5f, +0.5f, 0.f}, Colors::Blue};
+    VertexWithColor v1{{+0.0f, +0.5f, 0.f}, Colors::Green};
+    VertexWithColor v2{{+0.5f, -0.5f, 0.f}, Colors::Blue};
 
     VertexBuffer<VertexWithColor, IndexType> vertexBuffer{v0, v1, v2};
 
