@@ -31,8 +31,8 @@ Fragment VS(Vertex v)
 
     float4 hPosition = float4(v.Position, 1);
     float4 position = mul(hPosition, World);
-    position = mul(hPosition, View);
-    position = mul(hPosition, Projection);
+    position = mul(position, View);
+    position = mul(position, Projection);
     fragment.Position = position;
     fragment.Color = v.Color;
     
