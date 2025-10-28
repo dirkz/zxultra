@@ -13,9 +13,8 @@ DXGI_SAMPLE_DESC Swapchain::SampleDescription()
 }
 
 Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *commandQueue,
-                     ID3D12GraphicsCommandList *commandList, HWND hwnd,
-                     DescriptorHandleSizes &descriptorHandleSizes)
-    : m_device{device}, m_descriptorHandleSizes{descriptorHandleSizes}
+                     ID3D12GraphicsCommandList *commandList, HWND hwnd)
+    : m_device{device}
 {
     DXGI_SWAP_CHAIN_DESC1 desc{};
     desc.Format = BackBufferFormat;
@@ -40,6 +39,9 @@ Swapchain::Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12Command
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     HR(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(m_dsvDescriptorHeap.GetAddressOf())));
 
+    m_rtvDescriptorHandleIncrementSize =
+        device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
     CreateBuffers();
     CreateDepthStencilBufferAndView(commandList);
 }
@@ -53,7 +55,7 @@ void Swapchain::CreateBuffers()
     {
         HR(m_swapchain->GetBuffer(i, IID_PPV_ARGS(m_buffers[i].GetAddressOf())));
         m_device->CreateRenderTargetView(m_buffers[i].Get(), nullptr, rtvHeapHandle);
-        rtvHeapHandle.Offset(1, m_descriptorHandleSizes.RtvDescriptorHandleIncrementSize());
+        rtvHeapHandle.Offset(1, m_rtvDescriptorHandleIncrementSize);
     }
 }
 
@@ -119,9 +121,9 @@ void Swapchain::Resize(int width, int height, ID3D12GraphicsCommandList *command
 
 D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::CurrentBackBufferCPUDescriptorHandle() const
 {
-    return CD3DX12_CPU_DESCRIPTOR_HANDLE{
-        m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), m_currentBackBufferIndex,
-        m_descriptorHandleSizes.RtvDescriptorHandleIncrementSize()};
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE{m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+                                         m_currentBackBufferIndex,
+                                         m_rtvDescriptorHandleIncrementSize};
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Swapchain::DepthStencilCPUDescriptorHandle() const

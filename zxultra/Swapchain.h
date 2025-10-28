@@ -15,8 +15,7 @@ struct Swapchain
     static DXGI_SAMPLE_DESC SampleDescription();
 
     Swapchain(IDXGIFactory2 *factory, ID3D12Device *device, ID3D12CommandQueue *commandQueue,
-              ID3D12GraphicsCommandList *commandList, HWND hwnd,
-              DescriptorHandleSizes &descriptorHandleSizes);
+              ID3D12GraphicsCommandList *commandList, HWND hwnd);
 
     void CreateBuffers();
     void CreateDepthStencilBufferAndView(ID3D12GraphicsCommandList *commandList);
@@ -46,6 +45,8 @@ struct Swapchain
     ComPtr<ID3D12Device> m_device;
     ComPtr<IDXGISwapChain1> m_swapchain;
 
+    UINT m_rtvDescriptorHandleIncrementSize;
+
     UINT m_width;
     UINT m_height;
 
@@ -53,8 +54,6 @@ struct Swapchain
     ComPtr<ID3D12DescriptorHeap> m_dsvDescriptorHeap;
 
     INT m_currentBackBufferIndex = 0;
-
-    DescriptorHandleSizes m_descriptorHandleSizes;
 
     std::array<ComPtr<ID3D12Resource>, BufferCount> m_buffers;
 

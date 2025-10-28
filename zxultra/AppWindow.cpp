@@ -62,8 +62,7 @@ AppWindow::AppWindow(HWND hwnd)
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
       m_fence{m_device.Get()}, m_commandList{m_device.Get()},
       m_descriptorHandleSizes{m_device.Get()},
-      m_swapchain{m_factory.Get(),     m_device.Get(), m_commandQueue.Get(),
-                  m_commandList.Get(), hwnd,           m_descriptorHandleSizes},
+      m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(), m_commandList.Get(), hwnd},
       m_frameData{m_device.Get()}
 {
     // sample code for querying features
