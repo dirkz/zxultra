@@ -155,7 +155,7 @@ D3D12_RECT Swapchain::FullScissorRect() const
     scissorRect.top = 0;
     scissorRect.bottom = m_height;
 
-    return D3D12_RECT();
+    return scissorRect;
 }
 
 } // namespace zxultra
