@@ -45,10 +45,7 @@ struct AppWindow
     /// </summary>
     CommandList m_commandListForInitialization;
 
-    /// <summary>
-    /// Command allocator only used in the creation of the graphics command list.
-    /// </summary>
-    ComPtr<ID3D12CommandAllocator> m_noopCommandAllocator;
+    ComPtr<ID3D12CommandAllocator> m_commandAllocator;
 
     /// <summary>
     /// The command list for drawing.

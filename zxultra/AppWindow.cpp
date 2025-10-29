@@ -82,9 +82,9 @@ AppWindow::AppWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
       m_fence{m_device.Get()}, m_commandListForInitialization{m_device.Get()},
-      m_noopCommandAllocator{CreateCommandAllocator(m_device.Get())},
+      m_commandAllocator{CreateCommandAllocator(m_device.Get())},
       m_graphicsCommandList{
-          CreateGraphicsCommandList(m_device.Get(), m_noopCommandAllocator.Get())},
+          CreateGraphicsCommandList(m_device.Get(), m_commandAllocator.Get())},
       m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(),
                   m_commandListForInitialization.Get(), hwnd},
       m_frameData{m_device.Get()}
