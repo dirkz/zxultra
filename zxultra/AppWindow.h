@@ -32,11 +32,19 @@ struct AppWindow
     void CreateRootSignature();
     void CreatePipelineState();
 
+    inline FrameData &CurrentFrameData()
+    {
+        return m_frameData[m_currentFrameDataIndex];
+    }
+
     ComPtr<IDXGIFactory2> m_factory;
     ComPtr<IDXGIAdapter1> m_adapter;
     ComPtr<ID3D12Device> m_device;
     ComPtr<ID3D12CommandQueue> m_commandQueue;
 
+    /// <summary>
+    /// The main fence.
+    /// </summary>
     Fence m_fence;
 
     /// <summary>
@@ -59,7 +67,8 @@ struct AppWindow
     ComPtr<ID3D12Resource> m_indexBufferResource;
     D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
 
-    FrameData m_frameData;
+    std::array<FrameData, NumFrames> m_frameData;
+    UINT m_currentFrameDataIndex = 0;
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ComPtr<ID3D12PipelineState> m_pipelineState;

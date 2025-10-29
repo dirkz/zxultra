@@ -41,6 +41,8 @@ template <class T> struct ConstantBuffer
         std::swap(m_numElements, other.m_numElements);
         std::swap(m_resource, other.m_resource);
         std::swap(m_mappedBuffer, other.m_mappedBuffer);
+
+        return *this;
     }
 
     ~ConstantBuffer()

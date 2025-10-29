@@ -91,9 +91,13 @@ AppWindow::AppWindow(HWND hwnd)
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
       m_fence{m_device.Get()}, m_commandAllocator{CreateCommandAllocator(m_device.Get())},
       m_commandList{CreateGraphicsCommandList(m_device.Get(), m_commandAllocator.Get())},
-      m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(), m_commandList.Get(), hwnd},
-      m_frameData{m_device.Get()}
+      m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(), m_commandList.Get(), hwnd}
 {
+    for (FrameData &frameData : m_frameData)
+    {
+        frameData = FrameData{m_device.Get()};
+    }
+
     // sample code for querying features
     CD3DX12FeatureSupport features;
     HR(features.Init(m_device.Get()));
@@ -141,15 +145,15 @@ void AppWindow::Update(double elapsedSeconds)
     XMMATRIX scale = XMMatrixScaling(1.2f, 1.2f, 1);
     XMMATRIX translate = XMMatrixTranslation(+0.3f, +0.3f, 0);
 
-    XMStoreFloat4x4(&m_frameData.CbProjection()[0], XMMatrixTranspose(rotate));
-    XMStoreFloat4x4(&m_frameData.CbView()[0], XMMatrixTranspose(scale));
-    XMStoreFloat4x4(&m_frameData.CbModel()[0], XMMatrixTranspose(translate));
+    XMStoreFloat4x4(&CurrentFrameData().CbProjection()[0], XMMatrixTranspose(rotate));
+    XMStoreFloat4x4(&CurrentFrameData().CbView()[0], XMMatrixTranspose(scale));
+    XMStoreFloat4x4(&CurrentFrameData().CbModel()[0], XMMatrixTranspose(translate));
 }
 
 void AppWindow::Draw()
 {
     // The current frame data, even if it's just one at this stage.
-    FrameData &frameData = m_frameData;
+    FrameData &frameData = CurrentFrameData();
 
     frameData.FlushFence(m_commandQueue.Get());
 
@@ -200,6 +204,8 @@ void AppWindow::Draw()
     Execute(m_commandList.Get(), m_commandQueue.Get());
 
     m_swapchain.Present();
+
+    m_currentFrameDataIndex = (m_currentFrameDataIndex + 1) % NumFrames;
 }
 
 void AppWindow::WillShutdown()
