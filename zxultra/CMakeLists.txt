@@ -17,7 +17,8 @@ add_library(zxultra OBJECT
 	"FrameData.h"
 	"FrameData.cpp"
 	"DescriptorHeap.h"
-	"DescriptorHeap.cpp")
+	"DescriptorHeap.cpp"
+	"CreateFunctions.h")
 
 target_precompile_headers(zxultra INTERFACE stdafx.h)
 

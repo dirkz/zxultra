@@ -1,19 +1,10 @@
 #include "FrameData.h"
 
 #include "Constants.h"
+#include "CreateFunctions.h"
 
 namespace zxultra
 {
-
-static ComPtr<ID3D12CommandAllocator> CreateCommandAllocator(ID3D12Device *device)
-{
-    ComPtr<ID3D12CommandAllocator> commandAllocator;
-
-    HR(device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
-                                      IID_PPV_ARGS(commandAllocator.GetAddressOf())));
-
-    return commandAllocator;
-}
 
 FrameData::FrameData(ID3D12Device *device)
     : m_commandAllocator{CreateCommandAllocator(device)}, m_fence{device},
@@ -31,7 +22,8 @@ std::array<ID3D12DescriptorHeap *, 1> FrameData::DescriptorHeaps()
 {
     return {m_descriptorHeap.Get()};
 }
-void FrameData::FlushFence(ID3D12CommandQueue *commandQueue)
+
+void FrameData::FlushFence(ID3D12CommandQueue *commandQueue)
 {
     m_fence.Flush(commandQueue);
 }
