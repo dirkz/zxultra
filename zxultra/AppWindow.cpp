@@ -139,15 +139,17 @@ void AppWindow::Resize(int width, int height)
 
 void AppWindow::Update(double elapsedSeconds)
 {
+    FrameData &frameData = CurrentFrameData();
+
     XMMATRIX identity = XMMatrixIdentity();
 
     XMMATRIX rotate = XMMatrixRotationZ(XM_PIDIV4);
     XMMATRIX scale = XMMatrixScaling(1.2f, 1.2f, 1);
     XMMATRIX translate = XMMatrixTranslation(+0.3f, +0.3f, 0);
 
-    XMStoreFloat4x4(&CurrentFrameData().CbProjection()[0], XMMatrixTranspose(rotate));
-    XMStoreFloat4x4(&CurrentFrameData().CbView()[0], XMMatrixTranspose(scale));
-    XMStoreFloat4x4(&CurrentFrameData().CbModel()[0], XMMatrixTranspose(translate));
+    XMStoreFloat4x4(&frameData.CbProjection()[0], XMMatrixTranspose(rotate));
+    XMStoreFloat4x4(&frameData.CbView()[0], XMMatrixTranspose(scale));
+    XMStoreFloat4x4(&frameData.CbModel()[0], XMMatrixTranspose(translate));
 }
 
 void AppWindow::Draw()
