@@ -22,6 +22,8 @@ template <class T, class I, class H = std::hash<T>, class E = std::equal_to<T>> 
         }
     }
 
+    VertexBuffer &operator=(const VertexBuffer &) = delete;
+
     inline VertexBuffer &operator=(VertexBuffer &&v) noexcept
     {
         std::swap(m_vertexIndex, v.m_vertexIndex);
@@ -80,7 +82,7 @@ template <class T, class I, class H = std::hash<T>, class E = std::equal_to<T>> 
     }
 
   private:
-    // Note: (Partrial) move semantics
+    // Note: Move semantics
 
     std::unordered_map<T, I> m_vertexIndex;
     std::vector<T> m_vertices;
