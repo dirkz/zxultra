@@ -119,7 +119,7 @@ void AppWindow::Draw()
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
     m_commandList->SetGraphicsRootDescriptorTable(
-        0, frameData.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(0));
 
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     m_commandList->IASetIndexBuffer(&m_indexBufferView);
