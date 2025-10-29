@@ -24,9 +24,9 @@ struct FrameData
         std::swap(m_commandAllocator, other.m_commandAllocator);
         std::swap(m_fence, other.m_fence);
 
-        ConstantBuffer<XMFLOAT4X4>::Swap(m_cbProjection, other.m_cbProjection);
-        ConstantBuffer<XMFLOAT4X4>::Swap(m_cbView, other.m_cbView);
-        ConstantBuffer<XMFLOAT4X4>::Swap(m_cbModel, other.m_cbModel);
+        m_cbProjection.Swap(other.m_cbProjection);
+        m_cbView.Swap(other.m_cbView);
+        m_cbModel.Swap(other.m_cbModel);
 
         std::swap(m_descriptorHeap, other.m_descriptorHeap);
 
