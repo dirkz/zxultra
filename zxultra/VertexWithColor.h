@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 
-#include <Util.h>
+#include <Hasher.h>
 
 #include "Constants.h"
 
