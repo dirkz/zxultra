@@ -81,12 +81,10 @@ static ComPtr<ID3D12GraphicsCommandList> CreateGraphicsCommandList(
 AppWindow::AppWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
-      m_fence{m_device.Get()}, m_commandListForInitialization{m_device.Get()},
-      m_commandAllocator{CreateCommandAllocator(m_device.Get())},
-      m_graphicsCommandList{
-          CreateGraphicsCommandList(m_device.Get(), m_commandAllocator.Get())},
+      m_fence{m_device.Get()}, m_commandAllocator{CreateCommandAllocator(m_device.Get())},
+      m_graphicsCommandList{CreateGraphicsCommandList(m_device.Get(), m_commandAllocator.Get())},
       m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(),
-                  m_commandListForInitialization.Get(), hwnd},
+                  m_graphicsCommandList.Get(), hwnd},
       m_frameData{m_device.Get()}
 {
     // sample code for querying features
@@ -106,14 +104,13 @@ AppWindow::AppWindow(HWND hwnd)
     CreateVertexBuffers(uploadBuffers);
 
     // Wait for the swap chain initialization and buffer uploads.
-    m_commandListForInitialization.Execute(m_commandQueue.Get());
+    HR(m_graphicsCommandList->Close());
+    ID3D12CommandList *commandLists[]{m_graphicsCommandList.Get()};
+    m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
     m_fence.Flush(m_commandQueue.Get());
 
     CreateRootSignature();
     CreatePipelineState();
-
-    // Drawing will start with a reset of this command list.
-    HR(m_graphicsCommandList->Close());
 }
 
 void AppWindow::Resize(int width, int height)
@@ -122,11 +119,15 @@ void AppWindow::Resize(int width, int height)
     {
         m_fence.Flush(m_commandQueue.Get());
 
-        m_commandListForInitialization.Reset();
+        HR(m_commandAllocator->Reset());
+        m_graphicsCommandList->Reset(m_commandAllocator.Get(), nullptr);
 
-        m_swapchain.Resize(width, height, m_commandListForInitialization.Get());
+        m_swapchain.Resize(width, height, m_graphicsCommandList.Get());
 
-        m_commandListForInitialization.Execute(m_commandQueue.Get());
+        m_graphicsCommandList->Close();
+
+        ID3D12CommandList *commandLists[]{m_graphicsCommandList.Get()};
+        m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
     }
 }
 
@@ -248,15 +249,15 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
 
     m_vertexBuffer = VertexBuffer<VertexWithColor, IndexType>{v0, v1, v2};
 
-    m_vertexBufferResource = bufferCreator.CreateDefaultBuffer(m_commandListForInitialization.Get(),
-                                                               m_vertexBuffer.Vertices());
+    m_vertexBufferResource =
+        bufferCreator.CreateDefaultBuffer(m_graphicsCommandList.Get(), m_vertexBuffer.Vertices());
 
     m_vertexBufferView.BufferLocation = m_vertexBufferResource->GetGPUVirtualAddress();
     m_vertexBufferView.SizeInBytes = static_cast<UINT>(m_vertexBuffer.Vertices().size_bytes());
     m_vertexBufferView.StrideInBytes = sizeof(VertexWithColor);
 
-    m_indexBufferResource = bufferCreator.CreateDefaultBuffer(m_commandListForInitialization.Get(),
-                                                              m_vertexBuffer.Indices());
+    m_indexBufferResource =
+        bufferCreator.CreateDefaultBuffer(m_graphicsCommandList.Get(), m_vertexBuffer.Indices());
 
     m_indexBufferView.BufferLocation = m_indexBufferResource->GetGPUVirtualAddress();
     m_indexBufferView.SizeInBytes = static_cast<UINT>(m_vertexBuffer.Indices().size_bytes());
