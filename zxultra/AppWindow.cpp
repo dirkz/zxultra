@@ -157,6 +157,7 @@ void AppWindow::Draw()
 
     frameData.FlushFence(m_commandQueue.Get());
 
+    HR(frameData.CommandAllocator()->Reset());
     HR(m_commandList->Reset(frameData.CommandAllocator(), m_pipelineState.Get()));
 
     D3D12_VIEWPORT viewport = m_swapchain.FullViewport();
