@@ -22,6 +22,8 @@ template <class T, class I, class H = std::hash<T>, class E = std::equal_to<T>> 
         }
     }
 
+    VertexBuffer(const VertexBuffer &) = delete;
+
     VertexBuffer &operator=(const VertexBuffer &) = delete;
 
     inline VertexBuffer &operator=(VertexBuffer &&v) noexcept

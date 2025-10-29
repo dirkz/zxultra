@@ -15,6 +15,8 @@ struct FrameData
 
     FrameData(ID3D12Device *device);
 
+    FrameData(const FrameData &) = delete;
+
     FrameData &operator=(const FrameData &) = delete;
 
     inline FrameData& operator=(FrameData&& other) noexcept
