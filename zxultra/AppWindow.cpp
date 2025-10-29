@@ -74,11 +74,11 @@ void AppWindow::Update(double elapsedSeconds)
 
     XMMATRIX rotate = XMMatrixRotationZ(XM_PIDIV4);
     XMMATRIX scale = XMMatrixScaling(1.2f, 1.2f, 1);
-    XMMATRIX translate = XMMatrixTranslation(+0.3f, +0.3f, 0);
+    XMMATRIX translate = XMMatrixTranslation(+0.1f, +0.3f, 0);
 
-    XMStoreFloat4x4(&frameData.CbModel()[0], XMMatrixTranspose(identity));
-    XMStoreFloat4x4(&frameData.CbView()[0], XMMatrixTranspose(identity));
-    XMStoreFloat4x4(&frameData.CbProjection()[0], XMMatrixTranspose(identity));
+    XMStoreFloat4x4(&frameData.CbModel()[0], XMMatrixTranspose(rotate));
+    XMStoreFloat4x4(&frameData.CbView()[0], XMMatrixTranspose(scale));
+    XMStoreFloat4x4(&frameData.CbProjection()[0], XMMatrixTranspose(translate));
 }
 
 void AppWindow::Draw()
