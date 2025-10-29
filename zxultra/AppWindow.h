@@ -4,7 +4,6 @@
 
 #include <VertexBuffer.h>
 
-#include "CommandList.h"
 #include "DefaultBufferCreator.h"
 #include "Fence.h"
 #include "FrameData.h"
