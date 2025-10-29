@@ -52,7 +52,7 @@ struct DescriptorHeap
   private:
     ComPtr<ID3D12Device> m_device;
     ComPtr<ID3D12DescriptorHeap> m_descriptorHeap;
-    UINT m_descriptorHandleIncrementSize;
+    UINT m_descriptorHandleIncrementSize = 0;
 };
 
 } // namespace zxultra

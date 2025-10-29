@@ -7,6 +7,8 @@ namespace zxultra
 
 struct Fence
 {
+    Fence() {};
+
     Fence(ID3D12Device *device);
 
     void Flush(ID3D12CommandQueue *commandQueue);

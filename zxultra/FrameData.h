@@ -4,6 +4,7 @@
 
 #include "ConstantBuffer.h"
 #include "DescriptorHeap.h"
+#include "Fence.h"
 
 namespace zxultra
 {
@@ -31,18 +32,22 @@ struct FrameData
 
     std::array<ID3D12DescriptorHeap *, 1> DescriptorHeaps();
 
-    DescriptorHeap& GetDescriptorHeap()
+    DescriptorHeap &GetDescriptorHeap()
     {
         return m_descriptorHeap;
     }
 
-    ID3D12CommandAllocator* CommandAllocator() const
+    ID3D12CommandAllocator *CommandAllocator() const
     {
         return m_commandAllocator.Get();
     }
 
+    void FlushFence(ID3D12CommandQueue *commandQueue);
+
   private:
     ComPtr<ID3D12CommandAllocator> m_commandAllocator;
+
+    Fence m_fence;
 
     ConstantBuffer<XMFLOAT4X4> m_cbProjection;
     ConstantBuffer<XMFLOAT4X4> m_cbView;

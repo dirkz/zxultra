@@ -151,7 +151,7 @@ void AppWindow::Draw()
     // The current frame data, even if it's just one at this stage.
     FrameData &frameData = m_frameData;
 
-    m_fence.Flush(m_commandQueue.Get());
+    frameData.FlushFence(m_commandQueue.Get());
 
     HR(m_commandList->Reset(frameData.CommandAllocator(), m_pipelineState.Get()));
 
