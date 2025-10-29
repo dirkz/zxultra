@@ -33,9 +33,9 @@ struct FrameData
         return *this;
     }
 
-    ConstantBuffer<XMFLOAT4X4> &CbProjection()
+    ConstantBuffer<XMFLOAT4X4> &CbModel()
     {
-        return m_cbProjection;
+        return m_cbModel;
     }
 
     ConstantBuffer<XMFLOAT4X4> &CbView()
@@ -43,9 +43,9 @@ struct FrameData
         return m_cbView;
     }
 
-    ConstantBuffer<XMFLOAT4X4> &CbModel()
+    ConstantBuffer<XMFLOAT4X4> &CbProjection()
     {
-        return m_cbModel;
+        return m_cbProjection;
     }
 
     std::array<ID3D12DescriptorHeap *, 1> DescriptorHeaps();
@@ -69,9 +69,9 @@ struct FrameData
 
     Fence m_fence;
 
-    ConstantBuffer<XMFLOAT4X4> m_cbProjection;
-    ConstantBuffer<XMFLOAT4X4> m_cbView;
     ConstantBuffer<XMFLOAT4X4> m_cbModel;
+    ConstantBuffer<XMFLOAT4X4> m_cbView;
+    ConstantBuffer<XMFLOAT4X4> m_cbProjection;
 
     DescriptorHeap m_descriptorHeap;
 };

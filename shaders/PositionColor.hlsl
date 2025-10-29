@@ -1,6 +1,6 @@
-cbuffer cbProjection : register(b0)
+cbuffer cbModel : register(b0)
 {
-    float4x4 Projection;
+    float4x4 Model;
 }
 
 cbuffer cbView : register(b1)
@@ -8,9 +8,9 @@ cbuffer cbView : register(b1)
     float4x4 View;
 }
 
-cbuffer cbWorld : register(b2)
+cbuffer cbProjection : register(b2)
 {
-    float4x4 World;
+    float4x4 Projection;
 }
 
 struct Vertex
@@ -30,7 +30,7 @@ Fragment VS(Vertex v)
     Fragment fragment;
 
     float4 hPosition = float4(v.Position, 1);
-    float4 position = mul(hPosition, World);
+    float4 position = mul(hPosition, Model);
     position = mul(position, View);
     position = mul(position, Projection);
     fragment.Position = position;

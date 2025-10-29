@@ -76,9 +76,9 @@ void AppWindow::Update(double elapsedSeconds)
     XMMATRIX scale = XMMatrixScaling(1.2f, 1.2f, 1);
     XMMATRIX translate = XMMatrixTranslation(+0.3f, +0.3f, 0);
 
-    XMStoreFloat4x4(&frameData.CbProjection()[0], XMMatrixTranspose(rotate));
-    XMStoreFloat4x4(&frameData.CbView()[0], XMMatrixTranspose(scale));
-    XMStoreFloat4x4(&frameData.CbModel()[0], XMMatrixTranspose(translate));
+    XMStoreFloat4x4(&frameData.CbModel()[0], XMMatrixTranspose(identity));
+    XMStoreFloat4x4(&frameData.CbView()[0], XMMatrixTranspose(identity));
+    XMStoreFloat4x4(&frameData.CbProjection()[0], XMMatrixTranspose(identity));
 }
 
 void AppWindow::Draw()
@@ -214,17 +214,17 @@ void AppWindow::CreateRootSignature()
 {
     CD3DX12_ROOT_PARAMETER rootParameters[3]{};
 
-    CD3DX12_DESCRIPTOR_RANGE descriptorRange1{}, descriptorRange2{}, descriptorRange3{};
+    CD3DX12_DESCRIPTOR_RANGE descriptorRange0{}, descriptorRange1{}, descriptorRange2{};
     constexpr UINT baseShaderRegister = 0;
 
-    descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister);
-    rootParameters[0].InitAsDescriptorTable(1, &descriptorRange1);
+    descriptorRange0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister);
+    rootParameters[0].InitAsDescriptorTable(1, &descriptorRange0);
 
-    descriptorRange2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1);
-    rootParameters[1].InitAsDescriptorTable(1, &descriptorRange2);
+    descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1);
+    rootParameters[1].InitAsDescriptorTable(1, &descriptorRange1);
 
-    descriptorRange3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 2);
-    rootParameters[2].InitAsDescriptorTable(1, &descriptorRange3);
+    descriptorRange2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 2);
+    rootParameters[2].InitAsDescriptorTable(1, &descriptorRange2);
 
     constexpr UINT numStaticSamples = 0;
     constexpr D3D12_STATIC_SAMPLER_DESC *samplerDescription = nullptr;
