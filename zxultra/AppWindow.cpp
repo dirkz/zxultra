@@ -148,9 +148,12 @@ void AppWindow::Update(double elapsedSeconds)
 
 void AppWindow::Draw()
 {
+    // The current frame data, even if it's just one at this stage.
+    FrameData &frameData = m_frameData;
+
     m_fence.Flush(m_commandQueue.Get());
 
-    HR(m_commandList->Reset(m_frameData.CommandAllocator(), m_pipelineState.Get()));
+    HR(m_commandList->Reset(frameData.CommandAllocator(), m_pipelineState.Get()));
 
     D3D12_VIEWPORT viewport = m_swapchain.FullViewport();
     m_commandList->RSSetViewports(1, &viewport);
@@ -174,14 +177,14 @@ void AppWindow::Draw()
     D3D12_CPU_DESCRIPTOR_HANDLE depthStencilBuffer = m_swapchain.DepthStencilCPUDescriptorHandle();
     m_commandList->OMSetRenderTargets(1, &backBuffer, true, &depthStencilBuffer);
 
-    auto descriptorHeaps = m_frameData.DescriptorHeaps();
+    auto descriptorHeaps = frameData.DescriptorHeaps();
     m_commandList->SetDescriptorHeaps(static_cast<UINT>(descriptorHeaps.size()),
                                       descriptorHeaps.data());
 
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
     m_commandList->SetGraphicsRootDescriptorTable(
-        0, m_frameData.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+        0, frameData.GetDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
 
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     m_commandList->IASetIndexBuffer(&m_indexBufferView);
