@@ -39,12 +39,15 @@ struct AppWindow
 
     Fence m_fence;
 
+    /// <summary>
+    /// The main command allocator.
+    /// </summary>
     ComPtr<ID3D12CommandAllocator> m_commandAllocator;
 
     /// <summary>
-    /// The command list for drawing.
+    /// The main graphics command list.
     /// </summary>
-    ComPtr<ID3D12GraphicsCommandList> m_graphicsCommandList;
+    ComPtr<ID3D12GraphicsCommandList> m_commandList;
 
     Swapchain m_swapchain;
 
