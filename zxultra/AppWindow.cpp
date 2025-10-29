@@ -76,9 +76,13 @@ void AppWindow::Update(double elapsedSeconds)
     XMMATRIX scale = XMMatrixScaling(1.2f, 1.2f, 1);
     XMMATRIX translate = XMMatrixTranslation(+0.1f, +0.3f, 0);
 
-    XMStoreFloat4x4(&frameData.CbModel()[0], XMMatrixTranspose(rotate));
-    XMStoreFloat4x4(&frameData.CbView()[0], XMMatrixTranspose(scale));
-    XMStoreFloat4x4(&frameData.CbProjection()[0], XMMatrixTranspose(translate));
+    // A ModelViewProjection matrix would be:
+    // model * view * projection
+
+    XMMATRIX model = XMMatrixMultiply(scale, rotate);
+
+    XMStoreFloat4x4(&frameData.CbModel()[0], XMMatrixTranspose(model));
+    XMStoreFloat4x4(&frameData.CbViewProjection()[0], XMMatrixTranspose(identity));
 }
 
 void AppWindow::Draw()
@@ -123,9 +127,6 @@ void AppWindow::Draw()
 
     m_commandList->SetGraphicsRootDescriptorTable(
         1, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(1));
-
-    m_commandList->SetGraphicsRootDescriptorTable(
-        2, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(2));
 
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     m_commandList->IASetIndexBuffer(&m_indexBufferView);
@@ -212,9 +213,9 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
 
 void AppWindow::CreateRootSignature()
 {
-    CD3DX12_ROOT_PARAMETER rootParameters[3]{};
+    CD3DX12_ROOT_PARAMETER rootParameters[2]{};
 
-    CD3DX12_DESCRIPTOR_RANGE descriptorRange0{}, descriptorRange1{}, descriptorRange2{};
+    CD3DX12_DESCRIPTOR_RANGE descriptorRange0{}, descriptorRange1{};
     constexpr UINT baseShaderRegister = 0;
 
     descriptorRange0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister);
@@ -222,9 +223,6 @@ void AppWindow::CreateRootSignature()
 
     descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1);
     rootParameters[1].InitAsDescriptorTable(1, &descriptorRange1);
-
-    descriptorRange2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 2);
-    rootParameters[2].InitAsDescriptorTable(1, &descriptorRange2);
 
     constexpr UINT numStaticSamples = 0;
     constexpr D3D12_STATIC_SAMPLER_DESC *samplerDescription = nullptr;

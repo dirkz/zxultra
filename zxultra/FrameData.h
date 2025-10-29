@@ -24,9 +24,8 @@ struct FrameData
         std::swap(m_commandAllocator, other.m_commandAllocator);
         std::swap(m_fence, other.m_fence);
 
-        m_cbProjection.Swap(other.m_cbProjection);
-        m_cbView.Swap(other.m_cbView);
         m_cbModel.Swap(other.m_cbModel);
+        m_cbViewProjection.Swap(other.m_cbViewProjection);
 
         std::swap(m_descriptorHeap, other.m_descriptorHeap);
 
@@ -38,14 +37,9 @@ struct FrameData
         return m_cbModel;
     }
 
-    ConstantBuffer<XMFLOAT4X4> &CbView()
+    ConstantBuffer<XMFLOAT4X4> &CbViewProjection()
     {
-        return m_cbView;
-    }
-
-    ConstantBuffer<XMFLOAT4X4> &CbProjection()
-    {
-        return m_cbProjection;
+        return m_cbViewProjection;
     }
 
     std::array<ID3D12DescriptorHeap *, 1> DescriptorHeaps();
@@ -70,8 +64,7 @@ struct FrameData
     Fence m_fence;
 
     ConstantBuffer<XMFLOAT4X4> m_cbModel;
-    ConstantBuffer<XMFLOAT4X4> m_cbView;
-    ConstantBuffer<XMFLOAT4X4> m_cbProjection;
+    ConstantBuffer<XMFLOAT4X4> m_cbViewProjection;
 
     DescriptorHeap m_descriptorHeap;
 };

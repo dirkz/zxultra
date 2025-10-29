@@ -3,14 +3,9 @@ cbuffer cbModel : register(b0)
     float4x4 Model;
 }
 
-cbuffer cbView : register(b1)
+cbuffer cbViewProjection : register(b1)
 {
-    float4x4 View;
-}
-
-cbuffer cbProjection : register(b2)
-{
-    float4x4 Projection;
+    float4x4 ViewProjection;
 }
 
 struct Vertex
@@ -29,10 +24,11 @@ Fragment VS(Vertex v)
 {
     Fragment fragment;
 
+    float4x4 transform = mul(Model, ViewProjection);
+
     float4 hPosition = float4(v.Position, 1);
-    float4 position = mul(hPosition, Model);
-    position = mul(position, View);
-    position = mul(position, Projection);
+    float4 position = mul(hPosition, transform);
+
     fragment.Position = position;
     fragment.Color = v.Color;
     
