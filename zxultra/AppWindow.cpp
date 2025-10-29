@@ -219,16 +219,13 @@ void AppWindow::CreateRootSignature()
     constexpr UINT registerSpace = 0;
     constexpr UINT offsetInDescriptorsFromHeapStart = 0;
 
-    descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister, registerSpace,
-                          offsetInDescriptorsFromHeapStart);
+    descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister);
     rootParameters[0].InitAsDescriptorTable(1, &descriptorRange1);
 
-    descriptorRange2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1, registerSpace,
-                          offsetInDescriptorsFromHeapStart + 1);
+    descriptorRange2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1);
     rootParameters[1].InitAsDescriptorTable(1, &descriptorRange2);
 
-    descriptorRange3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 2, registerSpace,
-                          offsetInDescriptorsFromHeapStart + 2);
+    descriptorRange3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 2);
     rootParameters[2].InitAsDescriptorTable(1, &descriptorRange3);
 
     constexpr UINT numStaticSamples = 0;
