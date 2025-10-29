@@ -78,13 +78,20 @@ static ComPtr<ID3D12GraphicsCommandList> CreateGraphicsCommandList(
     return commandList;
 }
 
+static void Execute(ID3D12GraphicsCommandList *commandList, ID3D12CommandQueue *commandQueue)
+{
+
+    HR(commandList->Close());
+    ID3D12CommandList *commandLists[]{commandList};
+    commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+}
+
 AppWindow::AppWindow(HWND hwnd)
     : m_factory{CreateFactory()}, m_adapter{CreateAdapter(m_factory.Get())},
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
       m_fence{m_device.Get()}, m_commandAllocator{CreateCommandAllocator(m_device.Get())},
       m_commandList{CreateGraphicsCommandList(m_device.Get(), m_commandAllocator.Get())},
-      m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(),
-                  m_commandList.Get(), hwnd},
+      m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(), m_commandList.Get(), hwnd},
       m_frameData{m_device.Get()}
 {
     // sample code for querying features
@@ -104,9 +111,7 @@ AppWindow::AppWindow(HWND hwnd)
     CreateVertexBuffers(uploadBuffers);
 
     // Wait for the swap chain initialization and buffer uploads.
-    HR(m_commandList->Close());
-    ID3D12CommandList *commandLists[]{m_commandList.Get()};
-    m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+    Execute(m_commandList.Get(), m_commandQueue.Get());
     m_fence.Flush(m_commandQueue.Get());
 
     CreateRootSignature();
@@ -124,9 +129,7 @@ void AppWindow::Resize(int width, int height)
 
         m_swapchain.Resize(width, height, m_commandList.Get());
 
-        m_commandList->Close();
-        ID3D12CommandList *commandLists[]{m_commandList.Get()};
-        m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+        Execute(m_commandList.Get(), m_commandQueue.Get());
     }
 }
 
@@ -161,11 +164,11 @@ void AppWindow::Draw()
     m_commandList->ResourceBarrier(1, &transition1);
 
     m_commandList->ClearRenderTargetView(m_swapchain.CurrentBackBufferCPUDescriptorHandle(),
-                                                 Colors::Black, 0, nullptr);
+                                         Colors::Black, 0, nullptr);
 
     m_commandList->ClearDepthStencilView(m_swapchain.DepthStencilCPUDescriptorHandle(),
-                                                 D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
-                                                 1.f, 0, 0, nullptr);
+                                         D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.f, 0,
+                                         0, nullptr);
 
     D3D12_CPU_DESCRIPTOR_HANDLE backBuffer = m_swapchain.CurrentBackBufferCPUDescriptorHandle();
     D3D12_CPU_DESCRIPTOR_HANDLE depthStencilBuffer = m_swapchain.DepthStencilCPUDescriptorHandle();
@@ -173,7 +176,7 @@ void AppWindow::Draw()
 
     auto descriptorHeaps = m_frameData.DescriptorHeaps();
     m_commandList->SetDescriptorHeaps(static_cast<UINT>(descriptorHeaps.size()),
-                                              descriptorHeaps.data());
+                                      descriptorHeaps.data());
 
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
@@ -191,9 +194,7 @@ void AppWindow::Draw()
                                                             D3D12_RESOURCE_STATE_PRESENT);
     m_commandList->ResourceBarrier(1, &transition2);
 
-    HR(m_commandList->Close());
-    ID3D12CommandList *commandLists[]{m_commandList.Get()};
-    m_commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+    Execute(m_commandList.Get(), m_commandQueue.Get());
 
     m_swapchain.Present();
 }
