@@ -152,7 +152,6 @@ void AppWindow::Update(double elapsedSeconds)
 
 void AppWindow::Draw()
 {
-    // The current frame data, even if it's just one at this stage.
     FrameData &frameData = CurrentFrameData();
 
     frameData.FlushFence(m_commandQueue.Get());
