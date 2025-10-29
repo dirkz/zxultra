@@ -9,6 +9,8 @@ namespace zxultra
 
 struct DescriptorHeap
 {
+    DescriptorHeap() {};
+
     DescriptorHeap(ID3D12Device *device, UINT numDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
                    D3D12_DESCRIPTOR_HEAP_FLAGS flags);
 

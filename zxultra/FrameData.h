@@ -10,6 +10,8 @@ namespace zxultra
 
 struct FrameData
 {
+    FrameData() {};
+
     FrameData(ID3D12Device *device);
 
     ConstantBuffer<XMFLOAT4X4> &CbProjection()
