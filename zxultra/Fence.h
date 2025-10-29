@@ -13,7 +13,7 @@ struct Fence
 
     Fence(const Fence &) = delete;
 
-    Fence(Fence &&other)
+    Fence(Fence &&other) noexcept
         : m_value{std::move(other.m_value)}, m_fence{std::move(other.m_fence)}
     {
         other.m_fence = nullptr;

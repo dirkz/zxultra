@@ -16,7 +16,7 @@ struct DescriptorHeap
 
     DescriptorHeap(const DescriptorHeap &) = delete;
 
-    DescriptorHeap(DescriptorHeap &&other)
+    DescriptorHeap(DescriptorHeap &&other) noexcept
         : m_device{std::move(other.m_device)}, m_descriptorHeap{std::move(other.m_descriptorHeap)},
           m_descriptorHandleIncrementSize{std::move(other.m_descriptorHandleIncrementSize)}
     {
