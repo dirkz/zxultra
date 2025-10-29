@@ -214,22 +214,22 @@ void AppWindow::CreateRootSignature()
 {
     CD3DX12_ROOT_PARAMETER rootParameters[3]{};
 
-    CD3DX12_DESCRIPTOR_RANGE descriptorRange{};
+    CD3DX12_DESCRIPTOR_RANGE descriptorRange1{}, descriptorRange2{}, descriptorRange3{};
     constexpr UINT baseShaderRegister = 0;
     constexpr UINT registerSpace = 0;
     constexpr UINT offsetInDescriptorsFromHeapStart = 0;
 
-    descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister, registerSpace,
-                         offsetInDescriptorsFromHeapStart);
-    rootParameters[0].InitAsDescriptorTable(1, &descriptorRange);
+    descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister, registerSpace,
+                          offsetInDescriptorsFromHeapStart);
+    rootParameters[0].InitAsDescriptorTable(1, &descriptorRange1);
 
-    descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1, registerSpace,
-                         offsetInDescriptorsFromHeapStart + 1);
-    rootParameters[1].InitAsDescriptorTable(1, &descriptorRange);
+    descriptorRange2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1, registerSpace,
+                          offsetInDescriptorsFromHeapStart + 1);
+    rootParameters[1].InitAsDescriptorTable(1, &descriptorRange2);
 
-    descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 2, registerSpace,
-                         offsetInDescriptorsFromHeapStart + 2);
-    rootParameters[2].InitAsDescriptorTable(1, &descriptorRange);
+    descriptorRange3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 2, registerSpace,
+                          offsetInDescriptorsFromHeapStart + 2);
+    rootParameters[2].InitAsDescriptorTable(1, &descriptorRange3);
 
     constexpr UINT numStaticSamples = 0;
     constexpr D3D12_STATIC_SAMPLER_DESC *samplerDescription = nullptr;
