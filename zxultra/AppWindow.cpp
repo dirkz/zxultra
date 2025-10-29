@@ -121,6 +121,12 @@ void AppWindow::Draw()
     m_commandList->SetGraphicsRootDescriptorTable(
         0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(0));
 
+    m_commandList->SetGraphicsRootDescriptorTable(
+        1, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(1));
+
+    m_commandList->SetGraphicsRootDescriptorTable(
+        2, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(2));
+
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     m_commandList->IASetIndexBuffer(&m_indexBufferView);
     m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -206,11 +212,24 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
 
 void AppWindow::CreateRootSignature()
 {
-    CD3DX12_ROOT_PARAMETER rootParameters[1]{};
+    CD3DX12_ROOT_PARAMETER rootParameters[3]{};
+
     CD3DX12_DESCRIPTOR_RANGE descriptorRange{};
     constexpr UINT baseShaderRegister = 0;
-    descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, NumConstantBuffers, baseShaderRegister);
+    constexpr UINT registerSpace = 0;
+    constexpr UINT offsetInDescriptorsFromHeapStart = 0;
+
+    descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister, registerSpace,
+                         offsetInDescriptorsFromHeapStart);
     rootParameters[0].InitAsDescriptorTable(1, &descriptorRange);
+
+    descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1, registerSpace,
+                         offsetInDescriptorsFromHeapStart + 1);
+    rootParameters[1].InitAsDescriptorTable(1, &descriptorRange);
+
+    descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 2, registerSpace,
+                         offsetInDescriptorsFromHeapStart + 2);
+    rootParameters[2].InitAsDescriptorTable(1, &descriptorRange);
 
     constexpr UINT numStaticSamples = 0;
     constexpr D3D12_STATIC_SAMPLER_DESC *samplerDescription = nullptr;
@@ -226,9 +245,9 @@ void AppWindow::CreateRootSignature()
 
     if (!SUCCEEDED(hr) && errorBlob.Get() != nullptr)
     {
-        const WCHAR *msg = reinterpret_cast<WCHAR *>(errorBlob->GetBufferPointer());
-        OutputDebugString(L"D3D12SerializeRootSignature failed with the following error:\n");
-        OutputDebugString(msg);
+        const char *msg = reinterpret_cast<char *>(errorBlob->GetBufferPointer());
+        OutputDebugString(L"D3D12SerializeRootSignature failed with the following error:\n\n");
+        OutputDebugStringA(msg);
         OutputDebugString(L"\n");
     }
 
