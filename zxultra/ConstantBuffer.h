@@ -36,12 +36,6 @@ template <class T> struct ConstantBuffer
 
     ConstantBuffer &operator=(const ConstantBuffer &) = delete;
 
-    ConstantBuffer(ConstantBuffer &&other)
-        : m_numElements{std::move(other.m_numElements)}, m_resource{std::move(other.m_resource)},
-          m_mappedBuffer{std::move(other.m_mappedBuffer)}
-    {
-    }
-
     ConstantBuffer &operator=(ConstantBuffer &&other) noexcept
     {
         std::swap(m_numElements, other.m_numElements);
