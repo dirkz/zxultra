@@ -216,8 +216,6 @@ void AppWindow::CreateRootSignature()
 
     CD3DX12_DESCRIPTOR_RANGE descriptorRange1{}, descriptorRange2{}, descriptorRange3{};
     constexpr UINT baseShaderRegister = 0;
-    constexpr UINT registerSpace = 0;
-    constexpr UINT offsetInDescriptorsFromHeapStart = 0;
 
     descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister);
     rootParameters[0].InitAsDescriptorTable(1, &descriptorRange1);
