@@ -36,7 +36,7 @@ template <class T> struct ConstantBuffer
 
     ConstantBuffer &operator=(const ConstantBuffer &) = delete;
 
-    ConstantBuffer &operator=(ConstantBuffer &&other)
+    ConstantBuffer &operator=(ConstantBuffer &&other) noexcept
     {
         std::swap(m_numElements, other.m_numElements);
         std::swap(m_resource, other.m_resource);

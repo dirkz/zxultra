@@ -95,7 +95,7 @@ AppWindow::AppWindow(HWND hwnd)
 {
     for (FrameData &frameData : m_frameData)
     {
-        frameData = FrameData{m_device.Get()};
+        frameData = std::move(FrameData{m_device.Get()});
     }
 
     // sample code for querying features

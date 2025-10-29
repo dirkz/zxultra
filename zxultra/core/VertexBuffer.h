@@ -80,7 +80,8 @@ template <class T, class I, class H = std::hash<T>, class E = std::equal_to<T>> 
     }
 
   private:
-    // Note the (partrial) move semantics
+    // Note: (Partrial) move semantics
+
     std::unordered_map<T, I> m_vertexIndex;
     std::vector<T> m_vertices;
     std::vector<I> m_indices;
