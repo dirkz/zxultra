@@ -19,19 +19,14 @@ struct FrameData
 
     FrameData &operator=(const FrameData &) = delete;
 
-    inline FrameData& operator=(FrameData&& other) noexcept
+    inline FrameData &operator=(FrameData &&other) noexcept
     {
         std::swap(m_commandAllocator, other.m_commandAllocator);
         std::swap(m_fence, other.m_fence);
 
-        m_cbProjection = std::move(other.m_cbProjection);
-        other.m_cbProjection = ConstantBuffer<XMFLOAT4X4>();
-
-        m_cbView = std::move(other.m_cbView);
-        other.m_cbView = ConstantBuffer<XMFLOAT4X4>();
-
-        m_cbModel = std::move(other.m_cbModel);
-        other.m_cbModel = ConstantBuffer<XMFLOAT4X4>();
+        ConstantBuffer<XMFLOAT4X4>::Swap(m_cbProjection, other.m_cbProjection);
+        ConstantBuffer<XMFLOAT4X4>::Swap(m_cbView, other.m_cbView);
+        ConstantBuffer<XMFLOAT4X4>::Swap(m_cbModel, other.m_cbModel);
 
         std::swap(m_descriptorHeap, other.m_descriptorHeap);
 

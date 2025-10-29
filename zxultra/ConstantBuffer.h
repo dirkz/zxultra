@@ -13,6 +13,12 @@ inline UINT RoundedBufferElementSize(UINT size)
 
 template <class T> struct ConstantBuffer
 {
+    static inline void Swap(ConstantBuffer<T> &cb1, ConstantBuffer<T> &cb2)
+    {
+        cb1 = std::move(cb2);
+        cb2 = ConstantBuffer<T>();
+    }
+
     ConstantBuffer()
     {
     }
