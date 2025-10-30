@@ -232,6 +232,8 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
     m_indexBufferView.Format = IndexFormat;
 }
 
+// TODO: This looks like it belongs to FrameData, because this is the place
+// where the parameters are known.
 void AppWindow::CreateRootSignature()
 {
     CD3DX12_ROOT_PARAMETER rootParameters[AppFrameData::NumRootParameters]{};
