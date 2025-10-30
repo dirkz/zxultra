@@ -32,6 +32,11 @@ struct Swapchain
         return m_height;
     }
 
+    inline float AspectRatio() const
+    {
+        return static_cast<float>(m_width) / m_height;
+    }
+
     D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackBufferCPUDescriptorHandle() const;
     D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilCPUDescriptorHandle() const;
 

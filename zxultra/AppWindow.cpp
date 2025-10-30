@@ -67,18 +67,21 @@ void AppWindow::Update(double elapsedSeconds)
 {
     AppFrameData &frameData = CurrentFrameData();
 
-    XMMATRIX identity = XMMatrixIdentity();
-
-    XMMATRIX rotate = XMMatrixRotationZ(XM_PIDIV4);
-    XMMATRIX scale = XMMatrixScaling(1.2f, 1.2f, 1);
-    XMMATRIX translate = XMMatrixTranslation(+0.1f, +0.3f, 0);
-
-    // A ModelViewProjection matrix would be:
+    // ModelViewProjection matrix:
     // model * view * projection
 
-    XMMATRIX model = XMMatrixMultiply(scale, rotate);
+    XMMATRIX projection =
+        XMMatrixPerspectiveFovLH(XM_PIDIV4, m_swapchain.AspectRatio(), 0.1f, 10.f);
 
-    XMStoreFloat4x4(&frameData.PerPass(), XMMatrixTranspose(identity));
+    XMMATRIX view =
+        XMMatrixLookAtLH(XMVectorSet(0, 0, -5.f, 1), XMVectorZero(), XMVectorSet(0, 1.f, 0, 1));
+
+    XMMATRIX viewProjection = XMMatrixMultiply(view, projection);
+
+    XMMATRIX model = XMMatrixRotationY(XM_PIDIV4);
+    model = XMMatrixIdentity();
+
+    XMStoreFloat4x4(&frameData.PerPass(), XMMatrixTranspose(viewProjection));
     XMStoreFloat4x4(&frameData.PerObject(0), XMMatrixTranspose(model));
 }
 
@@ -187,11 +190,23 @@ void AppWindow::LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter)
 
 void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
 {
-    VertexWithColor v0{{-0.5f, -0.5f, 0.f}, Colors::Red};
-    VertexWithColor v1{{+0.0f, +0.5f, 0.f}, Colors::Green};
-    VertexWithColor v2{{+0.5f, -0.5f, 0.f}, Colors::Blue};
+    VertexWithColor v0{{-0.5f, -0.5f, -0.5f}, Colors::Yellow};    // front left bottom
+    VertexWithColor v1{{-0.5f, +0.5f, -0.5f}, Colors::White};     // front left top
+    VertexWithColor v2{{+0.5f, +0.5f, -0.5f}, Colors::Cyan};      // front right top
+    VertexWithColor v3{{+0.5f, -0.5f, -0.5f}, Colors::Green};     // front right bottom
+    VertexWithColor v4{{-0.5f, -0.5f, +0.5f}, Colors::Red};       // back left bottom
+    VertexWithColor v5{{-0.5f, +0.5f, +0.5f}, Colors::LightPink}; // back left top
+    VertexWithColor v6{{+0.5f, +0.5f, +0.5f}, Colors::Blue};      // back right top
+    VertexWithColor v7{{+0.5f, -0.5f, +0.5f}, Colors::Red};       // back right bottom
 
-    m_vertexBuffer = VertexBuffer<VertexWithColor, IndexType>{v0, v1, v2};
+    m_vertexBuffer = VertexBuffer<VertexWithColor, IndexType>{
+        v0, v1, v2, // front 1
+        v0, v2, v3, // front 2
+        v1, v5, v6, // top 1
+        v1, v6, v7, // top 2
+        v4, v5, v1, // left side 1
+        v4, v1, v0, // left side 2
+    };
 
     m_vertexBufferResource =
         bufferCreator.CreateDefaultBuffer(m_commandList.Get(), m_vertexBuffer.Vertices());
