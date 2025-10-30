@@ -102,8 +102,6 @@ template <class T> struct ConstantBuffer
     }
 
   private:
-    // Note: Move semantics!
-
     UINT m_elementSize = 0;
     UINT m_numElements = 0;
     ComPtr<ID3D12Resource> m_resource;
