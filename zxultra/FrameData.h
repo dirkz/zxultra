@@ -3,6 +3,8 @@
 #include "stdafx.h"
 
 #include "ConstantBuffer.h"
+#include "Constants.h"
+#include "CreateFunctions.h"
 #include "DescriptorHeap.h"
 #include "Fence.h"
 
@@ -13,7 +15,16 @@ struct FrameData
 {
     FrameData() {};
 
-    FrameData(ID3D12Device *device);
+    FrameData(ID3D12Device *device)
+        : m_commandAllocator{CreateCommandAllocator(device)}, m_fence{device}, m_cbModel{device, 1},
+          m_cbViewProjection{device, 1},
+          m_descriptorHeap{device, NumConstantBuffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+                           D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE}
+    {
+        INT index = 0;
+        index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbModel);
+        index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbViewProjection);
+    }
 
     FrameData(const FrameData &) = delete;
 
@@ -42,7 +53,10 @@ struct FrameData
         return m_cbViewProjection;
     }
 
-    std::array<ID3D12DescriptorHeap *, 1> DescriptorHeaps();
+    std::array<ID3D12DescriptorHeap *, 1> DescriptorHeaps()
+    {
+        return {m_descriptorHeap.Get()};
+    }
 
     DescriptorHeap &GetDescriptorHeap()
     {
@@ -54,7 +68,10 @@ struct FrameData
         return m_commandAllocator.Get();
     }
 
-    void FlushFence(ID3D12CommandQueue *commandQueue);
+    void FlushFence(ID3D12CommandQueue *commandQueue)
+    {
+        m_fence.Flush(commandQueue);
+    }
 
   private:
     // Note: Move semantics!

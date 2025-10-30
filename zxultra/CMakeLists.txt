@@ -15,7 +15,6 @@ add_library(zxultra OBJECT
 	"Blob.h"
 	"Blob.cpp"
 	"FrameData.h"
-	"FrameData.cpp"
 	"DescriptorHeap.h"
 	"DescriptorHeap.cpp"
 	"CreateFunctions.h")
