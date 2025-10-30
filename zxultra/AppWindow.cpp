@@ -77,8 +77,8 @@ void AppWindow::Update(double elapsedSeconds)
 
     XMMATRIX viewProjection = XMMatrixMultiply(view, projection);
 
-    float rotationY = std::sin(elapsed * XM_PI / 10.f) * XM_PI;
-    float rotationX = std::cos(elapsed * XM_PI / 10.f);
+    float rotationY = elapsed * XM_PI / 10.f;
+    float rotationX = std::sin(elapsed * XM_PI / 10.f);
 
     XMMATRIX model1 = XMMatrixRotationY(rotationY);
     XMMATRIX model2 = XMMatrixRotationX(rotationX);
@@ -213,6 +213,8 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
         v3, v6, v7, // right 2
         v4, v0, v3, // bottom 1
         v4, v3, v7, // bottom 2
+        v7, v6, v5, // back 1
+        v7, v5, v4, // back 2
     };
 
     m_vertexBufferResource =
