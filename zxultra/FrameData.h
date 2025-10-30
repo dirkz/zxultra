@@ -27,12 +27,6 @@ template <class P, class O, size_t I> struct FrameData
     /// <returns></returns>
     static const UINT NumRootParameters = 2;
 
-    /// <summary>
-    /// The maximum number of per-objects constant buffers.
-    /// </summary>
-    /// <returns></returns>
-    static const UINT NumObjects = I;
-
     FrameData(ID3D12Device *device)
         : m_commandAllocator{CreateCommandAllocator(device)}, m_fence{device},
           m_cbPerPass{device, 1}, m_cbPerObject{device, I},
