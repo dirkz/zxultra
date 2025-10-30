@@ -82,10 +82,12 @@ void AppWindow::Update(double elapsedSeconds)
 
     XMMATRIX model1 = XMMatrixRotationY(rotationY);
     XMMATRIX model2 = XMMatrixRotationX(rotationX);
-    XMMATRIX model = XMMatrixMultiply(model1, model2);
+    XMMATRIX translateLeft = XMMatrixTranslation(-1, 0, 0);
+    XMMATRIX modelLeft = XMMatrixMultiply(model1, model2);
+    modelLeft = XMMatrixMultiply(modelLeft, translateLeft);
 
     XMStoreFloat4x4(&frameData.PerPass(), XMMatrixTranspose(viewProjection));
-    XMStoreFloat4x4(&frameData.PerObject(0), XMMatrixTranspose(model));
+    XMStoreFloat4x4(&frameData.PerObject(0), XMMatrixTranspose(modelLeft));
 }
 
 void AppWindow::Draw()
