@@ -14,25 +14,7 @@ struct DescriptorHeap
     DescriptorHeap(ID3D12Device *device, UINT numDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
                    D3D12_DESCRIPTOR_HEAP_FLAGS flags);
 
-    DescriptorHeap(DescriptorHeap &&other) noexcept
-        : m_device{std::move(other.m_device)}, m_descriptorHeap{std::move(other.m_descriptorHeap)},
-          m_descriptorHandleIncrementSize{std::move(other.m_descriptorHandleIncrementSize)}
-    {
-        other.m_device = nullptr;
-        other.m_descriptorHeap = nullptr;
-        other.m_descriptorHandleIncrementSize = 0;
-    }
-
     DescriptorHeap(const DescriptorHeap &) = delete;
-
-    DescriptorHeap &operator=(DescriptorHeap &&other) noexcept
-    {
-        std::swap(m_device, other.m_device);
-        std::swap(m_descriptorHeap, other.m_descriptorHeap);
-        std::swap(m_descriptorHandleIncrementSize, other.m_descriptorHandleIncrementSize);
-
-        return *this;
-    }
 
     DescriptorHeap &operator=(const DescriptorHeap &) = delete;
 
@@ -79,8 +61,6 @@ struct DescriptorHeap
     }
 
   private:
-    // Note: Move semantics!
-
     ComPtr<ID3D12Device> m_device;
     ComPtr<ID3D12DescriptorHeap> m_descriptorHeap;
     UINT m_descriptorHandleIncrementSize = 0;

@@ -32,17 +32,6 @@ template <class P, class O, size_t I> struct FrameData
 
     FrameData(const FrameData &) = delete;
 
-    inline FrameData &operator=(FrameData &&other) noexcept
-    {
-        std::swap(m_commandAllocator, other.m_commandAllocator);
-        std::swap(m_fence, other.m_fence);
-        std::swap(m_cbPerPass, other.m_cbPerPass);
-        std::swap(m_cbPerObject, other.m_cbPerObject);
-        std::swap(m_descriptorHeap, other.m_descriptorHeap);
-
-        return *this;
-    }
-
     FrameData &operator=(const FrameData &) = delete;
 
     P &PerPass()
@@ -76,8 +65,6 @@ template <class P, class O, size_t I> struct FrameData
     }
 
   private:
-    // Note: Move semantics!
-
     ComPtr<ID3D12CommandAllocator> m_commandAllocator;
 
     Fence m_fence;
