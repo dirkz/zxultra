@@ -75,7 +75,7 @@ void AppWindow::Update(double elapsedSeconds)
 
     XMMATRIX viewProjection = XMMatrixMultiply(view, projection);
 
-    XMMATRIX model1 = XMMatrixRotationY(-XM_PIDIV4);
+    XMMATRIX model1 = XMMatrixRotationY(+XM_PIDIV4);
     XMMATRIX model2 = XMMatrixRotationX(-XM_PIDIV4);
     XMMATRIX model = XMMatrixMultiply(model1, model2);
 
@@ -204,6 +204,8 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
         v1, v6, v2, // top 2
         v4, v5, v1, // left side 1
         v4, v1, v0, // left side 2
+        v3, v2, v6, // right side 1
+        v3, v6, v7, // right side 2
     };
 
     m_vertexBufferResource =
