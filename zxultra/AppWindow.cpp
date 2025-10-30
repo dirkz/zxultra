@@ -128,21 +128,29 @@ void AppWindow::Draw()
     D3D12_CPU_DESCRIPTOR_HANDLE depthStencilBuffer = m_swapchain.DepthStencilCPUDescriptorHandle();
     m_commandList->OMSetRenderTargets(1, &backBuffer, true, &depthStencilBuffer);
 
+    m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+    m_commandList->IASetIndexBuffer(&m_indexBufferView);
+    m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
     auto descriptorHeaps = frameData.DescriptorHeaps();
     m_commandList->SetDescriptorHeaps(static_cast<UINT>(descriptorHeaps.size()),
                                       descriptorHeaps.data());
 
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
+    // Set per-pass data
+    m_commandList->SetGraphicsRootDescriptorTable(
+        1, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(0));
+    
+    // Object 0
     m_commandList->SetGraphicsRootDescriptorTable(
         0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(1));
 
-    m_commandList->SetGraphicsRootDescriptorTable(
-        1, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(0));
+    m_commandList->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
 
-    m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
-    m_commandList->IASetIndexBuffer(&m_indexBufferView);
-    m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    // Object 1
+    m_commandList->SetGraphicsRootDescriptorTable(
+        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(2));
 
     m_commandList->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
 
