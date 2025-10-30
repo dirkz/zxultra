@@ -34,7 +34,9 @@ template <class P, class O, size_t I> struct FrameData
                            D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE}
     {
         INT index = 0;
+        m_perObjectDescriptorIndex = index;
         index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbPerObject);
+        m_perPassDescriptorIndex = index;
         index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbPerPass);
     }
 
@@ -57,12 +59,12 @@ template <class P, class O, size_t I> struct FrameData
         return {m_descriptorHeap.Get()};
     }
 
-    DescriptorHeap &GetDescriptorHeap()
+    inline DescriptorHeap &GetDescriptorHeap()
     {
         return m_descriptorHeap;
     }
 
-    ID3D12CommandAllocator *CommandAllocator() const
+    inline ID3D12CommandAllocator *CommandAllocator() const
     {
         return m_commandAllocator.Get();
     }
@@ -70,6 +72,26 @@ template <class P, class O, size_t I> struct FrameData
     void FlushFence(ID3D12CommandQueue *commandQueue)
     {
         m_fence.Flush(commandQueue);
+    }
+
+    inline UINT PerObjectDescriptorIndex() const
+    {
+        return m_perObjectDescriptorIndex;
+    }
+
+    inline UINT PerPassDescriptorIndex() const
+    {
+        return m_perPassDescriptorIndex;
+    }
+
+    CD3DX12_GPU_DESCRIPTOR_HANDLE PerPassGPUDescriptorHandle() const
+    {
+        return m_descriptorHeap.GetGPUDescriptorHandle(PerPassDescriptorIndex());
+    }
+
+    CD3DX12_GPU_DESCRIPTOR_HANDLE PerObjectGPUDescriptorHandle(UINT index) const
+    {
+        return m_descriptorHeap.GetGPUDescriptorHandle(PerObjectDescriptorIndex() + index);
     }
 
   private:
@@ -81,6 +103,9 @@ template <class P, class O, size_t I> struct FrameData
     ConstantBuffer<O> m_cbPerObject;
 
     DescriptorHeap m_descriptorHeap;
+
+    UINT m_perObjectDescriptorIndex = 0;
+    UINT m_perPassDescriptorIndex = 0;
 };
 
 } // namespace zxultra

@@ -53,7 +53,7 @@ struct DescriptorHeap
         return m_descriptorHeap.Get();
     }
 
-    CD3DX12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(INT index)
+    CD3DX12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(INT index) const
     {
         CD3DX12_GPU_DESCRIPTOR_HANDLE base{m_descriptorHeap->GetGPUDescriptorHandleForHeapStart()};
 

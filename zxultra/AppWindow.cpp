@@ -139,18 +139,15 @@ void AppWindow::Draw()
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
     // Set per-pass data
-    m_commandList->SetGraphicsRootDescriptorTable(
-        1, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(2));
-    
+    m_commandList->SetGraphicsRootDescriptorTable(1, frameData.PerPassGPUDescriptorHandle());
+
     // Object 0
-    m_commandList->SetGraphicsRootDescriptorTable(
-        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(0));
+    m_commandList->SetGraphicsRootDescriptorTable(0, frameData.PerObjectGPUDescriptorHandle(0));
 
     m_commandList->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
 
     // Object 1
-    m_commandList->SetGraphicsRootDescriptorTable(
-        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(1));
+    m_commandList->SetGraphicsRootDescriptorTable(0, frameData.PerObjectGPUDescriptorHandle(1));
 
     m_commandList->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
 
