@@ -67,9 +67,6 @@ void AppWindow::Update(double elapsedSeconds)
 {
     AppFrameData &frameData = CurrentFrameData();
 
-    // ModelViewProjection matrix:
-    // model * view * projection
-
     XMMATRIX projection =
         XMMatrixPerspectiveFovLH(XM_PIDIV4, m_swapchain.AspectRatio(), 0.1f, 10.f);
 
@@ -78,8 +75,9 @@ void AppWindow::Update(double elapsedSeconds)
 
     XMMATRIX viewProjection = XMMatrixMultiply(view, projection);
 
-    XMMATRIX model = XMMatrixRotationY(XM_PIDIV4);
-    model = XMMatrixIdentity();
+    XMMATRIX model1 = XMMatrixRotationY(-XM_PIDIV4);
+    XMMATRIX model2 = XMMatrixRotationX(-XM_PIDIV4);
+    XMMATRIX model = XMMatrixMultiply(model1, model2);
 
     XMStoreFloat4x4(&frameData.PerPass(), XMMatrixTranspose(viewProjection));
     XMStoreFloat4x4(&frameData.PerObject(0), XMMatrixTranspose(model));

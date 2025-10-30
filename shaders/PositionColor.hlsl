@@ -24,7 +24,7 @@ Fragment VS(Vertex v)
 {
     Fragment fragment;
 
-    float4x4 transform = mul(Model, ViewProjection);
+    float4x4 transform = mul(ViewProjection, Model);
 
     float4 hPosition = float4(v.Position, 1);
     float4 position = mul(hPosition, transform);
