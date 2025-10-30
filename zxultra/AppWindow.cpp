@@ -201,7 +201,7 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
         v0, v1, v2, // front 1
         v0, v2, v3, // front 2
         v1, v5, v6, // top 1
-        v1, v6, v7, // top 2
+        v1, v6, v2, // top 2
         v4, v5, v1, // left side 1
         v4, v1, v0, // left side 2
     };
