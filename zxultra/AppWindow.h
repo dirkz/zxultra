@@ -69,7 +69,7 @@ struct AppWindow
     ComPtr<ID3D12Resource> m_indexBufferResource;
     D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
 
-    std::array<AppFrameData, NumFrames> m_frameData;
+    std::array<AppFrameData, 3> m_frameData;
     UINT m_currentFrameDataIndex = 0;
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
