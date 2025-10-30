@@ -65,6 +65,8 @@ void AppWindow::Resize(int width, int height)
 
 void AppWindow::Update(double elapsedSeconds)
 {
+    float elapsed = static_cast<float>(elapsedSeconds);
+
     AppFrameData &frameData = CurrentFrameData();
 
     XMMATRIX projection =
@@ -75,8 +77,11 @@ void AppWindow::Update(double elapsedSeconds)
 
     XMMATRIX viewProjection = XMMatrixMultiply(view, projection);
 
-    XMMATRIX model1 = XMMatrixRotationY(+XM_PIDIV4);
-    XMMATRIX model2 = XMMatrixRotationX(-XM_PIDIV4);
+    float rotationY = std::sin(elapsed * XM_PI / 10.f) * XM_PI;
+    float rotationX = std::cos(elapsed * XM_PI / 10.f);
+
+    XMMATRIX model1 = XMMatrixRotationY(rotationY);
+    XMMATRIX model2 = XMMatrixRotationX(rotationX);
     XMMATRIX model = XMMatrixMultiply(model1, model2);
 
     XMStoreFloat4x4(&frameData.PerPass(), XMMatrixTranspose(viewProjection));
@@ -195,17 +200,19 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
     VertexWithColor v4{{-0.5f, -0.5f, +0.5f}, Colors::Red};       // back left bottom
     VertexWithColor v5{{-0.5f, +0.5f, +0.5f}, Colors::LightPink}; // back left top
     VertexWithColor v6{{+0.5f, +0.5f, +0.5f}, Colors::Blue};      // back right top
-    VertexWithColor v7{{+0.5f, -0.5f, +0.5f}, Colors::Red};       // back right bottom
+    VertexWithColor v7{{+0.5f, -0.5f, +0.5f}, Colors::Magenta};       // back right bottom
 
     m_vertexBuffer = VertexBuffer<VertexWithColor, IndexType>{
         v0, v1, v2, // front 1
         v0, v2, v3, // front 2
         v1, v5, v6, // top 1
         v1, v6, v2, // top 2
-        v4, v5, v1, // left side 1
-        v4, v1, v0, // left side 2
-        v3, v2, v6, // right side 1
-        v3, v6, v7, // right side 2
+        v4, v5, v1, // left 1
+        v4, v1, v0, // left 2
+        v3, v2, v6, // right 1
+        v3, v6, v7, // right 2
+        v4, v0, v3, // bottom 1
+        v4, v3, v7, // bottom 2
     };
 
     m_vertexBufferResource =
