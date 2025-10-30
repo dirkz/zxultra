@@ -24,7 +24,7 @@ template <class P, class O, size_t I> struct FrameData
     FrameData(ID3D12Device *device)
         : m_commandAllocator{CreateCommandAllocator(device)}, m_fence{device},
           m_cbPerPass{device, 1}, m_cbPerObject{device, I},
-          m_descriptorHeap{device, NumConstantBuffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+          m_descriptorHeap{device, I + 1, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
                            D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE}
     {
         INT index = 0;
