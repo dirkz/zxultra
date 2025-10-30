@@ -19,8 +19,6 @@ namespace zxultra
 /// <typeparam name="I">The number of per-object objects</typeparam>
 template <class P, class O, size_t I> struct FrameData
 {
-    FrameData() {};
-
     FrameData(ID3D12Device *device)
         : m_commandAllocator{CreateCommandAllocator(device)}, m_fence{device},
           m_cbPerPass{device, 1}, m_cbPerObject{device, I},

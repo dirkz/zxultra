@@ -20,13 +20,10 @@ AppWindow::AppWindow(HWND hwnd)
       m_device{CreateDevice(m_adapter.Get())}, m_commandQueue{CreateCommandQueue(m_device.Get())},
       m_fence{m_device.Get()}, m_commandAllocator{CreateCommandAllocator(m_device.Get())},
       m_commandList{CreateGraphicsCommandList(m_device.Get(), m_commandAllocator.Get())},
-      m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(), m_commandList.Get(), hwnd}
+      m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(), m_commandList.Get(), hwnd},
+      m_frameData{AppFrameData{m_device.Get()}, AppFrameData{m_device.Get()},
+                  AppFrameData{m_device.Get()}}
 {
-    for (AppFrameData &frameData : m_frameData)
-    {
-        frameData = std::move(AppFrameData{m_device.Get()});
-    }
-
     // sample code for querying features
     CD3DX12FeatureSupport features;
     HR(features.Init(m_device.Get()));
