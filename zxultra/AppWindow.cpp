@@ -135,10 +135,10 @@ void AppWindow::Draw()
     m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
     m_commandList->SetGraphicsRootDescriptorTable(
-        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(0));
+        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(1));
 
     m_commandList->SetGraphicsRootDescriptorTable(
-        1, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(1));
+        1, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(0));
 
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     m_commandList->IASetIndexBuffer(&m_indexBufferView);
@@ -249,12 +249,15 @@ void AppWindow::CreateRootSignature()
 
     CD3DX12_DESCRIPTOR_RANGE descriptorRange0{}, descriptorRange1{};
     constexpr UINT baseShaderRegister = 0;
+    constexpr UINT registerSpace = 0;
+    constexpr UINT offsetInDescriptorsFromTableStart = 0;
 
-    descriptorRange0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister);
+    descriptorRange0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister, registerSpace,
+                          offsetInDescriptorsFromTableStart);
     rootParameters[0].InitAsDescriptorTable(1, &descriptorRange0);
 
-    descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, AppFrameData::NumObjects,
-                          baseShaderRegister + 1);
+    descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1, registerSpace,
+                          offsetInDescriptorsFromTableStart);
     rootParameters[1].InitAsDescriptorTable(1, &descriptorRange1);
 
     constexpr UINT numStaticSamples = 0;
