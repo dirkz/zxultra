@@ -34,8 +34,8 @@ template <class P, class O, size_t I> struct FrameData
                            D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE}
     {
         INT index = 0;
-        index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbPerPass);
         index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbPerObject);
+        index = m_descriptorHeap.CreateConstantBufferViews(index, m_cbPerPass);
     }
 
     FrameData(const FrameData &) = delete;

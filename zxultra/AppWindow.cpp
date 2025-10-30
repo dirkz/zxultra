@@ -140,17 +140,17 @@ void AppWindow::Draw()
 
     // Set per-pass data
     m_commandList->SetGraphicsRootDescriptorTable(
-        1, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(0));
+        1, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(2));
     
     // Object 0
     m_commandList->SetGraphicsRootDescriptorTable(
-        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(1));
+        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(0));
 
     m_commandList->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
 
     // Object 1
     m_commandList->SetGraphicsRootDescriptorTable(
-        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(2));
+        0, frameData.GetDescriptorHeap().GetGPUDescriptorHandle(1));
 
     m_commandList->DrawIndexedInstanced(m_vertexBuffer.NumIndices(), 1, 0, 0, 0);
 
