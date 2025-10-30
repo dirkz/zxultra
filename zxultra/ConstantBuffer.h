@@ -72,14 +72,16 @@ template <class T> struct ConstantBuffer
 
     inline const T &operator[](size_t n) const
     {
-        const T *buffer = reinterpret_cast<const T *>(m_mappedBuffer);
-        return buffer[n];
+        BYTE *pElement = m_mappedBuffer + n * ElementSize();
+        T &element = *(reinterpret_cast<T *>(pElement));
+        return element;
     }
 
     inline T &operator[](size_t n)
     {
-        T *buffer = reinterpret_cast<T *>(m_mappedBuffer);
-        return buffer[n];
+        BYTE *pElement = m_mappedBuffer + n * ElementSize();
+        T &element = *(reinterpret_cast<T *>(pElement));
+        return element;
     }
 
     inline std::vector<D3D12_CONSTANT_BUFFER_VIEW_DESC> ConstantBufferViewDescriptions() const
