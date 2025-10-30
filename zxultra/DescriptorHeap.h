@@ -14,17 +14,16 @@ struct DescriptorHeap
     DescriptorHeap(ID3D12Device *device, UINT numDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
                    D3D12_DESCRIPTOR_HEAP_FLAGS flags);
 
-    DescriptorHeap(const DescriptorHeap &) = delete;
-
     DescriptorHeap(DescriptorHeap &&other) noexcept
         : m_device{std::move(other.m_device)}, m_descriptorHeap{std::move(other.m_descriptorHeap)},
           m_descriptorHandleIncrementSize{std::move(other.m_descriptorHandleIncrementSize)}
     {
         other.m_device = nullptr;
         other.m_descriptorHeap = nullptr;
+        other.m_descriptorHandleIncrementSize = 0;
     }
 
-    DescriptorHeap &operator=(const DescriptorHeap &) = delete;
+    DescriptorHeap(const DescriptorHeap &) = delete;
 
     DescriptorHeap &operator=(DescriptorHeap &&other) noexcept
     {
@@ -34,6 +33,8 @@ struct DescriptorHeap
 
         return *this;
     }
+
+    DescriptorHeap &operator=(const DescriptorHeap &) = delete;
 
     template <class T>
     inline UINT CreateConstantBufferViews(INT startingIndex,

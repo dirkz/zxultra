@@ -11,15 +11,13 @@ struct Fence
 
     Fence(ID3D12Device *device);
 
-    Fence(const Fence &) = delete;
-
     Fence(Fence &&other) noexcept
         : m_value{std::move(other.m_value)}, m_fence{std::move(other.m_fence)}
     {
         other.m_fence = nullptr;
     }
 
-    Fence &operator=(const Fence &) = delete;
+    Fence(const Fence &) = delete;
 
     Fence &operator=(Fence &&other) noexcept
     {
@@ -28,6 +26,8 @@ struct Fence
 
         return *this;
     }
+
+    Fence &operator=(const Fence &) = delete;
 
     void Flush(ID3D12CommandQueue *commandQueue);
 

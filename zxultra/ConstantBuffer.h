@@ -32,6 +32,15 @@ template <class T> struct ConstantBuffer
         HR(m_resource->Map(0, nullptr, reinterpret_cast<void **>(&m_mappedBuffer)));
     }
 
+    ConstantBuffer(ConstantBuffer &&other)
+        : m_numElements{std::move(other.m_numElements)}, m_resource{std::move(other.m_resource)},
+          m_mappedBuffer{std::move(other.m_mappedBuffer)}
+    {
+        other.m_numElements = 0;
+        other.m_resource = nullptr;
+        other.m_mappedBuffer = nullptr;
+    }
+
     ConstantBuffer(const ConstantBuffer &) = delete;
 
     ConstantBuffer &operator=(const ConstantBuffer &) = delete;
@@ -52,11 +61,6 @@ template <class T> struct ConstantBuffer
             m_resource->Unmap(0, nullptr);
             m_resource = nullptr;
         }
-    }
-
-    inline void Swap(ConstantBuffer<T> &other)
-    {
-        *this = std::move(other);
     }
 
     inline UINT ElementSize() const
