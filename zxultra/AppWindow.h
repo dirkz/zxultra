@@ -13,6 +13,8 @@
 namespace zxultra
 {
 
+using AppFrameData = FrameData<XMFLOAT4X4, XMFLOAT4X4, 1>;
+
 struct AppWindow
 {
     AppWindow(HWND hwnd);
@@ -32,7 +34,7 @@ struct AppWindow
     void CreateRootSignature();
     void CreatePipelineState();
 
-    inline FrameData &CurrentFrameData()
+    inline AppFrameData &CurrentFrameData()
     {
         return m_frameData[m_currentFrameDataIndex];
     }
@@ -67,7 +69,7 @@ struct AppWindow
     ComPtr<ID3D12Resource> m_indexBufferResource;
     D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
 
-    std::array<FrameData, NumFrames> m_frameData;
+    std::array<AppFrameData, NumFrames> m_frameData;
     UINT m_currentFrameDataIndex = 0;
 
     ComPtr<ID3D12RootSignature> m_rootSignature;

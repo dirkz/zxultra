@@ -22,9 +22,9 @@ AppWindow::AppWindow(HWND hwnd)
       m_commandList{CreateGraphicsCommandList(m_device.Get(), m_commandAllocator.Get())},
       m_swapchain{m_factory.Get(), m_device.Get(), m_commandQueue.Get(), m_commandList.Get(), hwnd}
 {
-    for (FrameData &frameData : m_frameData)
+    for (AppFrameData &frameData : m_frameData)
     {
-        frameData = std::move(FrameData{m_device.Get()});
+        frameData = std::move(AppFrameData{m_device.Get()});
     }
 
     // sample code for querying features
@@ -68,7 +68,7 @@ void AppWindow::Resize(int width, int height)
 
 void AppWindow::Update(double elapsedSeconds)
 {
-    FrameData &frameData = CurrentFrameData();
+    AppFrameData &frameData = CurrentFrameData();
 
     XMMATRIX identity = XMMatrixIdentity();
 
@@ -81,13 +81,18 @@ void AppWindow::Update(double elapsedSeconds)
 
     XMMATRIX model = XMMatrixMultiply(scale, rotate);
 
-    XMStoreFloat4x4(&frameData.CbModel()[0], XMMatrixTranspose(model));
-    XMStoreFloat4x4(&frameData.CbViewProjection()[0], XMMatrixTranspose(identity));
+    XMFLOAT4X4 perPass;
+    XMStoreFloat4x4(&perPass, XMMatrixTranspose(identity));
+    frameData.PerPass(perPass);
+
+    XMFLOAT4X4 perObject;
+    XMStoreFloat4x4(&perObject, XMMatrixTranspose(model));
+    frameData.PerObject(0, perObject);
 }
 
 void AppWindow::Draw()
 {
-    FrameData &frameData = CurrentFrameData();
+    AppFrameData &frameData = CurrentFrameData();
 
     frameData.FlushFence(m_commandQueue.Get());
 
