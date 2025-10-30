@@ -49,14 +49,14 @@ template <class P, class O, size_t I> struct FrameData
         return *this;
     }
 
-    void PerPass(const P &data)
+    P &PerPass()
     {
-        m_cbPerPass[0] = data;
+        return m_cbPerPass[0];
     }
 
-    void PerObject(const UINT index, const O &data)
+    O &PerObject(const UINT index)
     {
-        m_cbPerObject[index] = data;
+        return m_cbPerObject[index];
     }
 
     std::array<ID3D12DescriptorHeap *, 1> DescriptorHeaps()

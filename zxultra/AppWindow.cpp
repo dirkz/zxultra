@@ -81,13 +81,8 @@ void AppWindow::Update(double elapsedSeconds)
 
     XMMATRIX model = XMMatrixMultiply(scale, rotate);
 
-    XMFLOAT4X4 perPass;
-    XMStoreFloat4x4(&perPass, XMMatrixTranspose(identity));
-    frameData.PerPass(perPass);
-
-    XMFLOAT4X4 perObject;
-    XMStoreFloat4x4(&perObject, XMMatrixTranspose(model));
-    frameData.PerObject(0, perObject);
+    XMStoreFloat4x4(&frameData.PerPass(), XMMatrixTranspose(identity));
+    XMStoreFloat4x4(&frameData.PerObject(0), XMMatrixTranspose(model));
 }
 
 void AppWindow::Draw()
