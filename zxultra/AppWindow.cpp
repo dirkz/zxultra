@@ -200,7 +200,7 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
     VertexWithColor v4{{-0.5f, -0.5f, +0.5f}, Colors::Red};       // back left bottom
     VertexWithColor v5{{-0.5f, +0.5f, +0.5f}, Colors::LightPink}; // back left top
     VertexWithColor v6{{+0.5f, +0.5f, +0.5f}, Colors::Blue};      // back right top
-    VertexWithColor v7{{+0.5f, -0.5f, +0.5f}, Colors::Magenta};       // back right bottom
+    VertexWithColor v7{{+0.5f, -0.5f, +0.5f}, Colors::Magenta};   // back right bottom
 
     m_vertexBuffer = VertexBuffer<VertexWithColor, IndexType>{
         v0, v1, v2, // front 1
@@ -234,7 +234,7 @@ void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
 
 void AppWindow::CreateRootSignature()
 {
-    CD3DX12_ROOT_PARAMETER rootParameters[2]{};
+    CD3DX12_ROOT_PARAMETER rootParameters[AppFrameData::NumRootParameters]{};
 
     CD3DX12_DESCRIPTOR_RANGE descriptorRange0{}, descriptorRange1{};
     constexpr UINT baseShaderRegister = 0;
@@ -242,7 +242,8 @@ void AppWindow::CreateRootSignature()
     descriptorRange0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister);
     rootParameters[0].InitAsDescriptorTable(1, &descriptorRange0);
 
-    descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1);
+    descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, AppFrameData::NumObjects,
+                          baseShaderRegister + 1);
     rootParameters[1].InitAsDescriptorTable(1, &descriptorRange1);
 
     constexpr UINT numStaticSamples = 0;

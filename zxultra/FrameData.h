@@ -19,6 +19,20 @@ namespace zxultra
 /// <typeparam name="I">The number of per-object objects</typeparam>
 template <class P, class O, size_t I> struct FrameData
 {
+    /// <summary>
+    /// The number of entries in the root signature.
+    /// There are 2 distinct object types (per-pass and per-object),
+    /// so this is 2.
+    /// </summary>
+    /// <returns></returns>
+    static const UINT NumRootParameters = 2;
+
+    /// <summary>
+    /// The maximum number of per-objects constant buffers.
+    /// </summary>
+    /// <returns></returns>
+    static const UINT NumObjects = I;
+
     FrameData(ID3D12Device *device)
         : m_commandAllocator{CreateCommandAllocator(device)}, m_fence{device},
           m_cbPerPass{device, 1}, m_cbPerObject{device, I},

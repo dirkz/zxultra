@@ -13,7 +13,7 @@
 namespace zxultra
 {
 
-using AppFrameData = FrameData<XMFLOAT4X4, XMFLOAT4X4, 1>;
+using AppFrameData = FrameData<XMFLOAT4X4, XMFLOAT4X4, 2>;
 
 struct AppWindow
 {
