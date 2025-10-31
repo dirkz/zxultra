@@ -9,7 +9,6 @@ namespace zxultra
 
 static void Execute(ID3D12GraphicsCommandList *commandList, ID3D12CommandQueue *commandQueue)
 {
-
     HR(commandList->Close());
     ID3D12CommandList *commandLists[]{commandList};
     commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
