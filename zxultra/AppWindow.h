@@ -31,7 +31,6 @@ struct AppWindow
 
   private:
     void CreateVertexBuffers(DefaultBufferCreator &bufferCreator);
-    void CreateRootSignature();
     void CreatePipelineState();
 
     inline AppFrameData &CurrentFrameData()

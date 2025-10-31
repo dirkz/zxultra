@@ -27,6 +27,55 @@ template <class P, class O, size_t I> struct FrameData
     /// <returns></returns>
     static const UINT NumRootParameters = 2;
 
+    static ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device *device)
+    {
+        CD3DX12_ROOT_PARAMETER rootParameters[NumRootParameters]{};
+
+        CD3DX12_DESCRIPTOR_RANGE descriptorRange0{}, descriptorRange1{};
+        constexpr UINT baseShaderRegister = 0;
+        constexpr UINT registerSpace = 0;
+        constexpr UINT offsetInDescriptorsFromTableStart = 0;
+
+        descriptorRange0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister, registerSpace,
+                              offsetInDescriptorsFromTableStart);
+        rootParameters[0].InitAsDescriptorTable(1, &descriptorRange0);
+
+        descriptorRange1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, baseShaderRegister + 1,
+                              registerSpace, offsetInDescriptorsFromTableStart);
+        rootParameters[1].InitAsDescriptorTable(1, &descriptorRange1);
+
+        constexpr UINT numStaticSamples = 0;
+        constexpr D3D12_STATIC_SAMPLER_DESC *samplerDescription = nullptr;
+        CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDescription{
+            _countof(rootParameters), rootParameters, numStaticSamples, samplerDescription,
+            D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT};
+
+        ComPtr<ID3DBlob> serializedRootSignature = nullptr;
+        ComPtr<ID3DBlob> errorBlob = nullptr;
+        HRESULT hr = D3D12SerializeRootSignature(
+            &rootSignatureDescription, D3D_ROOT_SIGNATURE_VERSION_1,
+            serializedRootSignature.GetAddressOf(), errorBlob.GetAddressOf());
+
+        if (!SUCCEEDED(hr) && errorBlob.Get() != nullptr)
+        {
+            const char *msg = reinterpret_cast<char *>(errorBlob->GetBufferPointer());
+            OutputDebugString(L"D3D12SerializeRootSignature failed with the following error:\n\n");
+            OutputDebugStringA(msg);
+            OutputDebugString(L"\n");
+        }
+
+        HR(hr);
+
+        ComPtr<ID3D12RootSignature> rootSignature;
+
+        constexpr UINT nodeMask = 0;
+        HR(device->CreateRootSignature(nodeMask, serializedRootSignature->GetBufferPointer(),
+                                       serializedRootSignature->GetBufferSize(),
+                                       IID_PPV_ARGS(rootSignature.GetAddressOf())));
+
+        return rootSignature;
+    }
+
     FrameData(ID3D12Device *device)
         : m_commandAllocator{CreateCommandAllocator(device)}, m_fence{device},
           m_cbPerPass{device, 1}, m_cbPerObject{device, I},
