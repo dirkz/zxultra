@@ -148,7 +148,7 @@ void AppWindow::Draw()
 
     m_swapchain.Present();
 
-    m_currentFrameDataIndex = (m_currentFrameDataIndex + 1) % m_frameData.size();
+    m_currentFrameDataIndex = (m_currentFrameDataIndex + 1) % static_cast<UINT>(m_frameData.size());
 }
 
 void AppWindow::WillShutdown()
