@@ -62,7 +62,7 @@ template <class T> struct ConstantBuffer
 
     inline D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress(UINT n) const
     {
-        return Resource()->GetGPUVirtualAddress() + n * m_elementSize;
+        return Resource()->GetGPUVirtualAddress() + static_cast<UINT64>(n) * m_elementSize;
     }
 
     inline BYTE *MappedBuffer() const
