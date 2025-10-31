@@ -169,43 +169,6 @@ void AppWindow::WillShutdown()
     m_fence.Flush(m_commandQueue.Get());
 }
 
-void AppWindow::LogAdapters()
-{
-    ComPtr<IDXGIFactory1> factory;
-    HR(CreateDXGIFactory1(IID_PPV_ARGS(factory.GetAddressOf())));
-
-    UINT i = 0;
-    ComPtr<IDXGIAdapter1> adapter;
-    while (factory->EnumAdapters1(i, adapter.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND)
-    {
-        DXGI_ADAPTER_DESC1 desc;
-        HR(adapter->GetDesc1(&desc));
-
-        std::wstring msg = std::format(L"Adapter: {}\n", desc.Description);
-        OutputDebugString(msg.c_str());
-
-        LogAdapterOutputs(adapter);
-
-        ++i;
-    }
-}
-
-void AppWindow::LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter)
-{
-    UINT i = 0;
-    ComPtr<IDXGIOutput> output;
-    while (adapter->EnumOutputs(i, output.ReleaseAndGetAddressOf()) != DXGI_ERROR_NOT_FOUND)
-    {
-        DXGI_OUTPUT_DESC desc;
-        HR(output->GetDesc(&desc));
-
-        std::wstring msg = std::format(L"Output: {}\n", desc.DeviceName);
-        OutputDebugString(msg.c_str());
-
-        ++i;
-    }
-}
-
 void AppWindow::CreateVertexBuffers(DefaultBufferCreator &bufferCreator)
 {
     VertexWithColor v0{{-0.5f, -0.5f, -0.5f}, Colors::Yellow};    // front left bottom

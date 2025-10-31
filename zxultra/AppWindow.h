@@ -26,9 +26,6 @@ struct AppWindow
 
     void WillShutdown();
 
-    void LogAdapters();
-    void LogAdapterOutputs(ComPtr<IDXGIAdapter1> adapter);
-
   private:
     void CreateVertexBuffers(DefaultBufferCreator &bufferCreator);
     void CreatePipelineState();
