@@ -60,7 +60,7 @@ void AppWindow::Update(double elapsedSeconds)
         XMMatrixPerspectiveFovLH(XM_PIDIV4, m_swapchain.AspectRatio(), 0.1f, 10.f);
 
     XMMATRIX view =
-        XMMatrixLookAtLH(XMVectorSet(0, 0, -5.f, 1), XMVectorZero(), XMVectorSet(0, 1.f, 0, 1));
+        XMMatrixLookAtLH(XMVectorSet(0, 0, -3.f, 1), XMVectorZero(), XMVectorSet(0, 1.f, 0, 1));
 
     XMMATRIX viewProjection = XMMatrixMultiply(view, projection);
 
