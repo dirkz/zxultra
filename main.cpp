@@ -13,7 +13,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     int result = 0;
 
     {
-        BaseWindow<AppWindow> baseWindow{hInstance, L"ZFX Ultra", 1280, 800};
+        BaseWindow<AppWindow> baseWindow{hInstance, L"ZFX Ultra", 1280, 720};
         baseWindow.ShowWindow(nShowCmd);
 
         result = baseWindow.RunMessageLoop();
